@@ -49,30 +49,6 @@ public abstract class ExecutionTracer
 	@Override
 	public abstract void onNewState(CrawlSession session);
        
-	
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * Get a list with all trace files in the executiontrace directory.
-	 * 
-	 * @return The list.
-	 */
-	public abstract List<String> allTraceFiles();
-
-	/**
-	 * @return Name of the assertion file.
-	 */
-
-	
 
 
 	/**
