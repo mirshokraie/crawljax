@@ -21,7 +21,7 @@ function addFunctionCallTrack(funcCallerName, funcCalleeName) {
 }
 
 
-function getXPath( element ) {
+function getXPath( element, eventHanlder ) {
     var xpath = '';
     for ( ; element && element.nodeType == 1; element = element.parentNode )
     {
@@ -29,5 +29,5 @@ function getXPath( element ) {
        id > 1 ? (id = '[' + id + ']') : (id = '');
        xpath = '/' + element.tagName.toLowerCase() + id + xpath;
     }
-    return xpath;
+    return  new Array(xpath, eventHandler);
 };

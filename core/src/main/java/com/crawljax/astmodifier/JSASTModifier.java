@@ -336,10 +336,6 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		
 		
 		protected abstract AstNode createFunctionTypeNameTrackingNode(FunctionNode callerFunc, AstNode node);
-		/**
-		 *  create node for logging variable/function-parameters
-		 */
-		protected abstract AstNode createNode(FunctionNode function, AstNode nodeForVarLog, String statementCategory);
 		
 		
 		/**
