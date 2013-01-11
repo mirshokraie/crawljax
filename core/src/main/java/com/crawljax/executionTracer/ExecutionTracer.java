@@ -1,5 +1,7 @@
 package com.crawljax.executionTracer;
 
+import com.crawljax.graph.WeightedGraph;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -26,56 +28,23 @@ import com.crawljax.core.plugin.OnNewStatePlugin;
 import com.crawljax.util.Helper;
 
 public abstract class ExecutionTracer
-				implements PreStateCrawlingPlugin, OnNewStatePlugin, PreCrawlingPlugin, GeneratesOutput{
+				implements PreStateCrawlingPlugin, OnNewStatePlugin{
 	
 	
 	protected static final int ONE_SEC = 1000;
 
-	protected static String outputFolder;
-	protected static String instrumentationFilename;
+	public static WeightedGraph dynamicFunctionCallGraph;
 
 	protected static JSONArray points = new JSONArray();
 
 
 
-
-
-	/**
-	 * @param filename
-	 *            How to name the file that will contain the assertions after execution.
-	 */
-	public ExecutionTracer(String filename) {
-		instrumentationFilename = filename;
+	public ExecutionTracer() {
+		dynamicFunctionCallGraph = new WeightedGraph();
 	}
 
-	/**
-	 * Initialize the plugin and create folders if needed.
-	 * 
-	 * @param browser
-	 *            The browser.
-	 */
-	@Override
-	public abstract void preCrawling(EmbeddedBrowser browser);
 
-	
 
-	/**
-	 * Retrieves the JavaScript instrumentation array from the webbrowser and writes its contents in
-	 *  to a file.
-	 * 
-	 * @param session
-	 *            The crawling session.
-	 * @param candidateElements
-	 *            The candidate clickable elements.
-	 */
-
-	@Override
-	public abstract void preStateCrawling(CrawlSession session, List<CandidateElement> candidateElements);
-	
-	
-	
-	
-	
 	
 	@Override
 	public abstract void onNewState(CrawlSession session);
@@ -102,19 +71,9 @@ public abstract class ExecutionTracer
 	/**
 	 * @return Name of the assertion file.
 	 */
-	public String getInstrumentationFilename() {
-		return instrumentationFilename;
-	}
 
-	@Override
-	public String getOutputFolder() {
-		return Helper.addFolderSlashIfNeeded(outputFolder);
-	}
+	
 
-	@Override
-	public void setOutputFolder(String absolutePath) {
-		outputFolder = absolutePath;
-	}
 
 	/**
 	 * 
