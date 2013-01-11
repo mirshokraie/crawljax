@@ -102,7 +102,7 @@ public class AstFunctionCallInstrumenter extends JSASTModifier {
 	private AstNode jsLoggingFunctions() {
 		String code;
 
-		File js = new File(this.getClass().getResource("/addFunctionCallTrack.js").getFile());
+		File js = new File(this.getClass().getResource("/getXPath.js").getFile());
 		code = Helper.getContent(js);
 		return parse(code);
 	}
