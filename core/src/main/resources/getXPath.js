@@ -20,6 +20,12 @@ function addFunctionCallTrack(funcCallerName, funcCalleeName) {
 				
 }
 
+function addFunctionNodeTrack(functionName, functionInfo) {
+	
+	return new Array(functionName, functionInfo);
+				
+}
+
 
 function getXPath( element, eventHanlder ) {
     var xpath = '';

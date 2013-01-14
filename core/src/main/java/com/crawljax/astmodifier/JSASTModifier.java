@@ -49,6 +49,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		 */
 		private static List<String> functionCallsNotToLog=new ArrayList<String>();
 		private static List<String> functionNodes=new ArrayList<String>();
+		private static List<String> executedFunctionNodes=new ArrayList<String>();
 		/**
 		 * This is used by the JavaScript node creation functions that follow.
 		 */
@@ -68,6 +69,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		
 		public boolean shouldTrackFunctionCalls;
 		public boolean shouldTrackClickables;
+		public boolean shouldTrackExecutedFunctions;
 		public boolean shouldTrackFunctionNodes=true;
 		
 
@@ -75,9 +77,11 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		/**
 		 * constructor without specifying functions that should be visited
 		 */
-		protected JSASTModifier(boolean shouldTrackFunctionCalls, boolean shouldTrackClickables){
+		protected JSASTModifier(boolean shouldTrackFunctionCalls, boolean shouldTrackClickables,
+				boolean shouldTrackExecutedFunctions){
 			this.shouldTrackFunctionCalls=shouldTrackFunctionCalls;
 			this.shouldTrackClickables=shouldTrackClickables;
+			this.shouldTrackExecutedFunctions=shouldTrackExecutedFunctions;
 			
 			events.add("click");
 			events.add("bind-2-click");
@@ -242,6 +246,12 @@ public abstract class JSASTModifier implements NodeVisitor  {
 						functionNodes.add(getFunctionName((FunctionNode)node));
 					}
 				}
+				else if(shouldTrackExecutedFunctions){
+					if (node instanceof FunctionNode && functionNodes.contains(getFunctionName((FunctionNode) node))){
+						AstNode newNode=createExecutedFunctionTrackingNode((FunctionNode)node);
+						((FunctionNode)node).getBody().addChildToFront(newNode);
+					}
+				}
 				else if(shouldTrackFunctionCalls){
 					
 					if (node instanceof FunctionCall
@@ -343,6 +353,8 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		 */
 		
 		protected abstract AstNode createFunctionTrackingNode(FunctionNode callerFunction, FunctionCall calleeFunction);
+		
+		protected abstract AstNode createExecutedFunctionTrackingNode(FunctionNode functionNode);
 		
 		/**
 		 * create node for tracking functions attached to events

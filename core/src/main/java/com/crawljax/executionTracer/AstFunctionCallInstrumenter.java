@@ -25,7 +25,7 @@ public class AstFunctionCallInstrumenter extends JSASTModifier {
 	 * Construct without patterns.
 	 */
 	public AstFunctionCallInstrumenter() {
-		super(true,false);
+		super(true,false,false);
 	
 	}
 	
@@ -115,6 +115,13 @@ public class AstFunctionCallInstrumenter extends JSASTModifier {
 	@Override
 	protected AstNode createFunctionAttachToEventNode(AstNode handler,
 			AstNode element) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected AstNode createExecutedFunctionTrackingNode(
+			FunctionNode functionNode) {
 		// TODO Auto-generated method stub
 		return null;
 	}
