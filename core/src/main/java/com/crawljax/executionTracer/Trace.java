@@ -14,7 +14,7 @@ public abstract class Trace {
 
 	public abstract FuncCallProgramPoint addFuncCallProgramPoint(String name, String lineNo);
 	public abstract EventHandlerProgramPoint addEventHandlerProgramPoint(String name, String lineNo);
-
+	public abstract ExecutedFunctionsProgramPoint addExecutedFuncsProgramPoint(String name, String lineNo);
 	public abstract String parse(JSONArray jsonObject) throws JSONException, CrawljaxException; 
 	
 

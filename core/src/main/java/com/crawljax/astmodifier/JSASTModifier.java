@@ -86,6 +86,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 			events.add("click");
 			events.add("bind-2-click");
 			events.add("on-2-click");
+			events.add("onclick");
 			
 			
 			functionCallsNotToLog.add("parseInt");
@@ -307,6 +308,24 @@ public abstract class JSASTModifier implements NodeVisitor  {
 					if (node instanceof Name) {
 
 					
+						if(node.getParent() instanceof PropertyGet &&
+								node.getParent().getParent() instanceof Assignment){
+							Assignment assignment=(Assignment)node.getParent().getParent();
+							PropertyGet propGet=(PropertyGet) node.getParent();
+							AstNode rightSide=assignment.getRight();
+							if(rightSide instanceof FunctionNode){
+								if (events.indexOf(node.toSource())!=-1){
+									FunctionNode handler=(FunctionNode)rightSide;
+									AstNode newNode=createFunctionAttachToEventNode(handler, propGet.getLeft());
+									appendNodeAfterClickEvent(node, newNode);
+								}
+							}
+							
+	
+						}
+						
+						
+						
 						if (node.getParent() instanceof PropertyGet
 						        && node.getParent().getParent() instanceof FunctionCall && !node.getParent().toSource().contains("function")) {
 

@@ -50,4 +50,12 @@ public class FuncCallTrace extends Trace {
 		return result.toString();
 	}
 
+
+	@Override
+	public ExecutedFunctionsProgramPoint addExecutedFuncsProgramPoint(
+			String name, String lineNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
