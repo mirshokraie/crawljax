@@ -4,7 +4,6 @@ import org.apache.commons.configuration.ConfigurationException;
 
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.core.CrawljaxController;
-import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.crawljax.core.configuration.InputSpecification;
@@ -12,9 +11,6 @@ import com.crawljax.core.configuration.ThreadConfiguration;
 
 /**
  * Simple Example.
- * 
- * @author dannyroest@gmail.com (Danny Roest)
- * @version $id$
  */
 public final class CrawljaxSimpleExampleSettings {
 
@@ -44,10 +40,11 @@ public final class CrawljaxSimpleExampleSettings {
 
 	private static CrawlSpecification getCrawlSpecification() {
 		CrawlSpecification crawler = new CrawlSpecification(URL);
-
+		crawler.setRandomInputInForms(false);
 		// click these elements
+
 		crawler.click("a");
-		crawler.click("input").withAttribute("type", "submit");
+		crawler.click("button");
 
 		// except these
 		crawler.dontClick("a").underXPath("//DIV[@id='guser']");
@@ -64,7 +61,7 @@ public final class CrawljaxSimpleExampleSettings {
 
 	private static InputSpecification getInputSpecification() {
 		InputSpecification input = new InputSpecification();
-		input.field("q").setValue("Crawljax");
+		input.field("gbqfq").setValue("Crawljax");
 		return input;
 	}
 
@@ -72,18 +69,9 @@ public final class CrawljaxSimpleExampleSettings {
 	 * @param args
 	 *            the command line args
 	 */
-	public static void main(String[] args) {
-		try {
-			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
-			crawljax.run();
-		} catch (CrawljaxException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (ConfigurationException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-
+	public static void main(String[] args) throws ConfigurationException {
+		CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
+		crawljax.run();
 	}
 
 }

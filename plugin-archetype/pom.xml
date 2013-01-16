@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.crawljax</groupId>
+		<artifactId>crawljax-parent-pom</artifactId>
+		<version>2.3-SNAPSHOT</version>
+	</parent>
+
+	<groupId>com.crawljax.plugins.archetypes</groupId>
+	<artifactId>crawljax-plugins-archetype</artifactId>
+
+	<packaging>jar</packaging>
+	<name>Crawljax plugins archetype</name>
+	<description>
+		Generates a Crawljax project template.
+	</description>
+
+	<developers>
+		<developer>
+			<id>amesbah</id>
+			<name>Ali Mesbah</name>
+			<email>a.mesbah@gmail.com</email>
+			<url>http://www.ece.ubc.ca/~amesbah/</url>
+			<organization>SALTLab, UBC</organization>
+			<organizationUrl>http://salt.ece.ubc.ca</organizationUrl>
+			<timezone>-8</timezone>
+		</developer>
+	</developers>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>archetype-resources/pom.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>archetype-resources/pom.xml</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<escapeString>\</escapeString>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+	</build>
+
+
+</project>
