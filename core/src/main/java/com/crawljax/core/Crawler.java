@@ -207,9 +207,7 @@ public class Crawler implements Runnable {
 			 */
 			controller.doBrowserWait(getBrowser());
 			
-			//Shabnam
-			CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
-			        .getCurrentCrawlPath().immutableCopy(true),controller.getSession());
+		
 
 			/**
 			 * Close opened windows
@@ -330,6 +328,10 @@ public class Crawler implements Runnable {
 			        new StateVertex(getBrowser().getCurrentUrl(), controller.getSession()
 			                .getStateFlowGraph().getNewStateName(), getBrowser().getDom(),
 			                this.controller.getStrippedDom(getBrowser()));
+			
+			//Shabnam
+			CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
+			        .getCurrentCrawlPath().immutableCopy(true),controller.getSession());
 
 			// checking if DOM is changed
 			if (CrawljaxPluginsUtil.runDomChangeNotifierPlugins(this.getStateMachine()
