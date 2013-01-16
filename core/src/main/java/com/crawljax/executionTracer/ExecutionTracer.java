@@ -21,14 +21,16 @@ import com.crawljax.core.CandidateElement;
 import com.crawljax.core.CrawlSession;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.plugin.GeneratesOutput;
+import com.crawljax.core.plugin.OnFireEventSuccessPlugin;
 import com.crawljax.core.plugin.PostCrawlingPlugin;
 import com.crawljax.core.plugin.PreCrawlingPlugin;
 import com.crawljax.core.plugin.PreStateCrawlingPlugin;
 import com.crawljax.core.plugin.OnNewStatePlugin;
+import com.crawljax.core.state.Eventable;
 import com.crawljax.util.Helper;
 
 public abstract class ExecutionTracer
-				implements PreStateCrawlingPlugin, OnNewStatePlugin{
+				implements OnFireEventSuccessPlugin/*PreStateCrawlingPlugin, OnNewStatePlugin */{
 	
 	
 	protected static final int ONE_SEC = 1000;
@@ -44,12 +46,14 @@ public abstract class ExecutionTracer
 
 
 
-	
+	/*
 	@Override
 	public abstract void onNewState(CrawlSession session);
-       
+     */  
 
 
+	@Override
+	public abstract void onFireEventSuccessed(Eventable eventable, List<Eventable> path, CrawlSession session);
 	/**
 	 * 
 	 * @param string

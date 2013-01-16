@@ -264,6 +264,21 @@ public final class CrawljaxPluginsUtil {
 			}
 		}
 	}
+	
+	
+	/**
+	 * @author: shabnam
+	 */
+	
+	public static void runOnFireEventSuccessPlugins(Eventable eventable, List<Eventable> path, CrawlSession session) {
+		LOGGER.info("Running OnFireEventFailedPlugins...");
+		for (Plugin plugin : CrawljaxPluginsUtil.PLUGINS) {
+			if (plugin instanceof OnFireEventSuccessPlugin) {
+				LOGGER.info("Calling plugin " + plugin.getClass().getName());
+				((OnFireEventSuccessPlugin) plugin).onFireEventSuccessed(eventable, path, session);
+			}
+		}
+	}
 
 	/**
 	 * Load and run the OnBrowserCreatedPlugins, this call has been made from the browserpool when a

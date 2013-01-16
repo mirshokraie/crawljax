@@ -206,6 +206,10 @@ public class Crawler implements Runnable {
 			 * Let the controller execute its specified wait operation on the browser thread safe.
 			 */
 			controller.doBrowserWait(getBrowser());
+			
+			//Shabnam
+			CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
+			        .getCurrentCrawlPath().immutableCopy(true),controller.getSession());
 
 			/**
 			 * Close opened windows
