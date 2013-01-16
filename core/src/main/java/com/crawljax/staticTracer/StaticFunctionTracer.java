@@ -3,6 +3,9 @@ package com.crawljax.staticTracer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.mozilla.javascript.CompilerEnvirons;
+import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.ast.AstNode;
 import org.mozilla.javascript.ast.FunctionCall;
 import org.mozilla.javascript.ast.FunctionNode;
@@ -12,6 +15,7 @@ import org.mozilla.javascript.ast.NodeVisitor;
 import org.mozilla.javascript.ast.ObjectProperty;
 import org.mozilla.javascript.ast.PropertyGet;
 
+import com.crawljax.core.CrawljaxController;
 import com.crawljax.globals.StaticCallGraph;
 import com.crawljax.graph.Edge;
 import com.crawljax.graph.Vertex;
@@ -24,6 +28,44 @@ public class StaticFunctionTracer implements NodeVisitor {
 	
 	public boolean shouldTrackFunctionCalls;
 	public boolean shouldTrackFunctionNodes=true;
+	protected static final Logger LOGGER = Logger.getLogger(CrawljaxController.class.getName());
+	 /**
+	  *  This is used by the JavaScript node creation functions that follow.
+	 */
+	private CompilerEnvirons compilerEnvirons = new CompilerEnvirons();
+
+	/**
+	 * Contains the scopename of the AST we are visiting. Generally this will be the filename
+	 */
+	private String scopeName = null;
+	
+	/**
+	 * @param scopeName
+	 *            the scopeName to set
+	 */
+	public void setScopeName(String scopeName) {
+		this.scopeName = scopeName;
+	}
+
+	/**
+	 * @return the scopeName
+	 */
+	public String getScopeName() {
+		return scopeName;
+	}
+	
+	/**
+	 * Parse some JavaScript to a simple AST.
+	 * 
+	 * @param code
+	 *            The JavaScript source code to parse.
+	 * @return The AST node.
+	 */
+	public AstNode parse(String code) {
+		Parser p = new Parser(compilerEnvirons, null);
+		return p.parse(code, null, 0);
+		
+	}
 	
 	public StaticFunctionTracer(boolean shouldTrackFunctionCalls,
 			boolean shouldTrackFunctionNodes){

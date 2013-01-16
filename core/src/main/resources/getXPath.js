@@ -9,22 +9,11 @@ function send(value) {
 }
 
 function sendReally() {
-	window.xhr.open('POST', document.location.href + '?thisisafuncexectracingcall', false);
+	window.xhr.open('POST', document.location.href + '?thisisaxpathtracingcall', false);
 	window.xhr.send(JSON.stringify(window.buffer));
 	window.buffer = new Array();
 }
 
-function addFunctionCallTrack(funcCallerName, funcCalleeName) {
-	
-	return new Array(funcCallerName, funcCalleeName);
-				
-}
-
-function addFunctionNodeTrack(functionName, functionInfo) {
-	
-	return new Array(functionName, functionInfo);
-				
-}
 
 
 function getXPath( element, eventHanlder ) {

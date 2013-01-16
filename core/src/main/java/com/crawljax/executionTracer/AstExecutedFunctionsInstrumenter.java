@@ -57,7 +57,7 @@ public class AstExecutedFunctionsInstrumenter extends JSASTModifier{
 	private AstNode jsLoggingFunctions() {
 		String code;
 
-		File js = new File(this.getClass().getResource("/getXPath.js").getFile());
+		File js = new File(this.getClass().getResource("/addFunctionNodeTrack.js").getFile());
 		code = Helper.getContent(js);
 		return parse(code);
 	}
