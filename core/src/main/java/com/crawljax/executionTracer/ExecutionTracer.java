@@ -33,14 +33,13 @@ public abstract class ExecutionTracer
 	
 	protected static final int ONE_SEC = 1000;
 
-	public static WeightedGraph dynamicFunctionCallGraph;
-
 	protected static JSONArray points = new JSONArray();
 
 
 
 	public ExecutionTracer() {
-		dynamicFunctionCallGraph = new WeightedGraph();
+		
+
 	}
 
 

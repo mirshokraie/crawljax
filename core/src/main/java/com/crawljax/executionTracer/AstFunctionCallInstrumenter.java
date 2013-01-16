@@ -25,7 +25,7 @@ public class AstFunctionCallInstrumenter extends JSASTModifier {
 	 * Construct without patterns.
 	 */
 	public AstFunctionCallInstrumenter() {
-		super(true,false);
+		super(true,false,false);
 	
 	}
 	
@@ -102,7 +102,7 @@ public class AstFunctionCallInstrumenter extends JSASTModifier {
 	private AstNode jsLoggingFunctions() {
 		String code;
 
-		File js = new File(this.getClass().getResource("/getXPath.js").getFile());
+		File js = new File(this.getClass().getResource("/addFunctionCallTrack.js").getFile());
 		code = Helper.getContent(js);
 		return parse(code);
 	}
@@ -115,6 +115,13 @@ public class AstFunctionCallInstrumenter extends JSASTModifier {
 	@Override
 	protected AstNode createFunctionAttachToEventNode(AstNode handler,
 			AstNode element) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected AstNode createExecutedFunctionTrackingNode(
+			FunctionNode functionNode) {
 		// TODO Auto-generated method stub
 		return null;
 	}

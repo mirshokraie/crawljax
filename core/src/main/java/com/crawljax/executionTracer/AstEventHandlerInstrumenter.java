@@ -16,7 +16,7 @@ import com.crawljax.util.Helper;
 
 public class AstEventHandlerInstrumenter extends JSASTModifier {
 
-	public static final String JSINSTRUMENTLOGNAME = "window.jsFuncCallExecTrace";
+	public static final String JSINSTRUMENTLOGNAME = "window.jsEventHanlderExecTrace";
 
 
 
@@ -25,7 +25,7 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 	 * Construct without patterns.
 	 */
 	public AstEventHandlerInstrumenter() {
-		super(true,false);
+		super(false,true,false);
 	
 	}
 	
@@ -91,6 +91,13 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 		eventHandler + "'"+"))));";
 	//	System.out.println(code);
 		return parse(code);
+	}
+
+	@Override
+	protected AstNode createExecutedFunctionTrackingNode(
+			FunctionNode functionNode) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -21,21 +22,21 @@ import com.crawljax.core.plugin.GeneratesOutput;
 import com.crawljax.core.plugin.PostCrawlingPlugin;
 import com.crawljax.core.plugin.PreCrawlingPlugin;
 import com.crawljax.core.plugin.PreStateCrawlingPlugin;
+import com.crawljax.globals.ExecutedFunctions;
 import com.crawljax.util.Helper;
 
-public class JSFuncExecutionTracer extends ExecutionTracer 
+public class JSExecutedFuncsExecTracer extends ExecutionTracer 
 	
 	//implements PreStateCrawlingPlugin, /*OnNewStatePlugin,*/ PostCrawlingPlugin, PreCrawlingPlugin, GeneratesOutput {
 		{
 		
-		private static final Logger LOGGER = Logger.getLogger(JSFuncExecutionTracer.class.getName());
-
-
+		private static final Logger LOGGER = Logger.getLogger(JSExecutedFuncsExecTracer.class.getName());
+	
 		/**
 		 * @param filename
 		 *            How to name the file that will contain the assertions after execution.
 		 */
-		public JSFuncExecutionTracer() {
+		public JSExecutedFuncsExecTracer() {
 			super();
 		}
 
@@ -56,7 +57,7 @@ public class JSFuncExecutionTracer extends ExecutionTracer
 	        
 		
 
-			try {
+		/*	try {
 
 				LOGGER.info("Reading execution trace");
 
@@ -68,11 +69,7 @@ public class JSFuncExecutionTracer extends ExecutionTracer
 
 				FuncCallTrace trace = new FuncCallTrace();
 
-			/*	PrintWriter file = new PrintWriter(filename);
-				file.write(trace.parse(points));
-				file.write('\n');
-				file.close();
-			*/	
+		
 				LOGGER.info("Saved execution trace in the dynamic call graph");
 
 				points = new JSONArray();
@@ -83,7 +80,7 @@ public class JSFuncExecutionTracer extends ExecutionTracer
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+	*/	}
 		
 		
 		
@@ -96,6 +93,7 @@ public class JSFuncExecutionTracer extends ExecutionTracer
 	        
 
 			try {
+		
 
 				LOGGER.info("Reading execution trace");
 
@@ -106,14 +104,26 @@ public class JSFuncExecutionTracer extends ExecutionTracer
 				Thread.sleep(ONE_SEC);
 
 				FuncCallTrace trace = new FuncCallTrace();
-
-		/*		PrintWriter file = new PrintWriter(filename);
-				file.write(trace.parse(points));
-				file.write('\n');
-				file.close();
-		*/		
-				LOGGER.info("Saved execution trace in the dynamic call graph");
-
+				String input=trace.parse(points);
+				String[] lines=input.split("\n");
+				String functionName="";
+				String scopeName="";
+				for(int i=0;i<lines.length && !lines.equals("");i++){
+					
+					scopeName=lines[i].split("::")[0];
+					i++;
+					while (!lines[i].equals("================================================")){
+														
+						functionName=lines[i].split("::")[0];
+						ExecutedFunctions.executedFuncList.add(functionName);
+						i++;
+							
+					}
+					
+				}
+				
+					
+				LOGGER.info("Saved execution trace in executedFuncList set");
 				points = new JSONArray();
 			} catch (CrawljaxException we) {
 				we.printStackTrace();
