@@ -60,7 +60,7 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 	private AstNode jsLoggingFunctions() {
 		String code;
 
-		File js = new File(this.getClass().getResource("/getXPath.js").getFile());
+		File js = new File(this.getClass().getResource("/giveUniqueId.js").getFile());
 		code = Helper.getContent(js);
 		return parse(code);
 	}
@@ -87,7 +87,7 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 			"send(new Array('" + getScopeName() + "::" + enclosingFunc + "', '" + lineNo +  
             "', new Array(";
 		
-		code += "getXPath('" + targetElement + "'" + ", " + "'" + 
+		code += "giveUniqueId('" + targetElement + "'" + ", " + "'" + 
 		eventHandler + "'"+"))));";
 	//	System.out.println(code);
 		return parse(code);

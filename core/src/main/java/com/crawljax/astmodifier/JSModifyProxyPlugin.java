@@ -235,7 +235,7 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 			JSExecutedFuncsExecTracer.addPoint(new String(request.getContent()));
 			return response;
 		}
-		if (request.getURL().toString().contains("?thisisaxpathtracingcall")){
+		if (request.getURL().toString().contains("?thisisaclickabletracingcall")){
 			
 			LOGGER.info("Execution trace request " + request.getURL().toString());
 			JSExecutedFuncsExecTracer.addPoint(new String(request.getContent()));

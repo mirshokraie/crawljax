@@ -45,7 +45,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 			String[] lines=input.split("\n");
 			String functionName="";
 			String scopeName="";
-			String xpath="";
+			String uniqueId="";
 			String handlerFunc="";
 			for(int i=0;i<lines.length && !lines.equals("");i++){
 				
@@ -53,9 +53,12 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 				i++;
 				while (!lines[i].equals("================================================")){
 													
-					xpath=lines[i].split("::")[0];
-					handlerFunc=lines[i].split("::")[1];
-					Eventables.eventableElementsMap.put(xpath, handlerFunc);
+					String[] uniqueIds=lines[i].split("::");
+					handlerFunc=lines[i].split("::")[uniqueIds.length-1];
+					for(int j=0;j<uniqueIds.length-1;j++){
+						Eventables.eventableElementsMap.put(handlerFunc,uniqueIds[j]);
+					}
+					
 					i++;
 						
 				}

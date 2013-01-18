@@ -31,8 +31,17 @@ public class EventHandlerProgramPoint extends ProgramPoint {
 			for (int i = 0; i < data.length(); i++) {
 				
 				JSONArray item = data.getJSONArray(i);
-
-				result.append(item.get(0) + "::" + item.get(1) );
+				if(item.get(0) instanceof JSONArray){
+					JSONArray array=(JSONArray) item.get(0);
+					for(int j=0;j<array.length();j++){
+						result.append(array.get(j) + "::");
+					}
+					result.append(item.get(1));
+				}
+					
+				else{
+					result.append(item.get(0) + "::" + item.get(1) );
+				}
 					
 				
 			}
