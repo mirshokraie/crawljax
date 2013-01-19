@@ -137,7 +137,7 @@ public class JarRunner {
 		return urlValue == null || !new UrlValidator(schemes).isValid(urlValue);
 	}
 
-	private static void readConfigAndRun(final CommandLine commandLine, String urlValue) {
+	private static void readConfigAndRun(final CommandLine commandLine, String urlValue) throws ConfigurationException, CrawljaxException {
 		CrawlSpecification crawlSpec = new CrawlSpecification(urlValue);
 		CrawljaxConfiguration config = new CrawljaxConfiguration();
 		config.setCrawlSpecification(crawlSpec);

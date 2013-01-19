@@ -4,6 +4,7 @@ import org.apache.commons.configuration.ConfigurationException;
 
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.core.CrawljaxController;
+import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.crawljax.core.configuration.InputSpecification;
@@ -68,8 +69,9 @@ public final class CrawljaxSimpleExampleSettings {
 	/**
 	 * @param args
 	 *            the command line args
+	 * @throws CrawljaxException 
 	 */
-	public static void main(String[] args) throws ConfigurationException {
+	public static void main(String[] args) throws ConfigurationException, CrawljaxException {
 		CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 		crawljax.run();
 	}
