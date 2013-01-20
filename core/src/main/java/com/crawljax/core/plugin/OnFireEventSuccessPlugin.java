@@ -15,6 +15,6 @@ public interface OnFireEventSuccessPlugin extends Plugin {
 		 * @param pathToFailure
 		 *            the list of eventable lead TO this failed eventable, the eventable excluded.
 		 */
-		void onFireEventSuccessed(Eventable eventable, List<Eventable> pathToFailure, CrawlSession session);
+		void onFireEventSuccessed(Eventable eventable, List<Eventable> pathToSuccess, CrawlSession session);
 
 }
