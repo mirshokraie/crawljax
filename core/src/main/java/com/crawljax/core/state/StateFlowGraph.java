@@ -18,11 +18,15 @@ import org.jgrapht.graph.DirectedMultigraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * The State-Flow Graph is a multi-edge directed graph with states (StateVetex) on the vertices and
  * clickables (Eventable) on the edges.
  */
 public class StateFlowGraph implements Serializable {
+	
+	//Shabnam
+	private ArrayList<StateVertex> notFullExpandedStates = new ArrayList<StateVertex>();
 
 	private static final long serialVersionUID = 923403417983488L;
 
@@ -52,6 +56,8 @@ public class StateFlowGraph implements Serializable {
 	public StateFlowGraph(StateVertex initialState) {
 		this();
 		sfg.addVertex(initialState);
+		//Shabnam
+		notFullExpandedStates.add(initialState);
 	}
 
 	/**
@@ -114,6 +120,9 @@ public class StateFlowGraph implements Serializable {
 				}
 			}
 			stateCounter.set(this.getAllStates().size() - 1);
+			// Shabnam: Add the new state to the list of unexpanded states
+			notFullExpandedStates.add(stateVertix);
+			LOGGER.info("State " + stateVertix + " added to the notFullExpandedStates list!");
 		}
 		return null;
 	}
@@ -401,5 +410,22 @@ public class StateFlowGraph implements Serializable {
 		}
 
 		return "state" + id;
+	}
+	
+	/**
+	 * Shabnam: removing a state from notFullExpandedStates list if all candidate clickables are fired. 
+	 */
+	public void removeFromNotFullExpandedStates(StateVertex s){
+		if (notFullExpandedStates.contains(s)){
+			notFullExpandedStates.remove(s);
+			LOGGER.info("State " + s.getName() + " removed from the notFullExpandedStates list!");
+		}
+		else
+			LOGGER.info("State " + s.getName() + " does not exist in the notFullExpandedStates list!");
+	}
+	
+	//Shabnam
+	public ArrayList<StateVertex> getNotFullExpandedStates(){
+		return notFullExpandedStates;
 	}
 }

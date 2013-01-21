@@ -1,5 +1,6 @@
 package com.crawljax.core;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +32,10 @@ import com.crawljax.util.ElementResolver;
  */
 public class Crawler implements Runnable {
 
+	//Shabnam
+	enum CrawlStrategy {
+		FuncCov;
+	}
 	private static final Logger LOGGER = LoggerFactory.getLogger(Crawler.class.getName());
 
 	private static final int ONE_SECOND = 1000;
@@ -456,7 +461,7 @@ public class Crawler implements Runnable {
 
 		if (orrigionalState.searchForCandidateElements(candidateExtractor, configurationReader
 		        .getTagElements(), configurationReader.getExcludeTagElements(),
-		        configurationReader.getCrawlSpecificationReader().getClickOnce())) {
+		        configurationReader.getCrawlSpecificationReader().getClickOnce(),controller.getSession().getStateFlowGraph())) {
 			// Only execute the preStateCrawlingPlugins when it's the first time
 			LOGGER.info("Starting preStateCrawlingPlugins...");
 			List<CandidateElement> candidateElements =
@@ -491,6 +496,124 @@ public class Crawler implements Runnable {
 		}
 		return true;
 	}
+	
+	//Shabnam
+	private boolean guidedCrawl() throws CrawljaxException {
+		StateVertex orrigionalState = this.getStateMachine().getCurrentState();
+
+		while (true) {
+			//TODO: should check depth...
+			if (depthLimitReached(depth)) {
+				return true;
+			}
+
+			if (!checkConstraints()) {
+				return false;
+			}
+
+			// Store the currentState to be able to 'back-track' later.
+			System.out.println("orrigionalState is " + orrigionalState.getName());
+
+			if (orrigionalState.searchForCandidateElements(candidateExtractor,
+					configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
+					configurationReader.getCrawlSpecificationReader().getClickOnce(),
+					controller.getSession().getStateFlowGraph())) {
+				// Only execute the preStateCrawlingPlugins when it's the first time
+				LOGGER.info("Starting preStateCrawlingPlugins...");
+
+				List<CandidateElement> candidateElements = orrigionalState.getUnprocessedCandidateElements();
+
+				//LOGGER.info("INNER # candidateElements for state " + orrigionalState.getName() + " is " + candidateElements.size());
+
+				CrawljaxPluginsUtil.runPreStateCrawlingPlugins(controller.getSession(),	candidateElements);
+				// update crawlActions
+				orrigionalState.filterCandidateActions(candidateElements);
+
+				// Amin: This is the count of candidates after filtering...
+				CrawljaxController.NumCandidateClickables += orrigionalState.getNumCandidateElements();
+			}else
+				//LOGGER.info("Outer # candidateElements for state " + orrigionalState.getName() + " is ZERO!");
+
+			// check if there were not candidateElements for the current state (i.e., is leaf node)
+			if (orrigionalState.isFullyExpanded())
+				this.controller.getSession().getStateFlowGraph().removeFromNotFullExpandedStates(orrigionalState);
+			else{
+				CandidateCrawlAction action =
+					orrigionalState.pollCandidateCrawlAction(this, crawlQueueManager);
+
+				ClickResult result = this.crawlAction(action);
+
+				orrigionalState.finishedWorking(this, action);
+
+				switch (result) {
+				case newState:
+					System.out.println("backTrackPath for new state " +this.getStateMachine().getCurrentState().getName()+ " is " + backTrackPath);
+					this.getStateMachine().getCurrentState().setCrawlPathToState(controller.getSession().getCurrentCrawlPath());
+
+					System.out.println("newState");
+					break;
+				case cloneDetected:
+					System.out.println("cloneDetected");
+					break;
+				default:
+					System.out.println("noChange");
+					break;
+				}
+			}
+
+			StateVertex currentState = this.getStateMachine().getCurrentState();
+			StateVertex previousState = this.getStateMachine().getPreviousState();
+			StateVertex previousPreviousState = this.getStateMachine().getPreviousPreviousState();
+
+			//LOGGER.info("currentState is " + currentState);
+			//LOGGER.info("previousState is " + previousState);
+			//LOGGER.info("previousPreviousState is " + previousPreviousState);
+
+			StateFlowGraph sfg = controller.getSession().getStateFlowGraph();
+			ArrayList<StateVertex> notFullExpandedStates = sfg.getNotFullExpandedStates();
+
+			// setting the crawl strategy
+			CrawlStrategy strategy = CrawlStrategy.FuncCov;
+
+			// choose next state to crawl based on the strategy
+			StateVertex nextToCrawl = nextStateToCrawl(strategy);
+
+			if (nextToCrawl==null){
+				LOGGER.info("Something is wrong! nextToCrawl is null...");
+				return false;
+			}
+
+			LOGGER.info("Next state to crawl is: " + nextToCrawl.getName());
+
+			switch (strategy){
+				
+				case FuncCov:
+					if (nextToCrawl.equals(currentState)){
+						// do nothing
+						LOGGER.info("same path will be continued...");
+					}else{
+						LOGGER.info("changing original from " + currentState.getName());
+						this.getStateMachine().changeToNewState(nextToCrawl);
+						LOGGER.info(" to " + this.getStateMachine().getCurrentState().getName());
+
+						// Start a new CrawlPath for this Crawler
+						controller.getSession().startNewPath();
+						LOGGER.info("Reloading page for navigating back");
+						this.goToInitialURL();
+						reloadToSate(nextToCrawl); // backtrack
+					}
+					break;
+				default:
+					System.out.println("Nothing!");
+					break;
+			}
+
+			orrigionalState = this.getStateMachine().getCurrentState();
+		}
+	}
+
+	
+	
 
 	/**
 	 * A new state has been found!
@@ -680,6 +803,70 @@ public class Crawler implements Runnable {
 		}
 		/* continue crawling */
 		return true;
+	}
+	
+	
+	/**
+	 * XXX: todo Shabnam
+	 * Find which state to crawl next
+	 */
+	public StateVertex nextStateToCrawl(CrawlStrategy strategy){
+		return null;
+	}
+
+	/**
+	 * Shabnam
+	 * Reload the browser to the given state.
+	 *
+	 * @throws CrawljaxException
+	 *             if the {@link Eventable#getTargetStateVertix()} encounters an error.
+	 */
+	private void reloadToSate(StateVertex s) throws CrawljaxException {
+		/**
+		 * Thread safe
+		 */
+		StateVertex curState = controller.getSession().getInitialState();
+
+		LOGGER.info("reloading to state " + s.getName());
+
+		if (s.equals(curState)){   // no Eventable to execute for the index state
+			LOGGER.info("reloaded to index! no execution needed!!!");
+			return;
+		}
+
+		LOGGER.info("crawlpath to state " + s.getName() + " is  " + s.getCrawlPathToState());
+
+		for (Eventable clickable : s.getCrawlPathToState()) {
+
+			if (!controller.getElementChecker().checkCrawlCondition(getBrowser())) {
+				return;
+			}
+
+			LOGGER.info("Backtracking by executing " + clickable.getEventType() + " on element: "
+			        + clickable);
+
+			this.getStateMachine().changeState(clickable.getTargetStateVertex());
+
+			curState = clickable.getTargetStateVertex();
+
+			controller.getSession().addEventableToCrawlPath(clickable);
+
+			this.handleInputElements(clickable);
+
+			if (this.fireEvent(clickable)) {
+				depth++;
+
+				/**
+				 * Run the onRevisitStateValidator(s)
+				 */
+				CrawljaxPluginsUtil.runOnRevisitStatePlugins(this.controller.getSession(),
+				        curState);
+			}
+
+			if (!controller.getElementChecker().checkCrawlCondition(getBrowser())) {
+				return;
+			}
+		}
 	}
 
 }

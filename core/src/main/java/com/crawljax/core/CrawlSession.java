@@ -15,6 +15,7 @@ import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateFlowGraph;
 import com.crawljax.core.state.StateVertex;
 
+
 /**
  * The data about the crawlsession.
  * 
@@ -257,5 +258,8 @@ public class CrawlSession {
 		crawlPaths.add(path);
 		return path;
 	}
+	
+	
+
 
 }

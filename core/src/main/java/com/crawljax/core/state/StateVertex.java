@@ -38,6 +38,11 @@ import com.crawljax.util.Helper;
  * @version $Id$
  */
 public class StateVertex implements Serializable {
+	
+	//Shabnam: stores number of remaining CandidateElements
+	private int numCandidateElements = 0;
+	//Shabnam: used to store path to this state. Note that crawlPath stores path to the parent (source state) of this state
+	private List<Eventable> crawlPathToState = new ArrayList<Eventable>();
 
 	private static final long serialVersionUID = 123400017983488L;
 
@@ -258,7 +263,7 @@ public class StateVertex implements Serializable {
 	@GuardedBy("candidateActionsSearchLock")
 	public boolean searchForCandidateElements(CandidateElementExtractor candidateExtractor,
 	        List<TagElement> crawlTagElements, List<TagElement> crawlExcludeTagElements,
-	        boolean clickOnce) {
+	        boolean clickOnce, StateFlowGraph sfg) {
 		synchronized (candidateActionsSearchLock) {
 			if (candidateActions == null) {
 				candidateActions = new LinkedBlockingDeque<CandidateCrawlAction>();
@@ -461,5 +466,31 @@ public class StateVertex implements Serializable {
 		registerdCandidateActions.remove(crawler);
 		workInProgressCandidateActions.remove(crawler);
 		registeredCrawlers.remove(crawler);
+	}
+	
+	//Shabnam  
+	public void decreaseCandidateElements(){
+		numCandidateElements--;
+		//System.out.println("numCandidateElements for state " + this.getName() + " is " + numCandidateElements);
+	}
+	//Shabnam checks is the state is fully expanded. should always be used after 
+	public boolean isFullyExpanded(){
+		if (numCandidateElements==0)
+			return true;
+		return false;
+	}
+	//Shabnam
+	public int getNumCandidateElements(){
+		return numCandidateElements;
+	}
+	//Shabnam
+	public List<Eventable> getCrawlPathToState() {
+		return crawlPathToState;
+	}
+	//Shabnam 
+	public void setCrawlPathToState(CrawlPath cp) {
+		for (Eventable e: cp)
+			this.crawlPathToState.add(e);
+		System.out.println("+++++ crawlpath to state " + this.getName() + " is set to " + this.crawlPathToState);
 	}
 }

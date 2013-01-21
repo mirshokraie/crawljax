@@ -31,6 +31,8 @@ import com.google.common.collect.ImmutableList;
  * @version $Id$
  */
 public class CrawljaxController implements CrawlQueueManager {
+	//Shabnam
+	public static int NumCandidateClickables = 0;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrawljaxController.class
 	        .getName());

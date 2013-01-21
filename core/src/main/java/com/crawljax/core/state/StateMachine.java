@@ -22,6 +22,10 @@ import com.crawljax.core.plugin.CrawljaxPluginsUtil;
  * @version $Id$
  */
 public class StateMachine {
+	
+	//Shabnam
+	private StateVertex previousPreviousState;
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(StateMachine.class.getName());
 	/**
 	 * One-to-one relation with the StateFlowGraph, the stateFlowGraph variable is never changed.
@@ -92,6 +96,8 @@ public class StateMachine {
 			LOGGER.debug("Changed To state: " + nextState.getName() + " From: "
 			        + currentState.getName());
 
+			//Shabnam
+			this.previousPreviousState = this.previousState; 
 			this.previousState = this.currentState;
 			currentState = nextState;
 
@@ -155,6 +161,7 @@ public class StateMachine {
 	public void rewind() {
 		this.currentState = this.initialState;
 		this.previousState = null;
+		this.previousPreviousState = null;
 	}
 
 	/**
@@ -213,4 +220,48 @@ public class StateMachine {
 			}
 		}
 	}
+	
+	/**
+	 * Shabnam: This is used in the crawl strategy
+	 * Change the currentState to the nextState if possible. The next state should already be
+	 * present in the graph.
+	 * 
+	 * @param nextState
+	 *            the next state.
+	 * @return true if currentState is successfully changed.
+	 */
+	public boolean changeToNewState(StateVertex nextState) {
+		if (nextState == null) {
+			LOGGER.info("nextState given is null");
+			return false;
+		}
+		LOGGER.debug("AFTER: sm.current: " + currentState.getName() + " hold.current: "
+				+ nextState.getName());
+
+
+		LOGGER.debug("Changed To state: " + nextState.getName() + " From: "
+				+ currentState.getName());
+
+		this.previousPreviousState = this.previousState;
+		this.previousState = this.currentState;
+		currentState = nextState;
+
+		LOGGER.info("StateMachine's Pointer changed to: " + currentState);
+
+		return true;
+	}
+	
+	//Shabnam
+	public StateVertex getPreviousPreviousState() {
+		return previousPreviousState;
+	}
+	/**
+	 * Shabnam: Return the previous State in this state machine.
+	 * 
+	 * @return the current State.
+	 */
+	public StateVertex getPreviousState() {
+		return previousState;
+	}
 }
+
