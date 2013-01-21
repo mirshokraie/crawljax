@@ -1,8 +1,11 @@
 package com.crawljax.examples;
 
+import org.apache.commons.configuration.ConfigurationException;
+
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.condition.UrlCondition;
 import com.crawljax.core.CrawljaxController;
+import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
 import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.crawljax.core.configuration.InputSpecification;
@@ -66,8 +69,10 @@ public final class SiteSimpleExample {
 	/**
 	 * @param args
 	 *            none.
+	 * @throws CrawljaxException 
+	 * @throws ConfigurationException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ConfigurationException, CrawljaxException {
 		CrawljaxController crawljax = new CrawljaxController(getConfig());
 		crawljax.run();
 	}

@@ -1,5 +1,6 @@
 package com.crawljax.executionTracer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -56,7 +57,10 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 					String[] uniqueIds=lines[i].split("::");
 					handlerFunc=lines[i].split("::")[uniqueIds.length-1];
 					for(int j=0;j<uniqueIds.length-1;j++){
-						Eventables.eventableElementsMap.put(handlerFunc,uniqueIds[j]);
+						ArrayList<Object> elementInfo=new ArrayList<Object>();
+						elementInfo.add(uniqueIds[j]);
+						elementInfo.add(eventable);
+						Eventables.eventableElementsMap.put(handlerFunc,elementInfo);
 					}
 					
 					i++;

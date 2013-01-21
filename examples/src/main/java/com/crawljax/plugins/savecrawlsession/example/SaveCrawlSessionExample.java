@@ -1,5 +1,7 @@
 package com.crawljax.plugins.savecrawlsession.example;
 
+import org.apache.commons.configuration.ConfigurationException;
+
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.core.CrawljaxController;
 import com.crawljax.core.CrawljaxException;
@@ -16,8 +18,9 @@ public class SaveCrawlSessionExample {
 	/**
 	 * @param args
 	 *            args are ignored
+	 * @throws ConfigurationException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ConfigurationException {
 
 		CrawlSpecification spec = new CrawlSpecification(Utils.URL);
 		spec.setMaximumStates(5);

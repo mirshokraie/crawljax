@@ -19,14 +19,14 @@ function sendReally() {
 
 function giveUniqueId(element, eventHanlder ) {
 	var idCounterList=new Array();
-	for(var i=0;i<element.get().length;i++){
-		 if($(element.get(i)).prop("id")==""){
-		  $(element.get(i)).prop("id","assignedId"+"_"+idCounter);
+	for(var i=0;i<$(element).get().length;i++){
+		 if($($(element).get(i)).prop("id")==""){
+		  $($(element).get(i)).prop("id","assignedId"+"_"+idCounter);
 		  idCounterList.push("assignedId"+"_"+idCounter);
 		  idCounter++;
 		 }
 		 else{
-			 idCounterList.push($(element.get(i)).prop("id"));
+			 idCounterList.push($($(element).get(i)).prop("id"));
 		 }
 	}
 	 return  new Array(idCounterList, eventHandler);
