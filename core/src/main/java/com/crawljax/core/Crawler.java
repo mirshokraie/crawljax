@@ -529,7 +529,7 @@ public class Crawler implements Runnable {
 				// update crawlActions
 				orrigionalState.filterCandidateActions(candidateElements);
 
-				// Amin: This is the count of candidates after filtering...
+				// Shabnam: This is the count of candidates after filtering...
 				CrawljaxController.NumCandidateClickables += orrigionalState.getNumCandidateElements();
 			}else
 				//LOGGER.info("Outer # candidateElements for state " + orrigionalState.getName() + " is ZERO!");
