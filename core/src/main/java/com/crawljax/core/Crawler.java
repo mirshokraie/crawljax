@@ -34,8 +34,10 @@ public class Crawler implements Runnable {
 
 	//Shabnam
 	enum CrawlStrategy {
-		FuncCov;
+		FuncCov, DFS
 	}
+	//Shabnam
+	private boolean strategicCrawl = true;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Crawler.class.getName());
 
 	private static final int ONE_SECOND = 1000;
@@ -470,8 +472,14 @@ public class Crawler implements Runnable {
 			        candidateElements);
 			// update crawlActions
 			orrigionalState.filterCandidateActions(candidateElements);
+			// Shabnam: This is the count of candidates after filtering...
+			CrawljaxController.NumCandidateClickables += orrigionalState.getNumCandidateElements();
 		}
-
+		else
+			
+		// Shabnam: check if there were not candidateElements for the current state (i.e., is leaf node)
+			if (orrigionalState.isFullyExpanded())
+				this.controller.getSession().getStateFlowGraph().removeFromNotFullExpandedStates(orrigionalState);
 		CandidateCrawlAction action =
 		        orrigionalState.pollCandidateCrawlAction(this, crawlQueueManager);
 		while (action != null) {
@@ -586,6 +594,19 @@ public class Crawler implements Runnable {
 			LOGGER.info("Next state to crawl is: " + nextToCrawl.getName());
 
 			switch (strategy){
+			case DFS:
+				if (!notFullExpandedStates.contains(currentState)){  // if the new state is fully expanded
+					LOGGER.info("changing original from " + currentState.getName());
+					this.getStateMachine().changeToNewState(nextToCrawl);
+					LOGGER.info(" to " + this.getStateMachine().getCurrentState().getName());
+
+					// Start a new CrawlPath for this Crawler
+					controller.getSession().startNewPath();
+					LOGGER.info("Reloading page for navigating back");
+					this.goToInitialURL();
+					reloadToSate(nextToCrawl); // backtrack
+				}
+				break;
 				
 				case FuncCov:
 					if (nextToCrawl.equals(currentState)){
@@ -728,9 +749,17 @@ public class Crawler implements Runnable {
 			/**
 			 * Hand over the main crawling
 			 */
-			if (!this.crawl()) {
-				controller.terminate(false);
+			// Shabnam: set strategicCrawl to true for enabling strategies for crawling
+			//strategicCrawl = true;
+			if (strategicCrawl){
+				if (!this.guidedCrawl()) {
+					controller.terminate(false);
+				}
 			}
+			else 
+				if (!this.crawl()) {
+					controller.terminate(false);
+				}
 
 			/**
 			 * Crawling is done; so the crawlPath of the current branch is known
