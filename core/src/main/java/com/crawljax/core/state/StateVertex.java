@@ -263,7 +263,7 @@ public class StateVertex implements Serializable {
 	@GuardedBy("candidateActionsSearchLock")
 	public boolean searchForCandidateElements(CandidateElementExtractor candidateExtractor,
 	        List<TagElement> crawlTagElements, List<TagElement> crawlExcludeTagElements,
-	        boolean clickOnce, StateFlowGraph sfg) {
+	        boolean clickOnce, StateFlowGraph sfg, boolean isEfficientCrawling) {
 		synchronized (candidateActionsSearchLock) {
 			if (candidateActions == null) {
 				candidateActions = new LinkedBlockingDeque<CandidateCrawlAction>();
@@ -279,23 +279,31 @@ public class StateVertex implements Serializable {
 			List<CandidateElement> candidateList =
 			        candidateExtractor.extract(crawlTagElements, crawlExcludeTagElements,
 			                clickOnce, this);
-
-			for (CandidateElement candidateElement : candidateList) {
-				for (String eventType : eventTypes) {
-					if (eventType.equals(EventType.click.toString())) {
-						candidateActions.add(new CandidateCrawlAction(candidateElement,
-						        EventType.click));
-					} else {
-						if (eventType.equals(EventType.hover.toString())) {
+			//Shabnam 
+			numCandidateElements = candidateList.size();
+			if (isEfficientCrawling){
+				//XXX todo Shabnam: perform sorting on candidate elements
+				
+			}
+			else{
+				for (CandidateElement candidateElement : candidateList) {
+					for (String eventType : eventTypes) {
+						if (eventType.equals(EventType.click.toString())) {
 							candidateActions.add(new CandidateCrawlAction(candidateElement,
-							        EventType.hover));
+									EventType.click));
 						} else {
-							LOGGER.warn("The Event Type: " + eventType + " is not supported.");
+							if (eventType.equals(EventType.hover.toString())) {
+								candidateActions.add(new CandidateCrawlAction(candidateElement,
+										EventType.hover));
+							} else {
+								LOGGER.warn("The Event Type: " + eventType + " is not supported.");
+							}
 						}
 					}
 				}
-			}
-		} catch (CrawljaxException e) {
+			} 
+		}
+		catch (CrawljaxException e) {
 			LOGGER.error(
 			        "Catched exception while searching for candidates in state " + getName(), e);
 		}
@@ -339,6 +347,8 @@ public class StateVertex implements Serializable {
 			currentAction = iter.next();
 			if (!candidateElements.contains(currentAction.getCandidateElement())) {
 				iter.remove();
+				//Shabnam
+				numCandidateElements--;
 				LOGGER.info("filtered candidate action: " + currentAction.getEventType().name()
 				        + " on " + currentAction.getCandidateElement().getGeneralString());
 

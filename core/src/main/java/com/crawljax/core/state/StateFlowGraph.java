@@ -27,6 +27,8 @@ public class StateFlowGraph implements Serializable {
 	
 	//Shabnam
 	private ArrayList<StateVertex> notFullExpandedStates = new ArrayList<StateVertex>();
+	//Shabnam
+	private boolean efficientCrawling = true;
 
 	private static final long serialVersionUID = 923403417983488L;
 
@@ -427,5 +429,26 @@ public class StateFlowGraph implements Serializable {
 	//Shabnam
 	public ArrayList<StateVertex> getNotFullExpandedStates(){
 		return notFullExpandedStates;
+	}
+	
+	/**
+	 * Shabnam: Calculates the number of unprocessed candidate elements for all states in the graph
+	 * 
+	 * 
+	 * @return the count of unprocessed candidate elements in the StateFlowGraph states
+	 */
+	public int getNumUnprocessedCandidateElements() {
+		Set<StateVertex> states = getAllStates();
+		int count = 0;
+		
+		for (StateVertex st : states) {
+			count += st.getUnprocessedCandidateElements().size();
+		}
+		return count;
+	}
+	
+	//shabnam
+	public void setEfficientCrawling(boolean efficientCrawling) { 
+		this.efficientCrawling = efficientCrawling;
 	}
 }

@@ -56,7 +56,7 @@ public final class CrawljaxConfiguration {
 	/**
 	 * @return The crawlSpecification which contains all the crawl settings.
 	 */
-	protected CrawlSpecification getCrawlSpecification() {
+	public CrawlSpecification getCrawlSpecification() {
 		return crawlSpecification;
 	}
 

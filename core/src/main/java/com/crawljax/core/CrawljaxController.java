@@ -33,6 +33,8 @@ import com.google.common.collect.ImmutableList;
 public class CrawljaxController implements CrawlQueueManager {
 	//Shabnam
 	public static int NumCandidateClickables = 0;
+	//Shabnam
+	private boolean efficientCrawling = true;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrawljaxController.class
 	        .getName());
@@ -73,6 +75,8 @@ public class CrawljaxController implements CrawlQueueManager {
 		configurationReader = new CrawljaxConfigurationReader(config);
 		CrawlSpecificationReader crawlerReader =
 		        configurationReader.getCrawlSpecificationReader();
+		//Shabnam
+		this.efficientCrawling = config.getCrawlSpecification().isEfficientCrawling();
 
 		stateComparator = new StateComparator(crawlerReader.getOracleComparators());
 		invariantList = crawlerReader.getInvariants();
@@ -383,4 +387,8 @@ public class CrawljaxController implements CrawlQueueManager {
 		this.workQueue.waitForTermination();
 	}
 
+	//Shabnam
+	public boolean isEfficientCrawling() {
+		return efficientCrawling;
+	}
 }

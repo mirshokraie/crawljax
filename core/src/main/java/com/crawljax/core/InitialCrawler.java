@@ -88,6 +88,8 @@ public class InitialCrawler extends Crawler {
 		                controller.getStartCrawl(), controller.getConfigurationReader());
 		controller.setSession(session);
 
+		//Shabnam
+		stateFlowGraph.setEfficientCrawling(controller.isEfficientCrawling());
 		/**
 		 * Run OnNewState Plugins for the index state.
 		 */

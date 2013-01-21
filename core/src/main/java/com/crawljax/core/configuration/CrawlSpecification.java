@@ -46,6 +46,8 @@ import com.crawljax.oraclecomparator.OracleComparator;
  * @version $Id$
  */
 public class CrawlSpecification {
+	//Shabnam
+	private boolean efficientCrawling = true;
 
 	private static final int DEFAULT_MAXIMUMRUNTIME = 3600;
 	private static final int DEFAULT_WAITTIMEAFTERRELOADURL = 500;
@@ -490,5 +492,15 @@ public class CrawlSpecification {
 	 */
 	protected boolean isCrawlFrames() {
 		return !disableCrawlFrames;
+	}
+	
+	//Shabnam
+	public boolean isEfficientCrawling() {
+		return efficientCrawling;
+	}
+	//Shabnam
+	public void setEfficientCrawling(boolean efficientCrawling) {
+		this.efficientCrawling = efficientCrawling;
+		
 	}
 }

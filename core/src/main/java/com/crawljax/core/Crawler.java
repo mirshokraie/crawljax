@@ -463,7 +463,7 @@ public class Crawler implements Runnable {
 
 		if (orrigionalState.searchForCandidateElements(candidateExtractor, configurationReader
 		        .getTagElements(), configurationReader.getExcludeTagElements(),
-		        configurationReader.getCrawlSpecificationReader().getClickOnce(),controller.getSession().getStateFlowGraph())) {
+		        configurationReader.getCrawlSpecificationReader().getClickOnce(),controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling())) {
 			// Only execute the preStateCrawlingPlugins when it's the first time
 			LOGGER.info("Starting preStateCrawlingPlugins...");
 			List<CandidateElement> candidateElements =
@@ -525,7 +525,7 @@ public class Crawler implements Runnable {
 			if (orrigionalState.searchForCandidateElements(candidateExtractor,
 					configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
 					configurationReader.getCrawlSpecificationReader().getClickOnce(),
-					controller.getSession().getStateFlowGraph())) {
+					controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling())) {
 				// Only execute the preStateCrawlingPlugins when it's the first time
 				LOGGER.info("Starting preStateCrawlingPlugins...");
 
