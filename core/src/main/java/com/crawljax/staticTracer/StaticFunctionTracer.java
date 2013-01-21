@@ -166,7 +166,7 @@ public class StaticFunctionTracer implements NodeVisitor {
 							if(!getFunctionName(callerFunc).equals("NoFunctionNode")){
 								
 								Vertex caller=new Vertex(getFunctionName(callerFunc));
-								Vertex callee=new Vertex(node.toSource());
+								Vertex callee=new Vertex(node.toSource()+"_functionAttachedToEventable");
 								Edge edge=new Edge(caller,caller);
 								StaticCallGraph.staticCallGraph.addEdge(edge, caller, callee);
 								/*	AstNode newNode=createFunctionTypeNameTrackingNode(callerFunc, (Name) node);
@@ -188,7 +188,7 @@ public class StaticFunctionTracer implements NodeVisitor {
 								if(!getFunctionName(callerFunc).equals("NoFunctionNode")){
 									
 									Vertex caller=new Vertex(getFunctionName(callerFunc));
-									Vertex callee=new Vertex(getFunctionName((FunctionNode)node));
+									Vertex callee=new Vertex(getFunctionName((FunctionNode)node)+"_functionAttachedToEventable");
 									Edge edge=new Edge(caller,caller);
 									StaticCallGraph.staticCallGraph.addEdge(edge, caller, callee);
 									/*	AstNode newNode=createFunctionTypeNameTrackingNode(callerFunc,node);
