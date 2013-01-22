@@ -2,6 +2,7 @@ package com.crawljax.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +22,7 @@ import com.crawljax.core.state.Identification;
 import com.crawljax.core.state.StateFlowGraph;
 import com.crawljax.core.state.StateMachine;
 import com.crawljax.core.state.StateVertex;
+import com.crawljax.core.state.StateVertix;
 import com.crawljax.forms.FormHandler;
 import com.crawljax.forms.FormInput;
 import com.crawljax.util.ElementResolver;
@@ -836,11 +838,45 @@ public class Crawler implements Runnable {
 	
 	
 	/**
-	 * XXX: todo Shabnam
+	 * TODO Shabnam
 	 * Find which state to crawl next
 	 */
 	public StateVertex nextStateToCrawl(CrawlStrategy strategy){
-		return null;
+		int index = 0;
+		StateFlowGraph sfg = controller.getSession().getStateFlowGraph();
+		ArrayList<StateVertex> notFullExpandedStates = sfg.getNotFullExpandedStates();
+
+		switch (strategy){
+		case DFS:
+			// continue with the last-in state
+			if (notFullExpandedStates.size()>0)
+				index = notFullExpandedStates.size()-1;
+			break;
+		case FuncCov:
+			if (notFullExpandedStates.size()>0){
+
+				index = nextForFunctionCovCrawling();
+			}
+			break;
+		default:
+			break;
+		}
+
+		if (index==-1)
+			return null;
+
+		if (notFullExpandedStates.size()==0)
+			return null;
+
+		LOGGER.info("Satet " + notFullExpandedStates.get(index) + " selected as the nextStateToCrawl");
+
+		return notFullExpandedStates.get(index);
+	}
+
+	//TODO Shabnam
+	private int nextForFunctionCovCrawling() {
+
+		return 0;
 	}
 
 	/**

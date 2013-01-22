@@ -44,6 +44,8 @@ public class StateVertex implements Serializable {
 	//Shabnam: used to store path to this state. Note that crawlPath stores path to the parent (source state) of this state
 	private List<Eventable> crawlPathToState = new ArrayList<Eventable>();
 
+	//Shabnam
+	private List<CandidateElement> candidateElemList;
 	private static final long serialVersionUID = 123400017983488L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StateVertex.class);
@@ -281,8 +283,9 @@ public class StateVertex implements Serializable {
 			                clickOnce, this);
 			//Shabnam 
 			numCandidateElements = candidateList.size();
+			candidateElemList=candidateList;
 			if (isEfficientCrawling){
-				//XXX todo Shabnam: perform sorting on candidate elements
+				//TODO Shabnam: perform sorting on candidate elements
 				
 			}
 			else{
@@ -502,5 +505,9 @@ public class StateVertex implements Serializable {
 		for (Eventable e: cp)
 			this.crawlPathToState.add(e);
 		System.out.println("+++++ crawlpath to state " + this.getName() + " is set to " + this.crawlPathToState);
+	}
+	//Shabnam
+	public List<CandidateElement> getCandidateElemList(){
+		return candidateElemList;
 	}
 }

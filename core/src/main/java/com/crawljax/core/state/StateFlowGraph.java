@@ -3,7 +3,9 @@ package com.crawljax.core.state;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,7 +31,13 @@ public class StateFlowGraph implements Serializable {
 	private ArrayList<StateVertex> notFullExpandedStates = new ArrayList<StateVertex>();
 	//Shabnam
 	private boolean efficientCrawling = true;
+	//Shabnam
+	private Map<String,Integer> statesFunctionCoverageIncrease = new Hashtable<String,Integer>();
 
+	//Shabnam
+	private int latestFunctionCoverageIncrease = 0;
+	//Shabnam
+	private int latestFunctionCoverage = 0;
 	private static final long serialVersionUID = 923403417983488L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StateFlowGraph.class.getName());
@@ -450,5 +458,44 @@ public class StateFlowGraph implements Serializable {
 	//shabnam
 	public void setEfficientCrawling(boolean efficientCrawling) { 
 		this.efficientCrawling = efficientCrawling;
+	}
+	
+	/**
+	 * Shabnam
+	 * Setting function coverage for a state using the latest function coverage
+	 */
+	private void setFunctionCoverageIncrease(StateVertex stateVertex) {
+		synchronized(statesFunctionCoverageIncrease){
+				LOGGER.info("Function coverage for state " + stateVertex.getName() + " is " + latestFunctionCoverageIncrease);
+				statesFunctionCoverageIncrease.put(stateVertex.toString(), latestFunctionCoverageIncrease);
+		}
+	}
+	
+	//Shabnam
+
+	public void setLatestCoverage(int newFunctionCoverage){
+		latestFunctionCoverageIncrease = newFunctionCoverage-latestFunctionCoverage;
+		latestFunctionCoverage = newFunctionCoverage;
+	}	
+
+	//Shabnam
+	public void setInitialCoverage(StateVertex initState, int newFunctionCoverage){
+		latestFunctionCoverageIncrease = newFunctionCoverage-latestFunctionCoverage;
+		latestFunctionCoverage = newFunctionCoverage;
+		setFunctionCoverageIncrease(initState);
+	}
+	//Shabnam
+	public int getFunctionCoverageIncrease(StateVertex stateVertex) {
+		int funcCov = 0;
+
+		synchronized(statesFunctionCoverageIncrease){
+			try{
+				funcCov = statesFunctionCoverageIncrease.get(stateVertex.toString());	
+				LOGGER.info("**** Function Coverage Increase for state " + stateVertex.getName() + " is " + funcCov);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return funcCov;
 	}
 }
