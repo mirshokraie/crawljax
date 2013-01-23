@@ -849,7 +849,7 @@ public class Crawler implements Runnable {
 	
 	
 	/**
-	 * TODO Shabnam
+	 * Shabnam
 	 * Find which state to crawl next
 	 */
 	public StateVertex nextStateToCrawl(CrawlStrategy strategy){
@@ -884,10 +884,27 @@ public class Crawler implements Runnable {
 		return notFullExpandedStates.get(index);
 	}
 
-	//TODO Shabnam
+	//Shabnam selecting next state for crawling
 	private int nextForFunctionCovCrawling() {
 
-		return 0;
+		StateFlowGraph sfg = controller.getSession().getStateFlowGraph();
+		ArrayList<StateVertex> notFullExpandedStates = sfg.getNotFullExpandedStates();
+		int stateIndex = 0;
+		int stateNewPotentialFuncs=0;
+		int maxPotentialFuncs=0;
+		if (notFullExpandedStates.size()==0)
+			return -1;
+		for (int i=0; i < notFullExpandedStates.size(); i++){
+			stateNewPotentialFuncs=sfg.getStatesNewPotentialFuncs(notFullExpandedStates.get(i));
+			if(stateNewPotentialFuncs>=maxPotentialFuncs){
+				maxPotentialFuncs=stateNewPotentialFuncs;
+				stateIndex=i;
+			}
+		}
+		LOGGER.info("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
+				+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
+
+		return stateIndex;
 	}
 
 	/**

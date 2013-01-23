@@ -620,6 +620,7 @@ public class StateFlowGraph implements Serializable {
 			statesNewPotentialFuncs.put(stateVertex, newList);
 		}
 	}
+	
 		
 	
 }
