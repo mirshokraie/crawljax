@@ -22,7 +22,6 @@ import com.crawljax.core.state.Identification;
 import com.crawljax.core.state.StateFlowGraph;
 import com.crawljax.core.state.StateMachine;
 import com.crawljax.core.state.StateVertex;
-import com.crawljax.core.state.StateVertix;
 import com.crawljax.forms.FormHandler;
 import com.crawljax.forms.FormInput;
 import com.crawljax.util.ElementResolver;

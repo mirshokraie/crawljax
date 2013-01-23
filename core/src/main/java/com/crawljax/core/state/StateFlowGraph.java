@@ -48,7 +48,7 @@ public class StateFlowGraph implements Serializable {
 	private TreeMap<String,HashSet<String>> statesNewPotentialFuncs = new TreeMap<String,HashSet<String>>();
 
 	//Shabnam
-	private ArrayList<String> ExecutedFunctions = new ArrayList<String>();
+	private Set<String> ExecutedFunctions = new HashSet<String>();
 	
 	private static final long serialVersionUID = 923403417983488L;
 
@@ -476,7 +476,7 @@ public class StateFlowGraph implements Serializable {
 	
 	//Shabnam
 
-	public void updateExecutedFunctions(ArrayList<String> executedFuncs){
+	public void updateExecutedFunctions(HashSet<String> executedFuncs){
 
 		ExecutedFunctions = executedFuncs;
 	}	
@@ -540,6 +540,7 @@ public class StateFlowGraph implements Serializable {
 					newList.add(elemInfo);
 					statesPotentialFuncs.put(state, newList);
 				}
+				updateStatesNewPotentialFuncs(state, funcName);
 				
 			}
 		}
@@ -610,16 +611,15 @@ public class StateFlowGraph implements Serializable {
 	//Shabnam
 	private void updateStatesNewPotentialFuncs(String stateVertex, String funcName){
 	
-		if(ExecutedFunctions.indexOf(funcName)==-1){
-			if(statesNewPotentialFuncs.get(stateVertex)!=null){
-				statesNewPotentialFuncs.get(stateVertex).add(funcName);
-			}
-			else{
-				HashSet<String> newList=new HashSet<String>();
-				newList.add(funcName);
-				statesNewPotentialFuncs.put(stateVertex, newList);
-			}
+		if(statesNewPotentialFuncs.get(stateVertex)!=null){
+			statesNewPotentialFuncs.get(stateVertex).add(funcName);
 		}
-		
+		else{
+			HashSet<String> newList=new HashSet<String>();
+			newList.add(funcName);
+			statesNewPotentialFuncs.put(stateVertex, newList);
+		}
 	}
+		
+	
 }
