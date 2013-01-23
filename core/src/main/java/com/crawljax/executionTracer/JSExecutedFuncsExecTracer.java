@@ -26,7 +26,7 @@ import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateMachine;
 import com.crawljax.globals.ExecutedFunctions;
 import com.crawljax.util.Helper;
-
+@Deprecated
 public class JSExecutedFuncsExecTracer extends ExecutionTracer 
 	
 	//implements PreStateCrawlingPlugin, /*OnNewStatePlugin,*/ PostCrawlingPlugin, PreCrawlingPlugin, GeneratesOutput {
@@ -56,7 +56,7 @@ public class JSExecutedFuncsExecTracer extends ExecutionTracer
 				session.getBrowser().executeJavaScript("sendReally();");
 				Thread.sleep(ONE_SEC);
 
-				FuncCallTrace trace = new FuncCallTrace();
+				ExecutedFunctionsTrace trace = new ExecutedFunctionsTrace();
 				String input=trace.parse(points);
 				String[] lines=input.split("\n");
 				String functionName="";

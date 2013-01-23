@@ -43,7 +43,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 			Thread.sleep(ONE_SEC);
 
 			
-			FuncCallTrace trace = new FuncCallTrace();
+			EventHandlerTrace trace = new EventHandlerTrace();
 			String input=trace.parse(points);
 			String[] lines=input.split("\n");
 			String functionName="";
@@ -55,25 +55,32 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 				scopeName=lines[i].split("::")[0];
 				i++;
 				while (!lines[i].equals("================================================")){
-													
-					String[] uniqueIds=lines[i].split("::");
-					handlerFunc=lines[i].split("::")[uniqueIds.length-1];
-					for(int j=0;j<uniqueIds.length-1;j++){
-						ArrayList<Object> elementInfo=new ArrayList<Object>();
-						elementInfo.add(uniqueIds[j]);
-						elementInfo.add(stateMachine.getCurrentState().toString());
-						elementInfo.add(eventable);
-						if(Eventables.eventableElementsMap.get(handlerFunc)!=null){
+									
+					if(lines[i].split("::")[0].equals("Eventable")){
+						String[] uniqueIds=lines[i].split("::");
+						handlerFunc=lines[i].split("::")[uniqueIds.length-1];
+						for(int j=1;j<uniqueIds.length-1;j++){
+							ArrayList<Object> elementInfo=new ArrayList<Object>();
+							elementInfo.add(uniqueIds[j]);
+							elementInfo.add(stateMachine.getCurrentState().toString());
+							elementInfo.add(eventable);
+							if(Eventables.eventableElementsMap.get(handlerFunc)!=null){
 							
-							Eventables.eventableElementsMap.get(handlerFunc).add(elementInfo);
+								Eventables.eventableElementsMap.get(handlerFunc).add(elementInfo);
 				
-						}
-						else{
-							ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
-							newList.add(elementInfo);
-							Eventables.eventableElementsMap.put(handlerFunc,newList);
+							}
+							else{
+								ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
+								newList.add(elementInfo);
+								Eventables.eventableElementsMap.put(handlerFunc,newList);
+							}
 						}
 					}
+					else 
+						if(lines[i].split("::")[0].equals("FunctionExecuted")){
+							functionName=lines[i].split("::")[1];
+							ExecutedFunctions.executedFuncList.add(functionName);
+						}
 					
 					i++;
 						

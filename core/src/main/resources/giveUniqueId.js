@@ -16,6 +16,11 @@ function sendReally() {
 }
 
 
+function addFunctionNodeTrack(functionName, functionInfo) {
+	
+	return new Array("addFunctionNodeTrack",functionName, functionInfo);
+				
+}
 
 function giveUniqueId(element, eventHanlder ) {
 	var idCounterList=new Array();
@@ -29,5 +34,5 @@ function giveUniqueId(element, eventHanlder ) {
 			 idCounterList.push($($(element).get(i)).prop("id"));
 		 }
 	}
-	 return  new Array(idCounterList, eventHandler);
+	 return  new Array("giveUniqueId",idCounterList, eventHandler);
 };

@@ -15,6 +15,8 @@ import org.owasp.webscarab.plugin.proxy.ProxyPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.crawljax.executionTracer.JSEventHandlerExecTracer;
 import com.crawljax.executionTracer.JSExecutedFuncsExecTracer;
 import com.crawljax.staticTracer.StaticFunctionTracer;
 import com.crawljax.util.Helper;
@@ -193,10 +195,7 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 					ast.visit(modifier);
 				}
 				
-				if(modifier.shouldTrackExecutedFunctions){
-					modifier.shouldTrackFunctionNodes=false;
-					ast.visit(modifier);
-				}
+				
 				
 
 				modifier.finish(ast);
@@ -230,15 +229,15 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 	private Response createResponse(Response response, Request request) {
 		String type = response.getHeader("Content-Type");
 
-		if (request.getURL().toString().contains("?thisisafuncnodeexectracingcall")) {
+	/*	if (request.getURL().toString().contains("?thisisafuncnodeexectracingcall")) {
 			LOGGER.info("Execution trace request " + request.getURL().toString());
 			JSExecutedFuncsExecTracer.addPoint(new String(request.getContent()));
 			return response;
 		}
-		if (request.getURL().toString().contains("?thisisaclickabletracingcall")){
+	*/	if (request.getURL().toString().contains("?thisisaclickabletracingcall")){
 			
 			LOGGER.info("Execution trace request " + request.getURL().toString());
-			JSExecutedFuncsExecTracer.addPoint(new String(request.getContent()));
+			JSEventHandlerExecTracer.addPoint(new String(request.getContent()));
 			return response;
 		}
 		

@@ -6,7 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.crawljax.core.CrawljaxException;
-
+@Deprecated
 public class ExecutedFunctionsTrace extends Trace {
 	
 	private ArrayList<ExecutedFunctionsProgramPoint> programPoints;

@@ -1,3 +1,4 @@
+
 package com.crawljax.executionTracer;
 
 import java.io.File;
@@ -10,7 +11,7 @@ import org.mozilla.javascript.ast.Name;
 
 import com.crawljax.astmodifier.JSASTModifier;
 import com.crawljax.util.Helper;
-
+@Deprecated
 public class AstExecutedFunctionsInstrumenter extends JSASTModifier{
 
 	public static final String JSINSTRUMENTLOGNAME = "window.jsExecFuncsTrace";
@@ -22,7 +23,7 @@ public class AstExecutedFunctionsInstrumenter extends JSASTModifier{
 	 * Construct without patterns.
 	 */
 	public AstExecutedFunctionsInstrumenter() {
-		super(false,false,true);
+		super(true);
 	
 	}
 	

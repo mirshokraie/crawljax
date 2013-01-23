@@ -25,7 +25,7 @@ public class AstFunctionCallInstrumenter extends JSASTModifier {
 	 * Construct without patterns.
 	 */
 	public AstFunctionCallInstrumenter() {
-		super(true,false,false);
+		super(false);
 	
 	}
 	

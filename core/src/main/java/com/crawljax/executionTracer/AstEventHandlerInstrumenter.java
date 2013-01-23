@@ -25,7 +25,7 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 	 * Construct without patterns.
 	 */
 	public AstEventHandlerInstrumenter() {
-		super(false,true,false);
+		super(true);
 	
 	}
 	
@@ -96,20 +96,24 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 	@Override
 	protected AstNode createExecutedFunctionTrackingNode(
 			FunctionNode functionNode) {
-		// TODO Auto-generated method stub
-		return null;
+		String functionName=getFunctionName(functionNode);
+	
+		
+		functionName = Helper.removeNewLines(functionName);
+		/* escape quotes */
+		functionName = functionName.replaceAll("\\\"", "\\\\\"");
+		functionName = functionName.replaceAll("\\\'", "\\\\\'");
+		int lineNo=functionNode.getLineno();
+		String code=
+			"send(new Array('" + getScopeName() + "::" + functionName + "', '" + lineNo +  
+            "', new Array(";
+		
+		code += "addFunctionNodeTrack('" + functionName + "'" + ", " + "'" + 
+		"NoMoreInfoYet" + "'"+"))));";
+	//	System.out.println(code);
+		return parse(code);
+	
 	}
-
-
-
-
-
-
-
-	
-
-	
-	
 	
 
 }

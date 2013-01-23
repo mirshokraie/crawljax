@@ -67,9 +67,8 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		 * shouldTrackFunctionCalls==false means that we are logging clicking events
 		 */
 		
-		public boolean shouldTrackFunctionCalls;
+	
 		public boolean shouldTrackClickables;
-		public boolean shouldTrackExecutedFunctions;
 		public boolean shouldTrackFunctionNodes=true;
 		
 
@@ -77,11 +76,10 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		/**
 		 * constructor without specifying functions that should be visited
 		 */
-		protected JSASTModifier(boolean shouldTrackFunctionCalls, boolean shouldTrackClickables,
-				boolean shouldTrackExecutedFunctions){
-			this.shouldTrackFunctionCalls=shouldTrackFunctionCalls;
+		protected JSASTModifier(boolean shouldTrackClickables){
+		
 			this.shouldTrackClickables=shouldTrackClickables;
-			this.shouldTrackExecutedFunctions=shouldTrackExecutedFunctions;
+			
 			
 			events.add("click");
 			events.add("bind-2-click");
@@ -247,13 +245,9 @@ public abstract class JSASTModifier implements NodeVisitor  {
 						functionNodes.add(getFunctionName((FunctionNode)node));
 					}
 				}
-				else if(shouldTrackExecutedFunctions){
-					if (node instanceof FunctionNode && functionNodes.contains(getFunctionName((FunctionNode) node))){
-						AstNode newNode=createExecutedFunctionTrackingNode((FunctionNode)node);
-						((FunctionNode)node).getBody().addChildToFront(newNode);
-					}
-				}
-				else if(shouldTrackFunctionCalls){
+				
+				
+/*				if(shouldTrackFunctionCalls){
 					
 					if (node instanceof FunctionCall
 							&& !(((FunctionCall) node).getTarget() instanceof PropertyGet)
@@ -302,9 +296,15 @@ public abstract class JSASTModifier implements NodeVisitor  {
 				
 				    				
 				}
+	*/			
 				
-				/* logging clickables such as .click, ... */
 				else if(shouldTrackClickables){
+					// should track ExecutedFunctions
+					if (node instanceof FunctionNode && functionNodes.contains(getFunctionName((FunctionNode) node))){
+						AstNode newNode=createExecutedFunctionTrackingNode((FunctionNode)node);
+						((FunctionNode)node).getBody().addChildToFront(newNode);
+					}
+					// should track clickables such as .click, ... */
 					if (node instanceof Name) {
 
 					

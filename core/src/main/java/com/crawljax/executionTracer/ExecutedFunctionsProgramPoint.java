@@ -1,10 +1,12 @@
 package com.crawljax.executionTracer;
 
 import org.json.JSONArray;
+
 import org.json.JSONException;
 
 import com.crawljax.core.CrawljaxException;
 
+@Deprecated
 public class ExecutedFunctionsProgramPoint extends ProgramPoint {
 
 
