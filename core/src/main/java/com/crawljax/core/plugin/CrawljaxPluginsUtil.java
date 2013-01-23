@@ -270,12 +270,13 @@ public final class CrawljaxPluginsUtil {
 	 * @author: shabnam
 	 */
 	
-	public static void runOnFireEventSuccessPlugins(Eventable eventable, List<Eventable> path, CrawlSession session) {
+	public static void runOnFireEventSuccessPlugins(Eventable eventable, List<Eventable> path, CrawlSession session,
+			StateMachine stateMachine) {
 		LOGGER.info("Running OnFireEventFailedPlugins...");
 		for (Plugin plugin : CrawljaxPluginsUtil.PLUGINS) {
 			if (plugin instanceof OnFireEventSuccessPlugin) {
 				LOGGER.info("Calling plugin " + plugin.getClass().getName());
-				((OnFireEventSuccessPlugin) plugin).onFireEventSuccessed(eventable, path, session);
+				((OnFireEventSuccessPlugin) plugin).onFireEventSuccessed(eventable, path, session,stateMachine);
 			}
 		}
 	}

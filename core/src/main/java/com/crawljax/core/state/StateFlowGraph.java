@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.jcip.annotations.GuardedBy;
@@ -20,6 +22,8 @@ import org.jgrapht.graph.DirectedMultigraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.crawljax.core.CandidateElement;
+
 
 /**
  * The State-Flow Graph is a multi-edge directed graph with states (StateVetex) on the vertices and
@@ -32,12 +36,13 @@ public class StateFlowGraph implements Serializable {
 	//Shabnam
 	private boolean efficientCrawling = true;
 	//Shabnam
-	private Map<String,Integer> statesFunctionCoverageIncrease = new Hashtable<String,Integer>();
+	private Map<String,ArrayList<String>> statesPotentialFuncs = new Hashtable<String,ArrayList<String>>();
 
 	//Shabnam
-	private int latestFunctionCoverageIncrease = 0;
+	private Map<String,Integer> statesNewPotentialFuncs = new Hashtable<String,Integer>();
+
 	//Shabnam
-	private int latestFunctionCoverage = 0;
+	private ArrayList<String> ExecutedFunctions = new ArrayList<String>();
 	private static final long serialVersionUID = 923403417983488L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StateFlowGraph.class.getName());
@@ -460,42 +465,61 @@ public class StateFlowGraph implements Serializable {
 		this.efficientCrawling = efficientCrawling;
 	}
 	
-	/**
-	 * Shabnam
-	 * Setting function coverage for a state using the latest function coverage
-	 */
-	private void setFunctionCoverageIncrease(StateVertex stateVertex) {
-		synchronized(statesFunctionCoverageIncrease){
-				LOGGER.info("Function coverage for state " + stateVertex.getName() + " is " + latestFunctionCoverageIncrease);
-				statesFunctionCoverageIncrease.put(stateVertex.toString(), latestFunctionCoverageIncrease);
-		}
-	}
+
 	
 	//Shabnam
 
-	public void setLatestCoverage(int newFunctionCoverage){
-		latestFunctionCoverageIncrease = newFunctionCoverage-latestFunctionCoverage;
-		latestFunctionCoverage = newFunctionCoverage;
+	public void updateExecutedFunctions(ArrayList<String> executedFuncs){
+//	latestFuncsExecutedIncrease = getLatestFuncsExecutedIncrease(potentialFuncs, latestFuncsExecuted); ;
+		ExecutedFunctions = executedFuncs;
 	}	
 
 	//Shabnam
-	public void setInitialCoverage(StateVertex initState, int newFunctionCoverage){
-		latestFunctionCoverageIncrease = newFunctionCoverage-latestFunctionCoverage;
-		latestFunctionCoverage = newFunctionCoverage;
-		setFunctionCoverageIncrease(initState);
-	}
-	//Shabnam
-	public int getFunctionCoverageIncrease(StateVertex stateVertex) {
-		int funcCov = 0;
-
-		synchronized(statesFunctionCoverageIncrease){
-			try{
-				funcCov = statesFunctionCoverageIncrease.get(stateVertex.toString());	
-				LOGGER.info("**** Function Coverage Increase for state " + stateVertex.getName() + " is " + funcCov);
-			}catch(Exception e){
-				e.printStackTrace();
+	public void updateStatesPotentialFuncs(StateVertex stateVertex, TreeMap<String,ArrayList<ArrayList<Object>>> eventableElementsMap){
+		String state=stateVertex.toString();
+		Set<String> keySet=eventableElementsMap.keySet();
+		Iterator<String> it=keySet.iterator();
+		while(it.hasNext()){
+			String funcName= it.next();
+			ArrayList<ArrayList<Object>> list= eventableElementsMap.get(funcName);
+			List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
+			for(int i=0;i<list.size();i++){
+				ArrayList<Object> innerList=list.get(i);
+				String id=(String) innerList.get(0);
+				Eventable eventable=(Eventable) innerList.get(2);
+				for(CandidateElement candidateElem:candidateElems){
+					if(candidateElem.getElement().getAttribute("id").equals(id)){
+						List<Eventable> eventableList= stateVertex.getCrawlPathToState();
+						for(int j=0;j<eventableList.size();j++){
+							if(eventableList.get(j).equals(eventable)){
+								if(statesPotentialFuncs.get(state)!=null){
+									statesPotentialFuncs.get(state).add(funcName);		
+								}
+								else{
+									ArrayList<String> newList=new ArrayList<String>();
+									newList.add(funcName);
+									statesPotentialFuncs.put(state, newList);
+									
+								}
+								
+								
+							}
+						}
+						
+					}
+				}
+			
 			}
 		}
-		return funcCov;
+		
+	}
+
+	
+	
+	
+	//Shabnam should return the list of potential functions for the given state
+	private ArrayList<String> setStatesNewPotentialFuncs(StateVertex stateVertex){
+		
+		return null;
 	}
 }

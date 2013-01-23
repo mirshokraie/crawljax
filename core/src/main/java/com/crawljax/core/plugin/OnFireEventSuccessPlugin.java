@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.crawljax.core.CrawlSession;
 import com.crawljax.core.state.Eventable;
+import com.crawljax.core.state.StateMachine;
 
 public interface OnFireEventSuccessPlugin extends Plugin {
 
@@ -15,6 +16,6 @@ public interface OnFireEventSuccessPlugin extends Plugin {
 		 * @param pathToFailure
 		 *            the list of eventable lead TO this failed eventable, the eventable excluded.
 		 */
-		void onFireEventSuccessed(Eventable eventable, List<Eventable> pathToSuccess, CrawlSession session);
+		void onFireEventSuccessed(Eventable eventable, List<Eventable> pathToSuccess, CrawlSession session, StateMachine stateMachine);
 
 }

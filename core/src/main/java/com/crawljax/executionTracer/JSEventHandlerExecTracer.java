@@ -10,6 +10,7 @@ import com.crawljax.core.CandidateElement;
 import com.crawljax.core.CrawlSession;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.state.Eventable;
+import com.crawljax.core.state.StateMachine;
 import com.crawljax.globals.Eventables;
 import com.crawljax.globals.ExecutedFunctions;
 
@@ -29,7 +30,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 
 	@Override
 	public void onFireEventSuccessed(Eventable eventable, List<Eventable> path,
-			CrawlSession session) {
+			CrawlSession session, StateMachine stateMachine) {
 		try {
 			
 
@@ -41,6 +42,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 			session.getBrowser().executeJavaScript("sendReally();");
 			Thread.sleep(ONE_SEC);
 
+			
 			FuncCallTrace trace = new FuncCallTrace();
 			String input=trace.parse(points);
 			String[] lines=input.split("\n");
@@ -59,8 +61,18 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 					for(int j=0;j<uniqueIds.length-1;j++){
 						ArrayList<Object> elementInfo=new ArrayList<Object>();
 						elementInfo.add(uniqueIds[j]);
+						elementInfo.add(stateMachine.getCurrentState().toString());
 						elementInfo.add(eventable);
-						Eventables.eventableElementsMap.put(handlerFunc,elementInfo);
+						if(Eventables.eventableElementsMap.get(handlerFunc)!=null){
+							
+							Eventables.eventableElementsMap.get(handlerFunc).add(elementInfo);
+				
+						}
+						else{
+							ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
+							newList.add(elementInfo);
+							Eventables.eventableElementsMap.put(handlerFunc,newList);
+						}
 					}
 					
 					i++;

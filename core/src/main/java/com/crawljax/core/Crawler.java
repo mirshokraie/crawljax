@@ -338,9 +338,7 @@ public class Crawler implements Runnable {
 			                .getStateFlowGraph().getNewStateName(), getBrowser().getDom(),
 			                this.controller.getStrippedDom(getBrowser()));
 			
-			//Shabnam
-			CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
-			        .getCurrentCrawlPath().immutableCopy(true),controller.getSession());
+			
 
 			// checking if DOM is changed
 			if (CrawljaxPluginsUtil.runDomChangeNotifierPlugins(this.getStateMachine()
@@ -356,13 +354,27 @@ public class Crawler implements Runnable {
 					        .getSession(), controller.getSession().getCurrentCrawlPath(), this
 					        .getStateMachine());
 
+					//Shabnam
+					CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
+					        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
+					        .getStateMachine());
 					return ClickResult.newState;
 				} else {
 					// Dom changed; Clone
+					//Shabnam
+					CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
+					        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
+					        .getStateMachine());
 					return ClickResult.cloneDetected;
 				}
 			}
+			/*Shabnam DOM has not been changed but still some functions may 
+			 * have been executed so we still need to keep track of things...*/
+			CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
+			        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
+			        .getStateMachine());
 		}
+
 		// Event not fired or, Dom not changed
 		return ClickResult.domUnChanged;
 	}

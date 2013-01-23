@@ -23,6 +23,7 @@ import com.crawljax.core.plugin.PostCrawlingPlugin;
 import com.crawljax.core.plugin.PreCrawlingPlugin;
 import com.crawljax.core.plugin.PreStateCrawlingPlugin;
 import com.crawljax.core.state.Eventable;
+import com.crawljax.core.state.StateMachine;
 import com.crawljax.globals.ExecutedFunctions;
 import com.crawljax.util.Helper;
 
@@ -43,7 +44,7 @@ public class JSExecutedFuncsExecTracer extends ExecutionTracer
 
 		@Override
 		public void onFireEventSuccessed(Eventable eventable,
-				List<Eventable> path, CrawlSession session) {
+				List<Eventable> path, CrawlSession session, StateMachine stateMachine) {
 			try {
 				
 

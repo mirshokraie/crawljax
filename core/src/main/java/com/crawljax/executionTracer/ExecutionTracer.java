@@ -27,6 +27,7 @@ import com.crawljax.core.plugin.PreCrawlingPlugin;
 import com.crawljax.core.plugin.PreStateCrawlingPlugin;
 import com.crawljax.core.plugin.OnNewStatePlugin;
 import com.crawljax.core.state.Eventable;
+import com.crawljax.core.state.StateMachine;
 import com.crawljax.util.Helper;
 
 public abstract class ExecutionTracer
@@ -53,7 +54,7 @@ public abstract class ExecutionTracer
 
 
 	@Override
-	public abstract void onFireEventSuccessed(Eventable eventable, List<Eventable> path, CrawlSession session);
+	public abstract void onFireEventSuccessed(Eventable eventable, List<Eventable> path, CrawlSession session, StateMachine stateMachine);
 	/**
 	 * 
 	 * @param string
