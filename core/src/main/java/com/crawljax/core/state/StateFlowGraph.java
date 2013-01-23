@@ -17,6 +17,14 @@ import org.jgrapht.GraphPath;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.alg.KShortestPaths;
 import org.jgrapht.graph.DirectedMultigraph;
+import org.mozilla.javascript.CompilerEnvirons;
+import org.mozilla.javascript.Parser;
+import org.mozilla.javascript.ast.AstNode;
+import org.mozilla.javascript.ast.FunctionCall;
+import org.mozilla.javascript.ast.FunctionNode;
+import org.mozilla.javascript.ast.Name;
+import org.mozilla.javascript.ast.ObjectProperty;
+import org.mozilla.javascript.ast.PropertyGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +45,7 @@ public class StateFlowGraph implements Serializable {
 	private TreeMap<String,ArrayList<ArrayList<Object>>> statesPotentialFuncs = new TreeMap<String,ArrayList<ArrayList<Object>>>();
 
 	//Shabnam map<statevertex,[function1,function2,...]>
-	private TreeMap<String,ArrayList<String>> statesNewPotentialFuncs = new TreeMap<String,ArrayList<String>>();
+	private TreeMap<String,HashSet<String>> statesNewPotentialFuncs = new TreeMap<String,HashSet<String>>();
 
 	//Shabnam
 	private ArrayList<String> ExecutedFunctions = new ArrayList<String>();
@@ -474,14 +482,81 @@ public class StateFlowGraph implements Serializable {
 	}	
 
 	//Shabnam
+	private CompilerEnvirons compilerEnvirons = new CompilerEnvirons();
+	//Shabnam
+	private AstNode parse(String code) {
+		
+		Parser p = new Parser(compilerEnvirons, null);
+		return p.parse(code, null, 0);
+		
+	}
+	//shabnam
+	private String getFunctionName(FunctionNode f) {
+		if (f==null)
+			return "NoFunctionNode";
+	/*	else if(f.getParent() instanceof LabeledStatement){
+			return ((LabeledStatement)f.getParent()).shortName();
+		}
+	*/	else if(f.getParent() instanceof ObjectProperty){
+			return ((ObjectProperty)f.getParent()).getLeft().toSource();
+		}
+		Name functionName = f.getFunctionName();
+
+		if (functionName == null) {
+			return "anonymous" + f.getLineno();
+		} else {
+			return functionName.toSource();
+		}
+	}
+	//Shabnam knownelems are the elements with onclick="function.." set in the html code
+	private void updateStatesPotentialFuncsWithKnownElems(StateVertex stateVertex){
+		String state=stateVertex.toString();
+		List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
+		
+		for(int i=0;i<candidateElems.size();i++){
+			if(candidateElems.get(i).getElement().hasAttribute("onclick")){
+				CandidateElement elem=candidateElems.get(i);
+				String function=elem.getElement().getAttribute("onclick");
+				AstNode funcNode=(AstNode) parse(function).getFirstChild();
+				String funcName="";
+				if(funcNode instanceof FunctionNode){
+					funcName=getFunctionName((FunctionNode) funcNode);
+				}
+				else if(funcNode instanceof FunctionCall){
+					funcName=((FunctionCall) funcNode).getTarget().toSource();
+				}
+				else if(funcNode instanceof PropertyGet){
+					funcName=((PropertyGet)funcNode).getProperty().toSource();
+				}
+				
+				ArrayList<Object> elemInfo=new ArrayList<Object>();
+				elemInfo.add(elem);
+				elemInfo.add(funcName);
+				if(statesPotentialFuncs.get(state)!=null){
+					statesPotentialFuncs.get(state).add(elemInfo);	
+				}
+				else{
+					ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
+					newList.add(elemInfo);
+					statesPotentialFuncs.put(state, newList);
+				}
+				
+			}
+		}
+	}
+	//Shabnam
 	public void updateStatesPotentialFuncs(StateVertex stateVertex, TreeMap<String,ArrayList<ArrayList<Object>>> eventableElementsMap){
 		String state=stateVertex.toString();
+		List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
+		
+		updateStatesPotentialFuncsWithKnownElems(stateVertex);
+		
 		Set<String> keySet=eventableElementsMap.keySet();
 		Iterator<String> it=keySet.iterator();
 		while(it.hasNext()){
 			String funcName= it.next();
 			ArrayList<ArrayList<Object>> list= eventableElementsMap.get(funcName);
-			List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
+			
 			for(int i=0;i<list.size();i++){
 				ArrayList<Object> innerList=list.get(i);
 				String id=(String) innerList.get(0);
@@ -520,7 +595,7 @@ public class StateFlowGraph implements Serializable {
 	}
 	
 	//Shabnam
-	public TreeMap<String,ArrayList<String>> getStatesNewPotentialFuncs(){
+	public TreeMap<String,HashSet<String>> getStatesNewPotentialFuncs(){
 		return statesNewPotentialFuncs;
 	}
 	
@@ -540,7 +615,7 @@ public class StateFlowGraph implements Serializable {
 				statesNewPotentialFuncs.get(stateVertex).add(funcName);
 			}
 			else{
-				ArrayList<String> newList=new ArrayList<String>();
+				HashSet<String> newList=new HashSet<String>();
 				newList.add(funcName);
 				statesNewPotentialFuncs.put(stateVertex, newList);
 			}
