@@ -3,10 +3,8 @@ package com.crawljax.core.state;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,14 +33,15 @@ public class StateFlowGraph implements Serializable {
 	private ArrayList<StateVertex> notFullExpandedStates = new ArrayList<StateVertex>();
 	//Shabnam
 	private boolean efficientCrawling = true;
-	//Shabnam
-	private Map<String,ArrayList<String>> statesPotentialFuncs = new Hashtable<String,ArrayList<String>>();
+	//Shabnam map<stateVertex,[[element1,function1],[element2, function2],...]>
+	private TreeMap<String,ArrayList<ArrayList<Object>>> statesPotentialFuncs = new TreeMap<String,ArrayList<ArrayList<Object>>>();
 
-	//Shabnam
-	private Map<String,Integer> statesNewPotentialFuncs = new Hashtable<String,Integer>();
+	//Shabnam map<statevertex,[function1,function2,...]>
+	private TreeMap<String,ArrayList<String>> statesNewPotentialFuncs = new TreeMap<String,ArrayList<String>>();
 
 	//Shabnam
 	private ArrayList<String> ExecutedFunctions = new ArrayList<String>();
+	
 	private static final long serialVersionUID = 923403417983488L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StateFlowGraph.class.getName());
@@ -470,7 +469,7 @@ public class StateFlowGraph implements Serializable {
 	//Shabnam
 
 	public void updateExecutedFunctions(ArrayList<String> executedFuncs){
-//	latestFuncsExecutedIncrease = getLatestFuncsExecutedIncrease(potentialFuncs, latestFuncsExecuted); ;
+
 		ExecutedFunctions = executedFuncs;
 	}	
 
@@ -493,33 +492,59 @@ public class StateFlowGraph implements Serializable {
 						for(int j=0;j<eventableList.size();j++){
 							if(eventableList.get(j).equals(eventable)){
 								if(statesPotentialFuncs.get(state)!=null){
-									statesPotentialFuncs.get(state).add(funcName);		
+									ArrayList<Object> elemInfo=new ArrayList<Object>();
+									elemInfo.add(candidateElem);
+									elemInfo.add(funcName);
+									statesPotentialFuncs.get(state).add(elemInfo);		
 								}
 								else{
-									ArrayList<String> newList=new ArrayList<String>();
-									newList.add(funcName);
+									ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
+									ArrayList<Object> elemInfo=new ArrayList<Object>();
+									elemInfo.add(candidateElem);
+									elemInfo.add(funcName);
+									newList.add(elemInfo);
 									statesPotentialFuncs.put(state, newList);
-									
 								}
-								
-								
+								updateStatesNewPotentialFuncs(state,funcName);
 							}
 						}
-						
 					}
-				}
-			
+				}	
+			}
+		}	
+	}
+
+	//Shabnam
+	public TreeMap<String,ArrayList<ArrayList<Object>>> getStatesPotentialFuncs(){
+		return statesPotentialFuncs;
+	}
+	
+	//Shabnam
+	public TreeMap<String,ArrayList<String>> getStatesNewPotentialFuncs(){
+		return statesNewPotentialFuncs;
+	}
+	
+	//Shabnam
+	public int getStatesNewPotentialFuncs(StateVertex stateVertex){
+		if(statesNewPotentialFuncs.get(stateVertex.toString())!=null){
+			return statesNewPotentialFuncs.get(stateVertex.toString()).size();
+		}
+		return 0;
+	}
+	
+	//Shabnam
+	private void updateStatesNewPotentialFuncs(String stateVertex, String funcName){
+	
+		if(ExecutedFunctions.indexOf(funcName)==-1){
+			if(statesNewPotentialFuncs.get(stateVertex)!=null){
+				statesNewPotentialFuncs.get(stateVertex).add(funcName);
+			}
+			else{
+				ArrayList<String> newList=new ArrayList<String>();
+				newList.add(funcName);
+				statesNewPotentialFuncs.put(stateVertex, newList);
 			}
 		}
 		
-	}
-
-	
-	
-	
-	//Shabnam should return the list of potential functions for the given state
-	private ArrayList<String> setStatesNewPotentialFuncs(StateVertex stateVertex){
-		
-		return null;
 	}
 }
