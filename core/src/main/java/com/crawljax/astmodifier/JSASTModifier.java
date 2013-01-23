@@ -1,10 +1,8 @@
 package com.crawljax.astmodifier;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
 
 import org.apache.log4j.Logger;
 import org.mozilla.javascript.CompilerEnvirons;
@@ -13,26 +11,18 @@ import org.mozilla.javascript.ast.Assignment;
 import org.mozilla.javascript.ast.AstNode;
 import org.mozilla.javascript.ast.AstRoot;
 import org.mozilla.javascript.ast.Block;
-import org.mozilla.javascript.ast.ElementGet;
+
 import org.mozilla.javascript.ast.ExpressionStatement;
 import org.mozilla.javascript.ast.ForLoop;
 import org.mozilla.javascript.ast.FunctionCall;
 import org.mozilla.javascript.ast.FunctionNode;
 import org.mozilla.javascript.ast.IfStatement;
-import org.mozilla.javascript.ast.InfixExpression;
-import org.mozilla.javascript.ast.KeywordLiteral;
-import org.mozilla.javascript.ast.LabeledStatement;
 import org.mozilla.javascript.ast.Name;
-import org.mozilla.javascript.ast.NewExpression;
 import org.mozilla.javascript.ast.NodeVisitor;
-import org.mozilla.javascript.ast.ObjectLiteral;
+
 import org.mozilla.javascript.ast.ObjectProperty;
-import org.mozilla.javascript.ast.ParenthesizedExpression;
 import org.mozilla.javascript.ast.PropertyGet;
 import org.mozilla.javascript.ast.ReturnStatement;
-import org.mozilla.javascript.ast.SwitchCase;
-import org.mozilla.javascript.ast.SwitchStatement;
-import org.mozilla.javascript.ast.UnaryExpression;
 import org.mozilla.javascript.ast.WhileLoop;
 
 import com.crawljax.core.CrawljaxController;
@@ -211,10 +201,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		
 		
 		
-		private boolean shouldVisitFunction(FunctionNode function){
-			
-			return true;
-		}
+	
 		
 		private boolean shouldVisitFunctionCall(FunctionCall function){
 			if (functionCallsNotToLog.size()==0)

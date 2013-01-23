@@ -1,31 +1,16 @@
 package com.crawljax.executionTracer;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
+
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
-import org.json.JSONException;
 
-import com.crawljax.browser.EmbeddedBrowser;
-import com.crawljax.core.CandidateElement;
 import com.crawljax.core.CrawlSession;
 import com.crawljax.core.CrawljaxException;
-import com.crawljax.core.plugin.GeneratesOutput;
-import com.crawljax.core.plugin.PostCrawlingPlugin;
-import com.crawljax.core.plugin.PreCrawlingPlugin;
-import com.crawljax.core.plugin.PreStateCrawlingPlugin;
 import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateMachine;
 import com.crawljax.globals.ExecutedFunctions;
-import com.crawljax.util.Helper;
+
 @Deprecated
 public class JSExecutedFuncsExecTracer extends ExecutionTracer 
 	

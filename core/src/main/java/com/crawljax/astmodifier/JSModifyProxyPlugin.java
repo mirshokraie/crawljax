@@ -17,7 +17,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.crawljax.executionTracer.JSEventHandlerExecTracer;
-import com.crawljax.executionTracer.JSExecutedFuncsExecTracer;
 import com.crawljax.staticTracer.StaticFunctionTracer;
 import com.crawljax.util.Helper;
 

@@ -1,7 +1,5 @@
 package com.crawljax.executionTracer;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
