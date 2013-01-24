@@ -654,10 +654,10 @@ public class StateFlowGraph implements Serializable {
 		}
 		return false;
 	}
-	// get the number of all potential functions for the given element
-	public int getElementNewPotentialFuncs(StateVertix stateVertix, CandidateElement element){
+	// get the number of all new potential functions for the given element
+	public int getElementNewPotentialFuncs(StateVertex stateVertex, CandidateElement element){
 		int newPotFuncs=0;
-		String state=stateVertix.toString();
+		String state=stateVertex.toString();
 		if(statesPotentialFuncs.get(state)!=null){
 			ArrayList<ArrayList<Object>> list=statesPotentialFuncs.get(state);
 			for(int i=0;i<list.size();i++){

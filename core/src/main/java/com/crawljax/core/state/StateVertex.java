@@ -285,7 +285,46 @@ public class StateVertex implements Serializable {
 			numCandidateElements = candidateList.size();
 			candidateElemList=candidateList;
 			if (isEfficientCrawling){
-				//TODO Shabnam: perform sorting on candidate elements
+				/*Shabnam: perform sorting on candidate elements based on the number of new
+				potential functions that each element may exercise*/
+				int[] indices = new int[candidateList.size()];
+				int[] newPotentialfuncs = new int[candidateList.size()];
+				
+				for (int i=0; i<candidateList.size(); i++){
+					indices[i]=i;
+					newPotentialfuncs[i]= sfg.getElementNewPotentialFuncs(this, candidateList.get(i));
+				}
+				
+				int temp_idx; int temp_newPotentialfuncs;
+				for (int i=0; i<candidateList.size(); i++)
+					for (int j=i; j<candidateList.size(); j++)
+						if (newPotentialfuncs[i] < newPotentialfuncs[j]){
+							temp_idx = indices[i];  
+							indices[i] = indices[j];
+							indices[j] = temp_idx;
+							temp_newPotentialfuncs = newPotentialfuncs[i];  
+							newPotentialfuncs[i] = newPotentialfuncs[j]; 
+							newPotentialfuncs[j] = temp_newPotentialfuncs;
+						}
+
+				for (int i=0; i<candidateList.size(); i++)
+				{
+					for (String eventType : eventTypes) { 
+						if (eventType.equals(EventType.click.toString())) {
+							candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
+									EventType.click));
+							
+						} else {
+							if (eventType.equals(EventType.hover.toString())) {
+								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
+										EventType.hover));
+								
+							} else {
+								LOGGER.warn("The Event Type: " + eventType + " is not supported.");
+							}
+						}
+					}
+				}
 				
 			}
 			else{
