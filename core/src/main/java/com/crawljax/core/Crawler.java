@@ -1,5 +1,6 @@
 package com.crawljax.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,6 +9,7 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import com.crawljax.browser.EmbeddedBrowser;
 import com.crawljax.core.configuration.CrawljaxConfigurationReader;
@@ -24,6 +26,8 @@ import com.crawljax.core.state.StateMachine;
 import com.crawljax.core.state.StateVertex;
 import com.crawljax.forms.FormHandler;
 import com.crawljax.forms.FormInput;
+import com.crawljax.globals.Eventables;
+import com.crawljax.globals.ExecutedFunctions;
 import com.crawljax.util.ElementResolver;
 
 /**
@@ -357,6 +361,8 @@ public class Crawler implements Runnable {
 					CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
 					        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
 					        .getStateMachine());
+					updateNotFullExpandedStates();
+					
 					return ClickResult.newState;
 				} else {
 					// Dom changed; Clone
@@ -364,6 +370,7 @@ public class Crawler implements Runnable {
 					CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
 					        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
 					        .getStateMachine());
+					updateNotFullExpandedStates();
 					return ClickResult.cloneDetected;
 				}
 			}
@@ -372,6 +379,7 @@ public class Crawler implements Runnable {
 			CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
 			        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
 			        .getStateMachine());
+			updateNotFullExpandedStates();
 		}
 
 		// Event not fired or, Dom not changed
@@ -958,6 +966,29 @@ public class Crawler implements Runnable {
 
 			if (!controller.getElementChecker().checkCrawlCondition(getBrowser())) {
 				return;
+			}
+		}
+	}
+	
+	/**
+	 * Shabnam updating not fully expanded states in stateflow graph 
+	 * with information we got from the execution till now
+	 */
+	
+	private void updateNotFullExpandedStates(){
+		
+		controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
+		ArrayList<StateVertex> notFullExpandedStates=controller.getSession().getStateFlowGraph().getNotFullExpandedStates();
+		for(int i=0;i<notFullExpandedStates.size();i++){
+			StateVertex state=notFullExpandedStates.get(i);
+			try {
+				controller.getSession().getStateFlowGraph().updateStatesPotentialFuncs(state, Eventables.eventableElementsMap);
+			} catch (SAXException e) {
+				
+				e.printStackTrace();
+			} catch (IOException e) {
+			
+				e.printStackTrace();
 			}
 		}
 	}

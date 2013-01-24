@@ -8,7 +8,7 @@ import com.crawljax.graph.WeightedGraph;
 
 public class ExecutedFunctions {
 	
-	public static Set<String> executedFuncList=new HashSet<String>();;
+	public static HashSet<String> executedFuncList=new HashSet<String>();;
 	public static WeightedGraph dynamicCallGraph=new WeightedGraph();
 	
 

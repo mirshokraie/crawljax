@@ -1,5 +1,6 @@
 package com.crawljax.core.state;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,8 +28,13 @@ import org.mozilla.javascript.ast.ObjectProperty;
 import org.mozilla.javascript.ast.PropertyGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import com.crawljax.core.CandidateElement;
+import com.crawljax.globals.StaticCallGraph;
+import com.crawljax.graph.Edge;
+import com.crawljax.graph.Vertex;
 
 
 /**
@@ -48,7 +54,7 @@ public class StateFlowGraph implements Serializable {
 	private TreeMap<String,HashSet<String>> statesNewPotentialFuncs = new TreeMap<String,HashSet<String>>();
 
 	//Shabnam
-	private Set<String> ExecutedFunctions = new HashSet<String>();
+	private Set<String> executedFunctions = new HashSet<String>();
 	
 	private static final long serialVersionUID = 923403417983488L;
 
@@ -145,6 +151,9 @@ public class StateFlowGraph implements Serializable {
 			// Shabnam: Add the new state to the list of unexpanded states
 			notFullExpandedStates.add(stateVertix);
 			LOGGER.info("State " + stateVertix + " added to the notFullExpandedStates list!");
+			if(efficientCrawling){
+				updateStatesPotentialFuncsWithKnownElems(stateVertix);
+			}
 		}
 		return null;
 	}
@@ -478,7 +487,7 @@ public class StateFlowGraph implements Serializable {
 
 	public void updateExecutedFunctions(HashSet<String> executedFuncs){
 
-		ExecutedFunctions = executedFuncs;
+		executedFunctions = executedFuncs;
 	}	
 
 	//Shabnam
@@ -509,6 +518,7 @@ public class StateFlowGraph implements Serializable {
 		}
 	}
 	//Shabnam knownelems are the elements with onclick="function.." set in the html code
+	//should be called in addstate (one time when a new state added)
 	private void updateStatesPotentialFuncsWithKnownElems(StateVertex stateVertex){
 		String state=stateVertex.toString();
 		List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
@@ -546,46 +556,44 @@ public class StateFlowGraph implements Serializable {
 		}
 	}
 	//Shabnam
-	public void updateStatesPotentialFuncs(StateVertex stateVertex, TreeMap<String,ArrayList<ArrayList<Object>>> eventableElementsMap){
+	public void updateStatesPotentialFuncs(StateVertex stateVertex, TreeMap<String,ArrayList<ArrayList<Object>>> eventableElementsMap) throws SAXException, IOException{
+		
 		String state=stateVertex.toString();
-		List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
-		
-		updateStatesPotentialFuncsWithKnownElems(stateVertex);
-		
+	//	List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
+		Document document=stateVertex.getDocument();
+			
 		Set<String> keySet=eventableElementsMap.keySet();
 		Iterator<String> it=keySet.iterator();
 		while(it.hasNext()){
 			String funcName= it.next();
 			ArrayList<ArrayList<Object>> list= eventableElementsMap.get(funcName);
-			
 			for(int i=0;i<list.size();i++){
 				ArrayList<Object> innerList=list.get(i);
 				String id=(String) innerList.get(0);
 				Eventable eventable=(Eventable) innerList.get(2);
-				for(CandidateElement candidateElem:candidateElems){
-					if(candidateElem.getElement().getAttribute("id").equals(id)){
+		//		for(CandidateElement candidateElem:candidateElems){
+				if(document.getElementById(id)!=null){	
+			//		if(candidateElem.getElement().getAttribute("id").equals(id)){
 						List<Eventable> eventableList= stateVertex.getCrawlPathToState();
 						for(int j=0;j<eventableList.size();j++){
 							if(eventableList.get(j).equals(eventable)){
-								if(statesPotentialFuncs.get(state)!=null){
-									ArrayList<Object> elemInfo=new ArrayList<Object>();
-									elemInfo.add(candidateElem);
-									elemInfo.add(funcName);
+								ArrayList<Object> elemInfo=new ArrayList<Object>();
+								//	elemInfo.add(candidateElem);
+								elemInfo.add(document.getElementById(id));
+								elemInfo.add(funcName);
+								if(statesPotentialFuncs.get(state)!=null && !isRedundantItem(state,elemInfo)){	
 									statesPotentialFuncs.get(state).add(elemInfo);		
 								}
 								else{
 									ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
-									ArrayList<Object> elemInfo=new ArrayList<Object>();
-									elemInfo.add(candidateElem);
-									elemInfo.add(funcName);
 									newList.add(elemInfo);
 									statesPotentialFuncs.put(state, newList);
 								}
 								updateStatesNewPotentialFuncs(state,funcName);
 							}
 						}
-					}
-				}	
+				}
+	//			}	
 			}
 		}	
 	}
@@ -611,15 +619,108 @@ public class StateFlowGraph implements Serializable {
 	//Shabnam
 	private void updateStatesNewPotentialFuncs(String stateVertex, String funcName){
 	
-		if(statesNewPotentialFuncs.get(stateVertex)!=null){
-			statesNewPotentialFuncs.get(stateVertex).add(funcName);
+		if(!executedFunctions.contains(funcName)){
+			if(statesNewPotentialFuncs.get(stateVertex)!=null){
+			
+				statesNewPotentialFuncs.get(stateVertex).add(funcName);
+				
+
+			}
+			else{
+				HashSet<String> newList=new HashSet<String>();
+				newList.add(funcName);
+				statesNewPotentialFuncs.put(stateVertex, newList);
+			}
+			
 		}
-		else{
-			HashSet<String> newList=new HashSet<String>();
-			newList.add(funcName);
-			statesNewPotentialFuncs.put(stateVertex, newList);
-		}
+		//update according to static call graph
+		updateNewPotentialFuncCall(stateVertex, funcName);
+		
 	}
+	//shabnam
+	private boolean isRedundantItem(String state,ArrayList<Object> elemInfo){
+		
+		if(statesPotentialFuncs.get(state)!=null){
+			ArrayList<ArrayList<Object>> list=statesPotentialFuncs.get(state);
+			for(int i=0;i<list.size();i++){
+				ArrayList<Object> elementInfo=list.get(i);
+				if(((org.w3c.dom.Element)elementInfo.get(0)).
+						isEqualNode(((org.w3c.dom.Element)elemInfo.get(0)))){
+					if(((String)elementInfo.get(1)).equals(elemInfo.get(1))){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	// get the number of all potential functions for the given element
+	public int getElementNewPotentialFuncs(StateVertix stateVertix, CandidateElement element){
+		int newPotFuncs=0;
+		String state=stateVertix.toString();
+		if(statesPotentialFuncs.get(state)!=null){
+			ArrayList<ArrayList<Object>> list=statesPotentialFuncs.get(state);
+			for(int i=0;i<list.size();i++){
+				ArrayList<Object> elemInfo=list.get(i);
+				if(((org.w3c.dom.Element)elemInfo.get(0)).
+						isEqualNode(element.getElement())){
+					String funcName=(String) elemInfo.get(1);
+					if(!executedFunctions.contains(funcName))
+						newPotFuncs++;
+					newPotFuncs+=getNewPotentialFuncCall(funcName);
+					
+					break;
+				}
+				
+			}
+			
+		}
+		return newPotFuncs;
+	}
+	
+	private void updateNewPotentialFuncCall(String stateVertex,String funcName){
+		ArrayList<Vertex> vertices=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getVertices();
+		for(int i=0;i<vertices.size();i++){
+			if(vertices.get(i).name.equals(funcName)){
+				ArrayList<Vertex> vertexList=new ArrayList<Vertex>();
+				Vertex vertex=vertices.get(i);
+				if(StaticCallGraph.staticCallGraph.getOutEdges(vertex).size()!=0){
+					ArrayList<Vertex> successors=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
+					for(Vertex v:successors){
+						if(!executedFunctions.contains(v.name))
+							statesNewPotentialFuncs.get(stateVertex).add(v.name);
+					}
+				}
+					
+				break;
+			}
+		}
+		
+	}
+	
+	
+	private int getNewPotentialFuncCall(String funcName){
+		int newPotFuncs=0;
+		ArrayList<Vertex> vertices=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getVertices();
+		for(int i=0;i<vertices.size();i++){
+			if(vertices.get(i).name.equals(funcName)){
+				ArrayList<Vertex> vertexList=new ArrayList<Vertex>();
+				Vertex vertex=vertices.get(i);
+				if(StaticCallGraph.staticCallGraph.getOutEdges(vertex).size()!=0){
+					ArrayList<Vertex> successors=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
+					for(Vertex v:successors){
+						if(!executedFunctions.contains(v.name))
+							newPotFuncs++;
+					}
+				}
+					
+				break;
+			}
+		}
+		return newPotFuncs;
+		
+	}
+	
 	
 		
 	

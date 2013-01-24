@@ -402,6 +402,20 @@ public class WeightedGraph implements DirectedGraph<Vertex, Edge>  {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public ArrayList<Vertex> getAllSuccessorVertices(Vertex v,ArrayList<Vertex> vertices){
+		
+		if(v.outEdges.size()!=0){
+			Iterator<Edge> it=v.outEdges.iterator();
+			while(it.hasNext()){
+				getAllSuccessorVertices(it.next().getDest(),vertices);
+			}
+		}
+		else
+			vertices.add(v);
+		return vertices;
+			
+	}
 
 	
 }
