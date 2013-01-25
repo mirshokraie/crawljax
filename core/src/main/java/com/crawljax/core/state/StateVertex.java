@@ -311,7 +311,7 @@ public class StateVertex implements Serializable {
 				for (int i=0; i<candidateList.size(); i++)
 				{
 					for (String eventType : eventTypes) { 
-						//Shabnam
+						//Shabnam select only clickable ones that we detect before and ignore the others
 						boolean select=false;
 						for(int j=0;j<elemList.size();j++){
 							if(elemList.get(j).hasAttribute("id"))
