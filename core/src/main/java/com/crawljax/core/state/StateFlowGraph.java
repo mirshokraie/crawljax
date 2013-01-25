@@ -3,6 +3,7 @@ package com.crawljax.core.state;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -735,6 +736,37 @@ public class StateFlowGraph implements Serializable {
 			}
 		}
 		return elemList;
+	}
+	
+	// check whether potential functions remain the same between the current state and the previous one
+	public boolean potenialFuncsRemainSame(StateVertex stateVertex){
+		Set<StateVertex> prevStates = new HashSet<StateVertex>();
+		Set<String> currStateFuncNames = new HashSet<String>();
+		Set<String> prevStateFuncNames = new HashSet<String>();
+		prevStates=getIncomingStates(stateVertex);
+		currStateFuncNames=statesNewPotentialFuncs.get(stateVertex.toString());
+		Iterator<StateVertex> it=prevStates.iterator();
+		while(it.hasNext()){
+			StateVertex vertex=it.next();
+			prevStateFuncNames.addAll(statesNewPotentialFuncs.get(vertex.toString()));
+			
+		}
+		if(currStateFuncNames.equals(prevStateFuncNames))
+			return true;
+		return false;
+		
+	
+	}
+	
+	private Set<StateVertex> getIncomingStates(StateVertex stateVertix) {
+		
+		final Set<StateVertex> result = new HashSet<StateVertex>();
+
+		for (Eventable c : getIncomingClickable(stateVertix)) {
+			result.add(sfg.getEdgeSource(c));
+		}
+
+		return result;
 	}
 	
 	

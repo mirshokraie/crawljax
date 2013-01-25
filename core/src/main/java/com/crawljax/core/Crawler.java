@@ -900,19 +900,29 @@ public class Crawler implements Runnable {
 		int stateIndex = 0;
 		int stateNewPotentialFuncs=0;
 		int maxPotentialFuncs=0;
+		boolean allEquals=true;
 		if (notFullExpandedStates.size()==0)
 			return -1;
 		for (int i=0; i < notFullExpandedStates.size(); i++){
 			stateNewPotentialFuncs=sfg.getStatesNewPotentialFuncs(notFullExpandedStates.get(i));
-			if(stateNewPotentialFuncs>=maxPotentialFuncs){
+			if(stateNewPotentialFuncs>maxPotentialFuncs && !sfg.potenialFuncsRemainSame(notFullExpandedStates.get(i))){
 				maxPotentialFuncs=stateNewPotentialFuncs;
 				stateIndex=i;
+				allEquals=false;
 			}
+			
 		}
 		LOGGER.info("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
 				+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
 
-		return stateIndex;
+		if(!allEquals)
+			return stateIndex;
+		else{
+			Random rand=new Random();
+			return rand.nextInt(notFullExpandedStates.size());
+			
+		}
+			
 	}
 
 	/**
