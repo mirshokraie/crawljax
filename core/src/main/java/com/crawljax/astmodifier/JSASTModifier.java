@@ -59,7 +59,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		
 	
 		public boolean shouldTrackClickables;
-		public boolean shouldTrackFunctionNodes=true;
+		public boolean shouldTrackFunctionNodes=false;
 		
 
 		

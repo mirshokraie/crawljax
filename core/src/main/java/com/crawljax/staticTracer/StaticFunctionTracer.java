@@ -134,7 +134,7 @@ public class StaticFunctionTracer implements NodeVisitor {
 				functionNodes.add(getFunctionName((FunctionNode)node));
 			}
 		}
-		else if (shouldTrackFunctionCalls){
+		if (shouldTrackFunctionCalls){
 		
 			if (node instanceof FunctionCall
 				&& !(((FunctionCall) node).getTarget() instanceof PropertyGet)

@@ -186,9 +186,9 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 				modifier.start();
 
 			/* recurse through AST */
-				modifier.shouldTrackFunctionNodes=true;
+			/*	modifier.shouldTrackFunctionNodes=true;
 				ast.visit(modifier);
-			
+			*/
 				if(modifier.shouldTrackClickables){
 					modifier.shouldTrackFunctionNodes=false;
 					ast.visit(modifier);

@@ -14,5 +14,12 @@
 			<artifactId>crawljax-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+				
+		<dependency>
+			<groupId>com.crawljax.plugins</groupId>
+			<artifactId>webscarabwrapper</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -1,0 +1,5 @@
+Total Crawling time(4199ms) ~= 0 min, 4 sec
+EXAMINED ELEMENTS: 0
+CLICKABLES: 0
+STATES: 1
+Dom average size (byte): 12365
