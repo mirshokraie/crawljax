@@ -1,6 +1,5 @@
 package com.crawljax.core.configuration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.crawljax.condition.Condition;
@@ -11,6 +10,8 @@ import com.crawljax.condition.invariant.Invariant;
 import com.crawljax.core.state.Eventable.EventType;
 import com.crawljax.oraclecomparator.Comparator;
 import com.crawljax.oraclecomparator.OracleComparator;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 /**
  * Specifies the crawl options for a single crawl session. The user must specify which HTML elements
@@ -55,7 +56,12 @@ public class CrawlSpecification {
 
 	private final String url;
 
-	private List<EventType> crawlEvents = new ArrayList<EventType>();
+	private final List<EventType> crawlEvents = Lists.newLinkedList();
+	private final List<String> ignoredFrameIdentifiers = Lists.newLinkedList();
+	private final List<Invariant> invariants = Lists.newLinkedList();
+	private final List<OracleComparator> oracleComparators = Lists.newLinkedList();
+	private final List<WaitCondition> waitConditions = Lists.newLinkedList();
+	private final List<CrawlCondition> crawlConditions = Lists.newLinkedList();
 
 	private int depth = 2;
 	private int maximumStates = 0;
@@ -68,13 +74,8 @@ public class CrawlSpecification {
 	private InputSpecification inputSpecification = new InputSpecification();
 
 	private boolean testInvariantsWhileCrawling = true;
-	private final List<Invariant> invariants = new ArrayList<Invariant>();
 
-	private final List<OracleComparator> oracleComparators = new ArrayList<OracleComparator>();
-	private final List<WaitCondition> waitConditions = new ArrayList<WaitCondition>();
-	private final List<CrawlCondition> crawlConditions = new ArrayList<CrawlCondition>();
 	private boolean clicklOnce = true;
-	private final List<String> ignoredFrameIdentifiers = new ArrayList<String>();
 	private boolean disableCrawlFrames = false;
 
 	/**
@@ -152,19 +153,6 @@ public class CrawlSpecification {
 	 */
 	public CrawlElement dontClick(String tagName) {
 		return crawlActions.dontClick(tagName);
-	}
-
-	/**
-	 * Crawljax will the HTML elements while crawling if and only if all the specified conditions
-	 * are satisfied. IMPORTANT: only works with click()!!! For example:
-	 * when(onContactPageCondition) will only click the HTML element if it is on the contact page
-	 * 
-	 * @param conditions
-	 *            the condition to be met.
-	 * @return this CrawlActions
-	 */
-	public CrawlActions when(Condition... conditions) {
-		return crawlActions.when(conditions);
 	}
 
 	/**
@@ -275,8 +263,8 @@ public class CrawlSpecification {
 	/**
 	 * @return the events that should be fired (e.g. onclick)
 	 */
-	protected List<EventType> getCrawlEvents() {
-		return crawlEvents;
+	protected ImmutableList<EventType> getCrawlEvents() {
+		return ImmutableList.copyOf(crawlEvents);
 	}
 
 	/**
@@ -304,8 +292,8 @@ public class CrawlSpecification {
 	/**
 	 * @return the oracleComparators
 	 */
-	protected List<OracleComparator> getOracleComparators() {
-		return oracleComparators;
+	protected ImmutableList<OracleComparator> getOracleComparators() {
+		return ImmutableList.copyOf(oracleComparators);
 	}
 
 	/**
@@ -338,8 +326,8 @@ public class CrawlSpecification {
 	/**
 	 * @return the invariants
 	 */
-	protected List<Invariant> getInvariants() {
-		return invariants;
+	protected ImmutableList<Invariant> getInvariants() {
+		return ImmutableList.copyOf(invariants);
 	}
 
 	/**
@@ -382,8 +370,8 @@ public class CrawlSpecification {
 	/**
 	 * @return the waitConditions
 	 */
-	protected List<WaitCondition> getWaitConditions() {
-		return waitConditions;
+	protected ImmutableList<WaitCondition> getWaitConditions() {
+		return ImmutableList.copyOf(waitConditions);
 	}
 
 	/**
@@ -413,8 +401,8 @@ public class CrawlSpecification {
 	/**
 	 * @return the crawlConditions
 	 */
-	protected List<CrawlCondition> getCrawlConditions() {
-		return crawlConditions;
+	protected ImmutableList<CrawlCondition> getCrawlConditions() {
+		return ImmutableList.copyOf(crawlConditions);
 	}
 
 	/**
@@ -459,8 +447,8 @@ public class CrawlSpecification {
 	 * @param crawlEvents
 	 *            the crawlEvents to set
 	 */
-	public void setCrawlEvents(List<EventType> crawlEvents) {
-		this.crawlEvents = crawlEvents;
+	public void addCrawlEvents(List<EventType> crawlEvents) {
+		this.crawlEvents.addAll(crawlEvents);
 	}
 
 	/**
@@ -474,8 +462,8 @@ public class CrawlSpecification {
 	/**
 	 * @return the list of ignored frames
 	 */
-	protected List<String> ignoredFrameIdentifiers() {
-		return ignoredFrameIdentifiers;
+	protected ImmutableList<String> ignoredFrameIdentifiers() {
+		return ImmutableList.copyOf(ignoredFrameIdentifiers);
 	}
 
 	/**
