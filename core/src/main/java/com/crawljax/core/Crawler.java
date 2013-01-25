@@ -975,22 +975,24 @@ public class Crawler implements Runnable {
 	 * with information we got from the execution till now
 	 */
 	
-	private void updateNotFullExpandedStates(){
-		
-		controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
-		ArrayList<StateVertex> notFullExpandedStates=controller.getSession().getStateFlowGraph().getNotFullExpandedStates();
-		for(int i=0;i<notFullExpandedStates.size();i++){
-			StateVertex state=notFullExpandedStates.get(i);
-			try {
-				controller.getSession().getStateFlowGraph().updateStatesPotentialFuncs(state, Eventables.eventableElementsMap);
-			} catch (SAXException e) {
-				
-				e.printStackTrace();
-			} catch (IOException e) {
+	protected void updateNotFullExpandedStates(){
+		try{
+			controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
+			ArrayList<StateVertex> notFullExpandedStates=controller.getSession().getStateFlowGraph().getNotFullExpandedStates();
+			for(int i=0;i<notFullExpandedStates.size();i++){
+				StateVertex state=notFullExpandedStates.get(i);
 			
-				e.printStackTrace();
+				controller.getSession().getStateFlowGraph().updateStatesPotentialFuncs(state, Eventables.eventableElementsMap);
 			}
 		}
+		catch (SAXException e) {
+				
+			e.printStackTrace();	
+		} catch (IOException e) {
+				
+			e.printStackTrace();
+		}
+		
 	}
 
 }

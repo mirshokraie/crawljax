@@ -90,6 +90,11 @@ public class InitialCrawler extends Crawler {
 
 		//Shabnam
 		stateFlowGraph.setEfficientCrawling(controller.isEfficientCrawling());
+		
+		CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(null, controller.getSession()
+		        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
+		        .getStateMachine());
+		updateNotFullExpandedStates();
 		/**
 		 * Run OnNewState Plugins for the index state.
 		 */

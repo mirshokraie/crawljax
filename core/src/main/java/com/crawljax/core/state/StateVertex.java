@@ -307,20 +307,33 @@ public class StateVertex implements Serializable {
 							newPotentialfuncs[j] = temp_newPotentialfuncs;
 						}
 
+				ArrayList<org.w3c.dom.Element> elemList=sfg.getClickableElements(this);
 				for (int i=0; i<candidateList.size(); i++)
 				{
 					for (String eventType : eventTypes) { 
-						if (eventType.equals(EventType.click.toString())) {
-							candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
-									EventType.click));
-							
-						} else {
-							if (eventType.equals(EventType.hover.toString())) {
+						//Shabnam
+						boolean select=false;
+						for(int j=0;j<elemList.size();j++){
+							if(elemList.get(j).hasAttribute("id"))
+								if(elemList.get(j).getAttribute("id").equals(
+										candidateList.get(indices[i]).getElement().getAttribute("id"))){
+									select=true;
+									break;
+								}
+						}
+						if(select){
+							if (eventType.equals(EventType.click.toString())) {
 								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
-										EventType.hover));
-								
+										EventType.click));
+							
 							} else {
-								LOGGER.warn("The Event Type: " + eventType + " is not supported.");
+								if (eventType.equals(EventType.hover.toString())) {
+									candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
+											EventType.hover));
+								
+								} else {
+									LOGGER.warn("The Event Type: " + eventType + " is not supported.");
+								}
 							}
 						}
 					}

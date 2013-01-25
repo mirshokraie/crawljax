@@ -576,7 +576,7 @@ public class StateFlowGraph implements Serializable {
 			//		if(candidateElem.getElement().getAttribute("id").equals(id)){
 						List<Eventable> eventableList= stateVertex.getCrawlPathToState();
 						for(int j=0;j<eventableList.size();j++){
-							if(eventableList.get(j).equals(eventable)){
+							if(eventableList.get(j).equals(eventable) || eventable==null){
 								ArrayList<Object> elemInfo=new ArrayList<Object>();
 								//	elemInfo.add(candidateElem);
 								elemInfo.add(document.getElementById(id));
@@ -720,6 +720,24 @@ public class StateFlowGraph implements Serializable {
 		return newPotFuncs;
 		
 	}
+	
+	//Shabnam returning the list of candidate elements with that are detected as real clickables
+	public ArrayList<org.w3c.dom.Element> getClickableElements(StateVertex stateVertex){
+		ArrayList<org.w3c.dom.Element> elemList=new ArrayList<org.w3c.dom.Element>();
+		String state=stateVertex.toString();
+		if(statesPotentialFuncs.get(state)!=null){
+			ArrayList<ArrayList<Object>> list=statesPotentialFuncs.get(state);
+			for(int i=0;i<list.size();i++){
+				ArrayList<Object> innerList=new ArrayList<Object>();
+				innerList=list.get(i);
+				org.w3c.dom.Element elem=(org.w3c.dom.Element) innerList.get(0);
+				elemList.add(elem);
+			}
+		}
+		return elemList;
+	}
+	
+	
 	
 	
 		
