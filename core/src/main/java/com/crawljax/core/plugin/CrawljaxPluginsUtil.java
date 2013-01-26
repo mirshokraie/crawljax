@@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
 public final class CrawljaxPluginsUtil {
 
 	/**
-	 * Make a new Log4j object used to do the logging.
+	 * Make a new Log object used to do the logging.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrawljaxPluginsUtil.class
 	        .getName());

@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.ast.Assignment;
@@ -32,7 +33,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 
 
 		private final ArrayList<String> events = new ArrayList<String>() ;
-		protected static final Logger LOGGER = Logger.getLogger(CrawljaxController.class.getName());
+		protected static final Logger LOGGER = LoggerFactory.getLogger(CrawljaxController.class.getName());
 		/**
 		 * list of functions that should be visited based on the function rank decision process.
 		 * an empty list means that all functions should be visited.

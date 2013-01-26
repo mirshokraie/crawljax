@@ -3,7 +3,7 @@ package com.crawljax.staticTracer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.ast.AstNode;
@@ -14,6 +14,8 @@ import org.mozilla.javascript.ast.NewExpression;
 import org.mozilla.javascript.ast.NodeVisitor;
 import org.mozilla.javascript.ast.ObjectProperty;
 import org.mozilla.javascript.ast.PropertyGet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.crawljax.core.CrawljaxController;
 import com.crawljax.globals.StaticCallGraph;
@@ -28,7 +30,7 @@ public class StaticFunctionTracer implements NodeVisitor {
 	
 	public boolean shouldTrackFunctionCalls;
 	public boolean shouldTrackFunctionNodes=true;
-	protected static final Logger LOGGER = Logger.getLogger(CrawljaxController.class.getName());
+	protected static final Logger LOGGER = LoggerFactory.getLogger(CrawljaxController.class.getName());
 	 /**
 	  *  This is used by the JavaScript node creation functions that follow.
 	 */

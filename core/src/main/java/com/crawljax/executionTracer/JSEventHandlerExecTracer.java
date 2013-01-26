@@ -3,9 +3,10 @@ package com.crawljax.executionTracer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.json.JSONArray;
 
+import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.crawljax.core.CrawlSession;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.state.Eventable;
@@ -17,7 +18,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 
 	//implements PreStateCrawlingPlugin, /*OnNewStatePlugin,*/ PostCrawlingPlugin, PreCrawlingPlugin, GeneratesOutput {
 	
-	private static final Logger LOGGER = Logger.getLogger(JSExecutedFuncsExecTracer.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(JSExecutedFuncsExecTracer.class.getName());
 
 	/**
 	 * @param filename

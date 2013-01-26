@@ -2,7 +2,6 @@ package com.crawljax.astmodifier;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Parser;
@@ -12,6 +11,8 @@ import org.owasp.webscarab.httpclient.HTTPClient;
 import org.owasp.webscarab.model.Request;
 import org.owasp.webscarab.model.Response;
 import org.owasp.webscarab.plugin.proxy.ProxyPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -23,7 +24,7 @@ import com.crawljax.util.Helper;
 
 public class JSModifyProxyPlugin extends ProxyPlugin{
 	
-	private static final Logger LOGGER = Logger.getLogger(JSModifyProxyPlugin.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(JSModifyProxyPlugin.class.getName());
 
 	private List<String> excludeFilenamePatterns;
 
