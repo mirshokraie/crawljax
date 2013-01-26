@@ -27,6 +27,7 @@ import org.mozilla.javascript.ast.ReturnStatement;
 import org.mozilla.javascript.ast.WhileLoop;
 
 import com.crawljax.core.CrawljaxController;
+import com.crawljax.staticTracer.StaticFunctionTracer;
 
 public abstract class JSASTModifier implements NodeVisitor  {
 
@@ -39,7 +40,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		 * an empty list means that all functions should be visited.
 		 */
 		private static List<String> functionCallsNotToLog=new ArrayList<String>();
-		private static List<String> functionNodes=new ArrayList<String>();
+		
 		private static List<String> executedFunctionNodes=new ArrayList<String>();
 		/**
 		 * This is used by the JavaScript node creation functions that follow.
@@ -60,7 +61,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		
 	
 		public boolean shouldTrackClickables;
-		public boolean shouldTrackFunctionNodes=false;
+	
 		
 
 		
@@ -228,11 +229,6 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		public boolean visit(AstNode node) {
 			
 		
-				if(shouldTrackFunctionNodes){
-					if(node instanceof FunctionNode){
-						functionNodes.add(getFunctionName((FunctionNode)node));
-					}
-				}
 				
 				
 /*				if(shouldTrackFunctionCalls){
@@ -286,9 +282,9 @@ public abstract class JSASTModifier implements NodeVisitor  {
 				}
 	*/			
 				
-				else if(shouldTrackClickables){
+				if(shouldTrackClickables){
 					// should track ExecutedFunctions
-					if (node instanceof FunctionNode && functionNodes.contains(getFunctionName((FunctionNode) node))){
+					if (node instanceof FunctionNode && StaticFunctionTracer.functionNodes.contains(getFunctionName((FunctionNode) node))){
 						AstNode newNode=createExecutedFunctionTrackingNode((FunctionNode)node);
 						((FunctionNode)node).getBody().addChildToFront(newNode);
 					}
@@ -317,12 +313,12 @@ public abstract class JSASTModifier implements NodeVisitor  {
 						if (node.getParent() instanceof PropertyGet
 						        && node.getParent().getParent() instanceof FunctionCall && !node.getParent().toSource().contains("function")) {
 
-							List<AstNode> arguments =
-							        ((FunctionCall) node.getParent().getParent()).getArguments();
+							List<AstNode> arguments = new ArrayList<AstNode>();
+							arguments=((FunctionCall) node.getParent().getParent()).getArguments();
 
 							
-							if (events.indexOf(node.toSource()) != -1
-							        || events.indexOf(node.toSource() + "-" + arguments.size() + "-" + arguments.get(0).toSource()) != -1) {
+							if (events.indexOf(node.toSource()) != -1 || (arguments.size()>0 &&
+							        events.indexOf(node.toSource() + "-" + arguments.size() + "-" + arguments.get(0).toSource()) != -1)) {
 								
 								
 								PropertyGet propGet=(PropertyGet) node.getParent();

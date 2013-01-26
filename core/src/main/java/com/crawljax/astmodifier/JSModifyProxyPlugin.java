@@ -177,12 +177,14 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 			/* parse some script and save it in AST */
 			ast = rhinoParser.parse(new String(input), scopename, 0);
 
-		
-			
+				
+				
 				staticFunctionTracer.setScopeName(scopename);
+				staticFunctionTracer.setShouldTrackFuncCalls_Nodes(false, true);
 				ast.visit(staticFunctionTracer);
-			
-			
+				staticFunctionTracer.setShouldTrackFuncCalls_Nodes(true, false);
+				ast.visit(staticFunctionTracer);
+				
 				modifier.setScopeName(scopename);
 				modifier.start();
 
@@ -191,7 +193,7 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 				ast.visit(modifier);
 			*/
 				if(modifier.shouldTrackClickables){
-					modifier.shouldTrackFunctionNodes=false;
+					
 					ast.visit(modifier);
 				}
 				

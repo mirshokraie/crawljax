@@ -50,7 +50,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 			String scopeName="";
 			String uniqueId="";
 			String handlerFunc="";
-			for(int i=0;i<lines.length && !lines.equals("");i++){
+			for(int i=0;i<lines.length-1 && !lines.equals("");i++){
 				
 				scopeName=lines[i].split("::")[0];
 				i++;
