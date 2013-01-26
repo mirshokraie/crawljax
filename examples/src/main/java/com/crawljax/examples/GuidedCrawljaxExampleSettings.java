@@ -27,7 +27,7 @@ public final class GuidedCrawljaxExampleSettings {
 
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
 	
-	private static final String URL = "http://localhost/same-game/";
+	private static final String URL = "http://localhost:8080/same-game/same-game.html";
 
 
 	
@@ -74,7 +74,7 @@ public final class GuidedCrawljaxExampleSettings {
 		// crawler.setMaximumRuntime(300); 		
 		
 
-		crawler.setEfficientCrawling(false);  // this is the default setting
+		crawler.setEfficientCrawling(true);  // this is the default setting
 
 		// crawler.setDiverseCrawling(true);   // do guided crawling
 		// crawler.setClickOnce(false);       // false: multiple click, true: click only once on each clickable
