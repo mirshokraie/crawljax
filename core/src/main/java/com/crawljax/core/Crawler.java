@@ -361,7 +361,8 @@ public class Crawler implements Runnable {
 					CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
 					        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
 					        .getStateMachine());
-					updateNotFullExpandedStates();
+				//	updateNotFullExpandedStates();
+					controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
 					
 					return ClickResult.newState;
 				} else {
@@ -370,7 +371,8 @@ public class Crawler implements Runnable {
 					CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
 					        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
 					        .getStateMachine());
-					updateNotFullExpandedStates();
+				//	updateNotFullExpandedStates();
+					controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
 					return ClickResult.cloneDetected;
 				}
 			}
@@ -379,7 +381,9 @@ public class Crawler implements Runnable {
 			CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
 			        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
 			        .getStateMachine());
-			updateNotFullExpandedStates();
+			//updateNotFullExpandedStates();
+			controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
+			
 		}
 
 		// Event not fired or, Dom not changed
@@ -495,6 +499,7 @@ public class Crawler implements Runnable {
 			orrigionalState.filterCandidateActions(candidateElements);
 			// Shabnam: This is the count of candidates after filtering...
 			CrawljaxController.NumCandidateClickables += orrigionalState.getNumCandidateElements();
+			updateNotFullExpandedStates();
 		}
 		else
 			

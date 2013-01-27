@@ -35,7 +35,7 @@ public final class GuidedCrawljaxExampleSettings {
 	private static final int MAX_DEPTH = 2; // this indicates no depth-limit
 	
 
-	private static final int MAX_NUMBER_STATES = 20;
+	private static final int MAX_NUMBER_STATES = 100;
 
 	private GuidedCrawljaxExampleSettings() {
 

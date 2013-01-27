@@ -3,7 +3,7 @@ package com.crawljax.core.state;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,12 +29,10 @@ import org.mozilla.javascript.ast.ObjectProperty;
 import org.mozilla.javascript.ast.PropertyGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import com.crawljax.core.CandidateElement;
 import com.crawljax.globals.StaticCallGraph;
-import com.crawljax.graph.Edge;
 import com.crawljax.graph.Vertex;
 
 
@@ -154,10 +152,11 @@ public class StateFlowGraph implements Serializable {
 			// Shabnam: Add the new state to the list of unexpanded states
 			notFullExpandedStates.add(stateVertix);
 			LOGGER.info("State " + stateVertix + " added to the notFullExpandedStates list!");
-			if(efficientCrawling){
+			//Shabnam
+	/*		if(efficientCrawling){
 				updateStatesPotentialFuncsWithKnownElems(stateVertix);
 			}
-		}
+	*/	}
 		return null;
 	}
 
@@ -575,16 +574,24 @@ public class StateFlowGraph implements Serializable {
 				String id=(String) innerList.get(0);
 				Eventable eventable=(Eventable) innerList.get(2);
 				for(CandidateElement candidateElem:candidateElems){
-		//		if(document.getElementById(id)!=null){	
+				if(candidateElem.getElement().hasAttribute("id")){	
 					if(candidateElem.getElement().getAttribute("id").equals(id)){
 						List<Eventable> eventableList= stateVertex.getCrawlPathToState();
+
+						ArrayList<Object> elemInfo=new ArrayList<Object>();
+						elemInfo.add(candidateElem);
+					//	elemInfo.add(document.getElementById(id));
+						elemInfo.add(funcName);
+						if(isRedundantItem(state,elemInfo))
+							break;
+						if(state.equals("index")){
+							updateStatesPotentialFuncs_InitalState(state,funcName,candidateElem);
+						}
 						for(int j=0;j<eventableList.size();j++){
 							if(eventableList.get(j).equals(eventable) || eventable==null){
-								ArrayList<Object> elemInfo=new ArrayList<Object>();
-								elemInfo.add(candidateElem);
-							//	elemInfo.add(document.getElementById(id));
-								elemInfo.add(funcName);
-								if(statesPotentialFuncs.get(state)!=null && !isRedundantItem(state,elemInfo)){	
+
+						
+								if(statesPotentialFuncs.get(state)!=null){	
 									statesPotentialFuncs.get(state).add(elemInfo);		
 								}
 								else{
@@ -596,6 +603,7 @@ public class StateFlowGraph implements Serializable {
 							}
 						}
 					}
+				}
 				}	
 			}
 		}	
@@ -647,8 +655,8 @@ public class StateFlowGraph implements Serializable {
 			ArrayList<ArrayList<Object>> list=statesPotentialFuncs.get(state);
 			for(int i=0;i<list.size();i++){
 				ArrayList<Object> elementInfo=list.get(i);
-				if(((org.w3c.dom.Element)elementInfo.get(0)).
-						isEqualNode(((org.w3c.dom.Element)elemInfo.get(0)))){
+				if(((CandidateElement)elementInfo.get(0)).getElement().getAttribute("id")
+						.equals(((CandidateElement)elemInfo.get(0)).getElement().getAttribute("id"))){
 					if(((String)elementInfo.get(1)).equals(elemInfo.get(1))){
 						return true;
 					}
@@ -665,8 +673,8 @@ public class StateFlowGraph implements Serializable {
 			ArrayList<ArrayList<Object>> list=statesPotentialFuncs.get(state);
 			for(int i=0;i<list.size();i++){
 				ArrayList<Object> elemInfo=list.get(i);
-				if(((org.w3c.dom.Element)elemInfo.get(0)).
-						isEqualNode(element.getElement())){
+				if((((CandidateElement)elemInfo.get(0)).getElement().getAttribute("id"))
+						.equals(element.getElement().getAttribute("id"))){
 					String funcName=(String) elemInfo.get(1);
 					if(!executedFunctions.contains(funcName))
 						newPotFuncs++;
@@ -725,19 +733,25 @@ public class StateFlowGraph implements Serializable {
 	}
 	
 	//Shabnam returning the list of candidate elements with that are detected as real clickables
-	public ArrayList<org.w3c.dom.Element> getClickableElements(StateVertex stateVertex){
-		ArrayList<org.w3c.dom.Element> elemList=new ArrayList<org.w3c.dom.Element>();
+	public ArrayList<CandidateElement> getClickableElements(StateVertex stateVertex){
+		HashSet<CandidateElement> elemList=new HashSet<CandidateElement>();
 		String state=stateVertex.toString();
 		if(statesPotentialFuncs.get(state)!=null){
 			ArrayList<ArrayList<Object>> list=statesPotentialFuncs.get(state);
 			for(int i=0;i<list.size();i++){
 				ArrayList<Object> innerList=new ArrayList<Object>();
 				innerList=list.get(i);
-				org.w3c.dom.Element elem=(org.w3c.dom.Element) innerList.get(0);
+				CandidateElement elem=(CandidateElement) innerList.get(0);
 				elemList.add(elem);
 			}
 		}
-		return elemList;
+		Iterator<CandidateElement> it=elemList.iterator();
+		ArrayList<CandidateElement> returnElemList=new ArrayList<CandidateElement>();
+		while(it.hasNext()){
+			returnElemList.add(it.next());
+		}
+		
+		return returnElemList;
 	}
 	
 	// check whether potential functions remain the same between the current state and the previous one
@@ -771,6 +785,27 @@ public class StateFlowGraph implements Serializable {
 		return result;
 	}
 	
+	private void updateStatesPotentialFuncs_InitalState(String state, String funcName,CandidateElement candidateElem){
+	
+			
+				ArrayList<Object> elemInfo=new ArrayList<Object>();
+				elemInfo.add(candidateElem);
+			//	elemInfo.add(document.getElementById(id));
+				elemInfo.add(funcName);
+				if(isRedundantItem(state,elemInfo))
+					return;
+				if(statesPotentialFuncs.get(state)!=null){	
+					statesPotentialFuncs.get(state).add(elemInfo);		
+				}
+				else{
+					ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
+					newList.add(elemInfo);
+					statesPotentialFuncs.put(state, newList);
+				}
+				updateStatesNewPotentialFuncs(state,funcName);
+			
+		
+	}
 	
 	
 	
