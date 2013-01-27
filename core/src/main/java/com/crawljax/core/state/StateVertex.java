@@ -285,6 +285,9 @@ public class StateVertex implements Serializable {
 			//Shabnam 
 			numCandidateElements = candidateList.size();
 			candidateElemList=candidateList;
+			//Shabnam
+			int alternateNumCandidateElements=0;
+			List<CandidateElement> alternateCandidateElemList=new ArrayList<CandidateElement>();
 			try {
 				sfg.updateStatesPotentialFuncs(this, Eventables.eventableElementsMap);
 			} catch (SAXException e) {
@@ -335,16 +338,24 @@ public class StateVertex implements Serializable {
 							if (eventType.equals(EventType.click.toString())) {
 								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
 										EventType.click));
+								alternateCandidateElemList.add(candidateList.get(indices[i]));
+								alternateNumCandidateElements++;
+						
 							
 							} else {
 								if (eventType.equals(EventType.hover.toString())) {
 									candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
 											EventType.hover));
+									alternateCandidateElemList.add(candidateList.get(indices[i]));
+									alternateNumCandidateElements++;
 								
 								} else {
 									LOGGER.warn("The Event Type: " + eventType + " is not supported.");
 								}
 							}
+							//Shabnam: replacing candidate elements with the ones that we detected
+							candidateElemList=alternateCandidateElemList;
+							numCandidateElements=alternateNumCandidateElements;
 						}
 					}
 				}

@@ -313,7 +313,8 @@ public class Crawler implements Runnable {
 	private ClickResult clickTag(final Eventable eventable) throws CrawljaxException {
 		// load input element values
 		this.handleInputElements(eventable);
-
+		// Shabnam: reducing from CandidateElements of the current state
+		this.getStateMachine().getCurrentState().decreaseCandidateElements();
 		// support for meta refresh tags
 		if (eventable.getElement().getTag().toLowerCase().equals("meta")) {
 			Pattern p = Pattern.compile("(\\d+);\\s+URL=(.*)");
@@ -335,6 +336,13 @@ public class Crawler implements Runnable {
 
 		LOGGER.info("Executing " + eventable.getEventType() + " on element: " + eventable
 		        + "; State: " + this.getStateMachine().getCurrentState().getName());
+		
+		// Shabnam check if all candidateElements have been fired on the current state
+		if (this.getStateMachine().getCurrentState().isFullyExpanded())
+			this.controller.getSession().getStateFlowGraph().removeFromNotFullExpandedStates(this.getStateMachine().getCurrentState());
+
+		//Shabnam 
+		CrawljaxController.NumCandidateClickables--;
 		if (this.fireEvent(eventable)) {
 			StateVertex newState =
 			        new StateVertex(getBrowser().getCurrentUrl(), controller.getSession()
@@ -497,15 +505,16 @@ public class Crawler implements Runnable {
 			        candidateElements);
 			// update crawlActions
 			orrigionalState.filterCandidateActions(candidateElements);
-			// Shabnam: This is the count of candidates after filtering...
+			/* Shabnam: This is the count of candidates after filtering...
 			CrawljaxController.NumCandidateClickables += orrigionalState.getNumCandidateElements();
 			updateNotFullExpandedStates();
-		}
-		else
+	*/	}
+		/*else
 			
-		// Shabnam: check if there were not candidateElements for the current state (i.e., is leaf node)
+		 Shabnam: check if there were not candidateElements for the current state (i.e., is leaf node)
 			if (orrigionalState.isFullyExpanded())
 				this.controller.getSession().getStateFlowGraph().removeFromNotFullExpandedStates(orrigionalState);
+		*/
 		CandidateCrawlAction action =
 		        orrigionalState.pollCandidateCrawlAction(this, crawlQueueManager);
 		while (action != null) {
@@ -565,6 +574,7 @@ public class Crawler implements Runnable {
 
 				// Shabnam: This is the count of candidates after filtering...
 				CrawljaxController.NumCandidateClickables += orrigionalState.getNumCandidateElements();
+				updateNotFullExpandedStates();
 			}else
 				//LOGGER.info("Outer # candidateElements for state " + orrigionalState.getName() + " is ZERO!");
 
@@ -677,7 +687,15 @@ public class Crawler implements Runnable {
 		 */
 		depth++;
 		LOGGER.info("RECURSIVE Call crawl; Current DEPTH= " + depth);
-		if (!this.crawl()) {
+		
+		if(strategicCrawl){
+			if (!this.guidedCrawl()) {
+				// Crawling has stopped
+				controller.terminate(false);
+				return false;
+			}
+		}
+		else if (!this.crawl()) {
 			// Crawling has stopped
 			controller.terminate(false);
 			return false;
@@ -993,11 +1011,12 @@ public class Crawler implements Runnable {
 	
 	protected void updateNotFullExpandedStates(){
 		try{
+			
 			controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
 			ArrayList<StateVertex> notFullExpandedStates=controller.getSession().getStateFlowGraph().getNotFullExpandedStates();
 			for(int i=0;i<notFullExpandedStates.size();i++){
 				StateVertex state=notFullExpandedStates.get(i);
-			
+				System.out.println("updateStatesPotentialFuncs for " + state.getName());
 				controller.getSession().getStateFlowGraph().updateStatesPotentialFuncs(state, Eventables.eventableElementsMap);
 			}
 		}
