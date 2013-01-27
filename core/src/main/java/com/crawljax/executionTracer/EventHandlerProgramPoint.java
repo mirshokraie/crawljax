@@ -33,10 +33,10 @@ public class EventHandlerProgramPoint extends ProgramPoint {
 				JSONArray item = data.getJSONArray(i);
 				if(item.get(0).equals("giveUniqueId")){
 					result.append("Eventable" + "::");
-					if(item.get(0) instanceof JSONArray){
+					if(item.get(1) instanceof JSONArray){
 						JSONArray array=(JSONArray) item.get(1);
 						for(int j=0;j<array.length();j++){
-							result.append(array.get(j) + "::");
+							result.append(array.get(j)+ "::");
 						}
 						result.append(item.get(2));
 					}
@@ -49,7 +49,7 @@ public class EventHandlerProgramPoint extends ProgramPoint {
 					if(item.get(0).equals("addFunctionNodeTrack")){
 						result.append("FunctionExecuted" + "::");								
 						item = data.getJSONArray(i);
-						result.append(item.get(0) + "::" + item.get(1) );	
+						result.append(item.get(1) + "::" + item.get(2) );	
 						
 					}
 				result.append("\n");

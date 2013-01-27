@@ -25,6 +25,7 @@ import com.crawljax.core.Crawler;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.TagElement;
 import com.crawljax.core.state.Eventable.EventType;
+import com.crawljax.globals.Eventables;
 import com.crawljax.util.Helper;
 
 /**
@@ -54,7 +55,7 @@ public class StateVertex implements Serializable {
 	private String dom;
 	private final String strippedDom;
 	private final String url;
-	private boolean guidedCrawling = false;
+	private boolean guidedCrawling = true;
 
 	/**
 	 * This list is used to store the possible candidates. If it is null its not initialised if it's
@@ -284,6 +285,15 @@ public class StateVertex implements Serializable {
 			//Shabnam 
 			numCandidateElements = candidateList.size();
 			candidateElemList=candidateList;
+			try {
+				sfg.updateStatesPotentialFuncs(this, Eventables.eventableElementsMap);
+			} catch (SAXException e) {
+			
+				e.printStackTrace();
+			} catch (IOException e) {
+			
+				e.printStackTrace();
+			}
 			if (isEfficientCrawling){
 				/*Shabnam: perform sorting on candidate elements based on the number of new
 				potential functions that each element may exercise*/

@@ -85,6 +85,8 @@ public class StateFlowGraph implements Serializable {
 	public StateFlowGraph(StateVertex initialState) {
 		this();
 		sfg.addVertex(initialState);
+		
+		
 		//Shabnam
 		notFullExpandedStates.add(initialState);
 	}
@@ -560,8 +562,8 @@ public class StateFlowGraph implements Serializable {
 	public void updateStatesPotentialFuncs(StateVertex stateVertex, TreeMap<String,ArrayList<ArrayList<Object>>> eventableElementsMap) throws SAXException, IOException{
 		
 		String state=stateVertex.toString();
-	//	List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
-		Document document=stateVertex.getDocument();
+		List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
+	//	Document document=stateVertex.getDocument();
 			
 		Set<String> keySet=eventableElementsMap.keySet();
 		Iterator<String> it=keySet.iterator();
@@ -572,15 +574,15 @@ public class StateFlowGraph implements Serializable {
 				ArrayList<Object> innerList=list.get(i);
 				String id=(String) innerList.get(0);
 				Eventable eventable=(Eventable) innerList.get(2);
-		//		for(CandidateElement candidateElem:candidateElems){
-				if(document.getElementById(id)!=null){	
-			//		if(candidateElem.getElement().getAttribute("id").equals(id)){
+				for(CandidateElement candidateElem:candidateElems){
+		//		if(document.getElementById(id)!=null){	
+					if(candidateElem.getElement().getAttribute("id").equals(id)){
 						List<Eventable> eventableList= stateVertex.getCrawlPathToState();
 						for(int j=0;j<eventableList.size();j++){
 							if(eventableList.get(j).equals(eventable) || eventable==null){
 								ArrayList<Object> elemInfo=new ArrayList<Object>();
-								//	elemInfo.add(candidateElem);
-								elemInfo.add(document.getElementById(id));
+								elemInfo.add(candidateElem);
+							//	elemInfo.add(document.getElementById(id));
 								elemInfo.add(funcName);
 								if(statesPotentialFuncs.get(state)!=null && !isRedundantItem(state,elemInfo)){	
 									statesPotentialFuncs.get(state).add(elemInfo);		
@@ -593,8 +595,8 @@ public class StateFlowGraph implements Serializable {
 								updateStatesNewPotentialFuncs(state,funcName);
 							}
 						}
-				}
-	//			}	
+					}
+				}	
 			}
 		}	
 	}

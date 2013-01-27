@@ -83,7 +83,7 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 			"send(new Array('" + getScopeName() + "::" + enclosingFunc + "', '" + lineNo +  
             "', new Array(";
 		
-		code += "giveUniqueId('" + targetElement + "'" + ", " + "'" + 
+		code += "giveUniqueId(" + targetElement + ", " + "'" + 
 		eventHandler + "'"+"))));";
 	//	System.out.println(code);
 		return parse(code);

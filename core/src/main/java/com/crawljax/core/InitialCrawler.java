@@ -94,7 +94,7 @@ public class InitialCrawler extends Crawler {
 		CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(null, controller.getSession()
 		        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
 		        .getStateMachine());
-		updateNotFullExpandedStates();
+//		updateNotFullExpandedStates();
 		/**
 		 * Run OnNewState Plugins for the index state.
 		 */
