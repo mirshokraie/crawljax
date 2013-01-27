@@ -4,8 +4,10 @@ var idCounter = new Date().getTime();
 
 function send(value) {
 	window.buffer.push(value);
+	if(window.buffer.length == 200){
 
 		sendReally();	
+	}
 	
 }
 
