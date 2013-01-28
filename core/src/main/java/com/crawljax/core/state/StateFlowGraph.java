@@ -568,6 +568,7 @@ public class StateFlowGraph implements Serializable {
 	//	Document document=stateVertex.getDocument();
 		Set<StateVertex> stateVertices=new HashSet<StateVertex>();
 		stateVertices=getAllPredecessorVertices(stateVertex, stateVertices);
+		stateVertices.add(stateVertex);
 		Set<String> stateNames=new HashSet<String>();
 		Iterator<StateVertex> verit=stateVertices.iterator();
 		while(verit.hasNext()){
@@ -599,7 +600,7 @@ public class StateFlowGraph implements Serializable {
 						if(isRedundantItem(state,elemInfo))
 							break;
 						if(state.equals("index")){
-							updateStatesPotentialFuncs_InitalState(state,funcName,candidateElem);
+							updateStatesPotentialFuncs_InitialState(state,funcName,candidateElem);
 						}
 					//	for(int j=0;j<eventableList.size();j++){
 						//	if(eventableList.get(j).equals(eventable) || eventable==null){
@@ -808,7 +809,7 @@ public class StateFlowGraph implements Serializable {
 	}
 	
 	//Shabnam
-	private void updateStatesPotentialFuncs_InitalState(String state, String funcName,CandidateElement candidateElem){
+	private void updateStatesPotentialFuncs_InitialState(String state, String funcName,CandidateElement candidateElem){
 	
 			
 				ArrayList<Object> elemInfo=new ArrayList<Object>();
@@ -895,6 +896,7 @@ public class StateFlowGraph implements Serializable {
 	private boolean unbindedLater(StateVertex curStateVertex, String stateInPath, CandidateElement elem, String funcName,
 			TreeMap<String,ArrayList<ArrayList<Object>>> eventableElementsMap){
 		
+		
 		Set<StateVertex> allstates=new HashSet<StateVertex>();
 		allstates=this.getAllStates();
 		Iterator<StateVertex> iter=allstates.iterator();
@@ -907,7 +909,10 @@ public class StateFlowGraph implements Serializable {
 		}
 		
 		ArrayList<ArrayList<Object>> list= eventableElementsMap.get(funcName);
-
+		//adding unbinds such as unbind("click") which unbinds all click events regardless of the function name/event handler
+		ArrayList<ArrayList<Object>> clickUnbindList=eventableElementsMap.get("click");
+		if(clickUnbindList!=null)
+			list.addAll(clickUnbindList);
 		Set<StateVertex> successorStateVertices=new HashSet<StateVertex>();
 		Set<StateVertex> preStateVertices=new HashSet<StateVertex>();
 		preStateVertices=getAllPredecessorVertices(curStateVertex, preStateVertices);

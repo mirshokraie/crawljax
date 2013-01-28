@@ -20,6 +20,7 @@ import org.mozilla.javascript.ast.FunctionNode;
 import org.mozilla.javascript.ast.IfStatement;
 import org.mozilla.javascript.ast.Name;
 import org.mozilla.javascript.ast.NodeVisitor;
+import org.mozilla.javascript.ast.StringLiteral;
 
 import org.mozilla.javascript.ast.ObjectProperty;
 import org.mozilla.javascript.ast.PropertyGet;
@@ -77,6 +78,9 @@ public abstract class JSASTModifier implements NodeVisitor  {
 			events.add("bind-2-click");
 			events.add("on-2-click");
 			events.add("onclick");
+			events.add("unbind-2-click");
+			events.add("unbind");
+			
 			
 			
 			functionCallsNotToLog.add("parseInt");
