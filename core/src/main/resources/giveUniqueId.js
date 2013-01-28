@@ -24,7 +24,7 @@ function addFunctionNodeTrack(functionName, functionInfo) {
 				
 }
 
-function giveUniqueId(element, eventHandler ) {
+function giveUniqueId(element, eventHandler, eventType ) {
 	
 	var idCounterList=new Array();
 	for(var i=0;i<$(element).get().length;i++){
@@ -39,5 +39,5 @@ function giveUniqueId(element, eventHandler ) {
 	}
 
 	//	document.write(idCounterList[1]);
-	 return  new Array("giveUniqueId",idCounterList, eventHandler);
+	 return  new Array("giveUniqueId",idCounterList, eventHandler, eventType);
 };
