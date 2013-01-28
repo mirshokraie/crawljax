@@ -1,1 +1,11 @@
 Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov
+Time	#Clicks	#Links	#States	estCov	actCov	codeCov

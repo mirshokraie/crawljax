@@ -50,7 +50,7 @@ public final class GuidedCrawljaxExampleSettings {
 		ProxyConfiguration prox=new ProxyConfiguration();	
 		WebScarabWrapper web = new WebScarabWrapper();
 		AstEventHandlerInstrumenter eventHandlerInstrumenter=new AstEventHandlerInstrumenter();
-		StaticFunctionTracer staticFunctionTracer=new StaticFunctionTracer(true, true);
+		StaticFunctionTracer staticFunctionTracer=new StaticFunctionTracer();
 		JSModifyProxyPlugin proxyPlugin = new JSModifyProxyPlugin(eventHandlerInstrumenter,staticFunctionTracer);
 		proxyPlugin.excludeDefaults();
 		

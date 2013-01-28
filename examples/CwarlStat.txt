@@ -3,3 +3,53 @@ EXAMINED ELEMENTS: 0
 CLICKABLES: 0
 STATES: 1
 Dom average size (byte): 12365
+Total Crawling time(2941ms) ~= 0 min, 2 sec
+EXAMINED ELEMENTS: 0
+CLICKABLES: 0
+STATES: 1
+Dom average size (byte): 12365
+Total Crawling time(2988ms) ~= 0 min, 2 sec
+EXAMINED ELEMENTS: 0
+CLICKABLES: 0
+STATES: 1
+Dom average size (byte): 12370
+Total Crawling time(48532ms) ~= 0 min, 48 sec
+EXAMINED ELEMENTS: 120
+CLICKABLES: 19
+STATES: 20
+Dom average size (byte): 11476
+Total Crawling time(8009ms) ~= 0 min, 8 sec
+EXAMINED ELEMENTS: 120
+CLICKABLES: 1
+STATES: 2
+Dom average size (byte): 11202
+Total Crawling time(42288ms) ~= 0 min, 42 sec
+EXAMINED ELEMENTS: 120
+CLICKABLES: 19
+STATES: 20
+Dom average size (byte): 11558
+Total Crawling time(3446ms) ~= 0 min, 3 sec
+EXAMINED ELEMENTS: 0
+CLICKABLES: 0
+STATES: 1
+Dom average size (byte): 53199
+Total Crawling time(20462ms) ~= 0 min, 20 sec
+EXAMINED ELEMENTS: 120
+CLICKABLES: 6
+STATES: 7
+Dom average size (byte): 11373
+Total Crawling time(3200ms) ~= 0 min, 3 sec
+EXAMINED ELEMENTS: 0
+CLICKABLES: 0
+STATES: 1
+Dom average size (byte): 53227
+Total Crawling time(41965ms) ~= 0 min, 41 sec
+EXAMINED ELEMENTS: 120
+CLICKABLES: 19
+STATES: 20
+Dom average size (byte): 11435
+Total Crawling time(40467ms) ~= 0 min, 40 sec
+EXAMINED ELEMENTS: 120
+CLICKABLES: 19
+STATES: 20
+Dom average size (byte): 11627
