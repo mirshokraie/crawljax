@@ -137,7 +137,7 @@ public final class GuidedCrawljaxExampleSettings {
 		if (!tudu)
 			crawler.setInputSpecification(getInputSpecification());
 
-		crawler.setClickOnce(true);
+	//	crawler.setClickOnce(true);
 		crawler.setDepth(2);
 		// limit the crawling scope
 		crawler.setMaximumStates(MAX_NUMBER_STATES);

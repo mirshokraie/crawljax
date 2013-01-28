@@ -26,6 +26,7 @@ import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.TagElement;
 import com.crawljax.core.state.Eventable.EventType;
 import com.crawljax.globals.Eventables;
+import com.crawljax.globals.ExecutedFunctions;
 import com.crawljax.util.Helper;
 
 /**
@@ -288,15 +289,19 @@ public class StateVertex implements Serializable {
 			//Shabnam
 			int alternateNumCandidateElements=0;
 			List<CandidateElement> alternateCandidateElemList=new ArrayList<CandidateElement>();
+			//Shabnam
+			sfg.updateExecutedFunctions(ExecutedFunctions.executedFuncList);
 			try {
 				sfg.updateStatesPotentialFuncs(this, Eventables.eventableElementsMap);
-			} catch (SAXException e) {
+			} catch (SAXException e1) {
 			
-				e.printStackTrace();
-			} catch (IOException e) {
-			
-				e.printStackTrace();
+				e1.printStackTrace();
+			} catch (IOException e1) {
+		
+				e1.printStackTrace();
 			}
+			
+
 			if (isEfficientCrawling){
 				/*Shabnam: perform sorting on candidate elements based on the number of new
 				potential functions that each element may exercise*/
@@ -319,7 +324,7 @@ public class StateVertex implements Serializable {
 							newPotentialfuncs[i] = newPotentialfuncs[j]; 
 							newPotentialfuncs[j] = temp_newPotentialfuncs;
 						}
-
+				
 				ArrayList<CandidateElement> elemList=sfg.getClickableElements(this);
 				for (int i=0; i<candidateList.size(); i++)
 				{

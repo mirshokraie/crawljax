@@ -341,6 +341,7 @@ public class Crawler implements Runnable {
 		if (this.getStateMachine().getCurrentState().isFullyExpanded())
 			this.controller.getSession().getStateFlowGraph().removeFromNotFullExpandedStates(this.getStateMachine().getCurrentState());
 
+		
 		//Shabnam 
 		CrawljaxController.NumCandidateClickables--;
 		if (this.fireEvent(eventable)) {
@@ -367,30 +368,42 @@ public class Crawler implements Runnable {
 
 					//Shabnam
 					CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
-					        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
+					        .getCurrentCrawlPath(),controller.getSession(),this
 					        .getStateMachine());
-				//	updateNotFullExpandedStates();
-					controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
-					
-					return ClickResult.newState;
+				
+				//	controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
+					//Shabnam
+			/*		controller.getSession().getCurrentState().searchForCandidateElements(candidateExtractor,
+							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
+							configurationReader.getCrawlSpecificationReader().getClickOnce(),
+							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
+					updateNotFullExpandedStates(); 
+			*/		return ClickResult.newState;
 				} else {
 					// Dom changed; Clone
 					//Shabnam
 					CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
-					        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
+					        .getCurrentCrawlPath(),controller.getSession(),this
 					        .getStateMachine());
-				//	updateNotFullExpandedStates();
-					controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
-					return ClickResult.cloneDetected;
+			/*		controller.getSession().getCurrentState().searchForCandidateElements(candidateExtractor,
+							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
+							configurationReader.getCrawlSpecificationReader().getClickOnce(),
+							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
+					updateNotFullExpandedStates();
+			*/		return ClickResult.cloneDetected;
 				}
 			}
 			/*Shabnam DOM has not been changed but still some functions may 
 			 * have been executed so we still need to keep track of things...*/
 			CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(eventable, controller.getSession()
-			        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
+			        .getCurrentCrawlPath(),controller.getSession(),this
 			        .getStateMachine());
-			//updateNotFullExpandedStates();
-			controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
+		/*	controller.getSession().getCurrentState().searchForCandidateElements(candidateExtractor,
+					configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
+					configurationReader.getCrawlSpecificationReader().getClickOnce(),
+					controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
+			updateNotFullExpandedStates();
+		*/
 			
 		}
 
@@ -593,11 +606,20 @@ public class Crawler implements Runnable {
 				case newState:
 					System.out.println("backTrackPath for new state " +this.getStateMachine().getCurrentState().getName()+ " is " + backTrackPath);
 					this.getStateMachine().getCurrentState().setCrawlPathToState(controller.getSession().getCurrentCrawlPath());
-
-					System.out.println("newState");
+					this.getStateMachine().getCurrentState().searchForCandidateElements(candidateExtractor,
+							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
+							configurationReader.getCrawlSpecificationReader().getClickOnce(),
+							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
+					System.out.println("newState with "+this.getStateMachine().getCurrentState().getCandidateElemList().size() + " candidate elements");
+					this.updateNotFullExpandedStates();
 					break;
 				case cloneDetected:
 					System.out.println("cloneDetected");
+					this.getStateMachine().getCurrentState().searchForCandidateElements(candidateExtractor,
+							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
+							configurationReader.getCrawlSpecificationReader().getClickOnce(),
+							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
+					this.updateNotFullExpandedStates();
 					break;
 				default:
 					System.out.println("noChange");

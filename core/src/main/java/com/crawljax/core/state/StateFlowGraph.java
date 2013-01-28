@@ -424,7 +424,7 @@ public class StateFlowGraph implements Serializable {
 	 */
 	public String getNewStateName() {
 		stateCounter.getAndIncrement();
-		String state = makeStateName(stateCounter.get(), false);
+		String state = makeStateName(stateCounter.get(), efficientCrawling);
 		return state;
 	}
 

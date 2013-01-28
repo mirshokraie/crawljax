@@ -93,7 +93,7 @@ public class InitialCrawler extends Crawler {
 		stateFlowGraph.setEfficientCrawling(controller.isEfficientCrawling());
 		
 		CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(null, controller.getSession()
-		        .getCurrentCrawlPath().immutableCopy(true),controller.getSession(),this
+		        .getCurrentCrawlPath(),controller.getSession(),this
 		        .getStateMachine());
 		controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
 		/**
