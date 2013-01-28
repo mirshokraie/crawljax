@@ -573,6 +573,7 @@ public class StateFlowGraph implements Serializable {
 				ArrayList<Object> innerList=list.get(i);
 				String id=(String) innerList.get(0);
 				Eventable eventable=(Eventable) innerList.get(2);
+				String eventType=(String) innerList.get(3);
 				for(CandidateElement candidateElem:candidateElems){
 				if(candidateElem.getElement().hasAttribute("id")){	
 					if(candidateElem.getElement().getAttribute("id").equals(id)){
@@ -590,23 +591,27 @@ public class StateFlowGraph implements Serializable {
 						for(int j=0;j<eventableList.size();j++){
 							if(eventableList.get(j).equals(eventable) || eventable==null){
 
-						
-								if(statesPotentialFuncs.get(state)!=null){	
-									statesPotentialFuncs.get(state).add(elemInfo);		
+								if(!unbindedLater(j, (ArrayList<Eventable>)eventableList, candidateElem, funcName, eventableElementsMap)){
+							
+									if(statesPotentialFuncs.get(state)!=null){	
+										statesPotentialFuncs.get(state).add(elemInfo);		
+									}
+									else{
+										ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
+										newList.add(elemInfo);
+										statesPotentialFuncs.put(state, newList);
+									}
+									updateStatesNewPotentialFuncs(state,funcName);
 								}
-								else{
-									ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
-									newList.add(elemInfo);
-									statesPotentialFuncs.put(state, newList);
-								}
-								updateStatesNewPotentialFuncs(state,funcName);
 							}
 						}
 					}
 				}
 				}	
 			}
-		}	
+		}
+		
+		updateStatesPotentialFuncsWithKnownElems(stateVertex);
 	}
 
 	//Shabnam
@@ -807,7 +812,31 @@ public class StateFlowGraph implements Serializable {
 		
 	}
 	
-	
+	private boolean unbindedLater(int eventableIndex, ArrayList<Eventable> eventableList, CandidateElement elem, String funcName,
+			TreeMap<String,ArrayList<ArrayList<Object>>> eventableElementsMap){
+		ArrayList<ArrayList<Object>> list= eventableElementsMap.get(funcName);
+
+		
+			for(int i=eventableIndex;i<eventableList.size();i++){
+				for(int j=0;j<list.size();j++){
+					ArrayList<Object> innerList=list.get(j);
+					String id=(String) innerList.get(0);
+					Eventable eventable=(Eventable) innerList.get(2);
+					String eventType=(String) innerList.get(3);
+					if(eventableList.get(i).equals(eventable) &&
+							eventType.equals("unbind"))
+						if(elem.getElement().hasAttribute("id") 
+								&& elem.getElement().getAttribute("id").equals(id)){
+							return true;
+						}
+				}
+			}
+			
+			return false;
+
+					
+		
+	}
 	
 		
 	

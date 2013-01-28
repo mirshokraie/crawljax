@@ -1038,7 +1038,7 @@ public class Crawler implements Runnable {
 			ArrayList<StateVertex> notFullExpandedStates=controller.getSession().getStateFlowGraph().getNotFullExpandedStates();
 			for(int i=0;i<notFullExpandedStates.size();i++){
 				StateVertex state=notFullExpandedStates.get(i);
-				System.out.println("updateStatesPotentialFuncs for " + state.getName());
+			//	System.out.println("updateStatesPotentialFuncs for " + state.getName());
 				controller.getSession().getStateFlowGraph().updateStatesPotentialFuncs(state, Eventables.eventableElementsMap);
 			}
 		}

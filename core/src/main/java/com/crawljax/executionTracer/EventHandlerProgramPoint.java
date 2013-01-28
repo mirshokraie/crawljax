@@ -38,11 +38,11 @@ public class EventHandlerProgramPoint extends ProgramPoint {
 						for(int j=0;j<array.length();j++){
 							result.append(array.get(j)+ "::");
 						}
-						result.append(item.get(2));
+						result.append(item.get(2)+"::" + item.get(3));
 					}
 					
 					else{
-						result.append(item.get(1) + "::" + item.get(2) );
+						result.append(item.get(1) + "::" + item.get(2) + "::" + item.get(3) );
 					}
 				}
 				else

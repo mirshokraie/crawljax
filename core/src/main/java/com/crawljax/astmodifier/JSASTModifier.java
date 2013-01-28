@@ -299,8 +299,14 @@ public abstract class JSASTModifier implements NodeVisitor  {
 							AstNode rightSide=assignment.getRight();
 							if(rightSide instanceof FunctionNode){
 								if (events.indexOf(node.toSource())!=-1){
+									String str=node.toSource();
+									String eventType="";
+									if(str.contains("click"))
+										eventType="click";
+									else if(str.contains("unbind"))
+										eventType="unbind";
 									FunctionNode handler=(FunctionNode)rightSide;
-									AstNode newNode=createFunctionAttachToEventNode(handler, propGet.getLeft());
+									AstNode newNode=createFunctionAttachToEventNode(handler, propGet.getLeft(),eventType);
 									appendNodeAfterClickEvent(node, newNode);
 								}
 							}
@@ -320,15 +326,20 @@ public abstract class JSASTModifier implements NodeVisitor  {
 							if (events.indexOf(node.toSource()) != -1 || (arguments.size()>0 &&
 							        events.indexOf(node.toSource() + "-" + arguments.size() + "-" + arguments.get(0).toSource()) != -1)) {
 								
-								
+								String str=node.toSource();
+								String eventType="";
+								if(str.contains("click"))
+									eventType="click";
+								else if(str.contains("unbind"))
+									eventType="unbind";
 								PropertyGet propGet=(PropertyGet) node.getParent();
 								if(arguments.size()==1){
-									AstNode newNode=createFunctionAttachToEventNode(arguments.get(0), propGet.getLeft());
+									AstNode newNode=createFunctionAttachToEventNode(arguments.get(0), propGet.getLeft(),eventType);
 									appendNodeAfterClickEvent(node, newNode);
 									
 								}
 								else if(arguments.size()==2){
-									AstNode newNode=createFunctionAttachToEventNode(arguments.get(1), propGet.getLeft());
+									AstNode newNode=createFunctionAttachToEventNode(arguments.get(1), propGet.getLeft(),eventType);
 									appendNodeAfterClickEvent(node, newNode);
 									
 								}
@@ -363,7 +374,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		 * create node for tracking functions attached to events
 		 */
 		
-		protected abstract AstNode createFunctionAttachToEventNode(AstNode handler, AstNode element);
+		protected abstract AstNode createFunctionAttachToEventNode(AstNode handler, AstNode element,String eventType);
 		
 		/**
 		 * This method is called when the complete AST has been traversed.
