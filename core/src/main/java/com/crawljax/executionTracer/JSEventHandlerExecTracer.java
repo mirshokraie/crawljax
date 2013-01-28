@@ -50,7 +50,8 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 			String scopeName="";
 			String uniqueId="";
 			String handlerFunc="";
-			for(int i=0;i<lines.length && !lines.equals("");i++){
+			String eventType="";
+			for(int i=0;i<lines.length-1 && !lines.equals("");i++){
 				
 				scopeName=lines[i].split("::")[0];
 				i++;
@@ -58,12 +59,14 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 									
 					if(lines[i].split("::")[0].equals("Eventable")){
 						String[] uniqueIds=lines[i].split("::");
-						handlerFunc=lines[i].split("::")[uniqueIds.length-1];
+						handlerFunc=uniqueIds[uniqueIds.length-2];
+						eventType=uniqueIds[uniqueIds.length-1];
 						for(int j=1;j<uniqueIds.length-1;j++){
 							ArrayList<Object> elementInfo=new ArrayList<Object>();
 							elementInfo.add(uniqueIds[j]);
 							elementInfo.add(stateMachine.getCurrentState().toString());
 							elementInfo.add(eventable);
+							elementInfo.add(eventType);
 							if(Eventables.eventableElementsMap.get(handlerFunc)!=null){
 							
 								Eventables.eventableElementsMap.get(handlerFunc).add(elementInfo);

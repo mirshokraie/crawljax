@@ -26,10 +26,10 @@ import com.crawljax.graph.Vertex;
 public class StaticFunctionTracer implements NodeVisitor {
 	
 	private static List<String> functionCallsNotToLog=new ArrayList<String>();
-	private static List<String> functionNodes=new ArrayList<String>();
+	public static  List<String> functionNodes=new ArrayList<String>();
 	
-	public boolean shouldTrackFunctionCalls;
-	public boolean shouldTrackFunctionNodes=true;
+	private boolean shouldTrackFunctionCalls;
+	private boolean shouldTrackFunctionNodes;
 	protected static final Logger LOGGER = LoggerFactory.getLogger(CrawljaxController.class.getName());
 	 /**
 	  *  This is used by the JavaScript node creation functions that follow.
@@ -48,6 +48,12 @@ public class StaticFunctionTracer implements NodeVisitor {
 	public void setScopeName(String scopeName) {
 		this.scopeName = scopeName;
 	}
+	
+	public void setShouldTrackFuncCalls_Nodes(boolean shouldTrackfuncCalls, boolean shouldTrackfuncNodes){
+		shouldTrackFunctionCalls=shouldTrackfuncCalls;
+		shouldTrackFunctionNodes=shouldTrackfuncNodes;
+	}
+
 
 	/**
 	 * @return the scopeName
@@ -69,11 +75,9 @@ public class StaticFunctionTracer implements NodeVisitor {
 		
 	}
 	
-	public StaticFunctionTracer(boolean shouldTrackFunctionCalls,
-			boolean shouldTrackFunctionNodes){
+	public StaticFunctionTracer(){
 		
-		this.shouldTrackFunctionCalls=shouldTrackFunctionCalls;
-		this.shouldTrackFunctionNodes=shouldTrackFunctionNodes;
+
 		
 		functionCallsNotToLog.add("parseInt");
 		functionCallsNotToLog.add("jQuery");
@@ -135,6 +139,7 @@ public class StaticFunctionTracer implements NodeVisitor {
 			if(node instanceof FunctionNode){
 				functionNodes.add(getFunctionName((FunctionNode)node));
 			}
+			
 		}
 		if (shouldTrackFunctionCalls){
 		
@@ -143,13 +148,13 @@ public class StaticFunctionTracer implements NodeVisitor {
 				&& !(node instanceof NewExpression)
 				&& shouldVisitFunctionCall((FunctionCall)node)
 				&& functionNodes.contains(((FunctionCall)node).getTarget().toSource())){
-		
+			
 				FunctionNode callerFunc=node.getEnclosingFunction();
 				if(!getFunctionName(callerFunc).equals("NoFunctionNode")){
 				
 					Vertex caller=new Vertex(getFunctionName(callerFunc));
 					Vertex callee=new Vertex(((FunctionCall)node).getTarget().toSource());
-					Edge edge=new Edge(caller,caller);
+					Edge edge=new Edge(caller,callee);
 					StaticCallGraph.staticCallGraph.addEdge(edge, caller, callee);
 					/*	AstNode newNode=createFunctionTrackingNode(callerFunc, (FunctionCall) node);
 						appendNodeAfterFunctionCall(node, newNode);

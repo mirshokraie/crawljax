@@ -111,7 +111,7 @@ public class AstFunctionCallInstrumenter extends JSASTModifier {
 
 	@Override
 	protected AstNode createFunctionAttachToEventNode(AstNode handler,
-			AstNode element) {
+			AstNode element,String eventType) {
 		// TODO Auto-generated method stub
 		return null;
 	}

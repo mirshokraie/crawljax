@@ -67,7 +67,7 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 
 
 	@Override
-	protected AstNode createFunctionAttachToEventNode(AstNode handler, AstNode element) {
+	protected AstNode createFunctionAttachToEventNode(AstNode handler, AstNode element,String eventType) {
 		String eventHandler=handler.toSource();
 		String targetElement=element.toSource();
 		String enclosingFunc=getFunctionName(element.getEnclosingFunction());
@@ -83,8 +83,8 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 			"send(new Array('" + getScopeName() + "::" + enclosingFunc + "', '" + lineNo +  
             "', new Array(";
 		
-		code += "giveUniqueId('" + targetElement + "'" + ", " + "'" + 
-		eventHandler + "'"+"))));";
+		code += "giveUniqueId(" + targetElement + ", " + "'" + 
+		eventHandler + "'"+ ", " + "'" + eventType + "'" + "))));";
 	//	System.out.println(code);
 		return parse(code);
 	}

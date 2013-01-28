@@ -4,9 +4,11 @@ var idCounter = new Date().getTime();
 
 function send(value) {
 	window.buffer.push(value);
-	if(window.buffer.length == 200) {
+	if(window.buffer.length == 200){
+
 		sendReally();	
 	}
+	
 }
 
 function sendReally() {
@@ -17,22 +19,25 @@ function sendReally() {
 
 
 function addFunctionNodeTrack(functionName, functionInfo) {
-	
+
 	return new Array("addFunctionNodeTrack",functionName, functionInfo);
 				
 }
 
-function giveUniqueId(element, eventHanlder ) {
+function giveUniqueId(element, eventHandler, eventType ) {
+	
 	var idCounterList=new Array();
 	for(var i=0;i<$(element).get().length;i++){
 		 if($($(element).get(i)).prop("id")==""){
 		  $($(element).get(i)).prop("id","assignedId"+"_"+idCounter);
-		  idCounterList.push("assignedId"+"_"+idCounter);
+		  idCounterList[i]="assignedId"+"_"+idCounter;
 		  idCounter++;
 		 }
 		 else{
-			 idCounterList.push($($(element).get(i)).prop("id"));
+			 idCounterList[i]=$($(element).get(i)).prop("id");
 		 }
 	}
-	 return  new Array("giveUniqueId",idCounterList, eventHandler);
+
+	//	document.write(idCounterList[1]);
+	 return  new Array("giveUniqueId",idCounterList, eventHandler, eventType);
 };

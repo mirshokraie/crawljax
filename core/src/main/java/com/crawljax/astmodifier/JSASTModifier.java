@@ -27,6 +27,7 @@ import org.mozilla.javascript.ast.ReturnStatement;
 import org.mozilla.javascript.ast.WhileLoop;
 
 import com.crawljax.core.CrawljaxController;
+import com.crawljax.staticTracer.StaticFunctionTracer;
 
 public abstract class JSASTModifier implements NodeVisitor  {
 
@@ -39,7 +40,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		 * an empty list means that all functions should be visited.
 		 */
 		private static List<String> functionCallsNotToLog=new ArrayList<String>();
-		private static List<String> functionNodes=new ArrayList<String>();
+		
 		private static List<String> executedFunctionNodes=new ArrayList<String>();
 		/**
 		 * This is used by the JavaScript node creation functions that follow.
@@ -60,7 +61,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		
 	
 		public boolean shouldTrackClickables;
-		public boolean shouldTrackFunctionNodes=false;
+	
 		
 
 		
@@ -228,11 +229,6 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		public boolean visit(AstNode node) {
 			
 		
-				if(shouldTrackFunctionNodes){
-					if(node instanceof FunctionNode){
-						functionNodes.add(getFunctionName((FunctionNode)node));
-					}
-				}
 				
 				
 /*				if(shouldTrackFunctionCalls){
@@ -286,9 +282,9 @@ public abstract class JSASTModifier implements NodeVisitor  {
 				}
 	*/			
 				
-				else if(shouldTrackClickables){
+				if(shouldTrackClickables){
 					// should track ExecutedFunctions
-					if (node instanceof FunctionNode && functionNodes.contains(getFunctionName((FunctionNode) node))){
+					if (node instanceof FunctionNode && StaticFunctionTracer.functionNodes.contains(getFunctionName((FunctionNode) node))){
 						AstNode newNode=createExecutedFunctionTrackingNode((FunctionNode)node);
 						((FunctionNode)node).getBody().addChildToFront(newNode);
 					}
@@ -303,8 +299,14 @@ public abstract class JSASTModifier implements NodeVisitor  {
 							AstNode rightSide=assignment.getRight();
 							if(rightSide instanceof FunctionNode){
 								if (events.indexOf(node.toSource())!=-1){
+									String str=node.toSource();
+									String eventType="";
+									if(str.contains("click"))
+										eventType="click";
+									else if(str.contains("unbind"))
+										eventType="unbind";
 									FunctionNode handler=(FunctionNode)rightSide;
-									AstNode newNode=createFunctionAttachToEventNode(handler, propGet.getLeft());
+									AstNode newNode=createFunctionAttachToEventNode(handler, propGet.getLeft(),eventType);
 									appendNodeAfterClickEvent(node, newNode);
 								}
 							}
@@ -317,22 +319,27 @@ public abstract class JSASTModifier implements NodeVisitor  {
 						if (node.getParent() instanceof PropertyGet
 						        && node.getParent().getParent() instanceof FunctionCall && !node.getParent().toSource().contains("function")) {
 
-							List<AstNode> arguments =
-							        ((FunctionCall) node.getParent().getParent()).getArguments();
+							List<AstNode> arguments = new ArrayList<AstNode>();
+							arguments=((FunctionCall) node.getParent().getParent()).getArguments();
 
 							
-							if (events.indexOf(node.toSource()) != -1
-							        || events.indexOf(node.toSource() + "-" + arguments.size() + "-" + arguments.get(0).toSource()) != -1) {
+							if (events.indexOf(node.toSource()) != -1 || (arguments.size()>0 &&
+							        events.indexOf(node.toSource() + "-" + arguments.size() + "-" + arguments.get(0).toSource()) != -1)) {
 								
-								
+								String str=node.toSource();
+								String eventType="";
+								if(str.contains("click"))
+									eventType="click";
+								else if(str.contains("unbind"))
+									eventType="unbind";
 								PropertyGet propGet=(PropertyGet) node.getParent();
 								if(arguments.size()==1){
-									AstNode newNode=createFunctionAttachToEventNode(arguments.get(0), propGet.getLeft());
+									AstNode newNode=createFunctionAttachToEventNode(arguments.get(0), propGet.getLeft(),eventType);
 									appendNodeAfterClickEvent(node, newNode);
 									
 								}
 								else if(arguments.size()==2){
-									AstNode newNode=createFunctionAttachToEventNode(arguments.get(1), propGet.getLeft());
+									AstNode newNode=createFunctionAttachToEventNode(arguments.get(1), propGet.getLeft(),eventType);
 									appendNodeAfterClickEvent(node, newNode);
 									
 								}
@@ -367,7 +374,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 		 * create node for tracking functions attached to events
 		 */
 		
-		protected abstract AstNode createFunctionAttachToEventNode(AstNode handler, AstNode element);
+		protected abstract AstNode createFunctionAttachToEventNode(AstNode handler, AstNode element,String eventType);
 		
 		/**
 		 * This method is called when the complete AST has been traversed.
