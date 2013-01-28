@@ -162,10 +162,7 @@ public final class GuidedCrawljaxExampleSettings {
 		} catch (CrawljaxException e) {
 			e.printStackTrace();
 			System.exit(1);
-		} catch (ConfigurationException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		} 
 
 	}
 
