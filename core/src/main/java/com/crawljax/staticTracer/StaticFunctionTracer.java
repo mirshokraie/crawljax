@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.crawljax.core.CrawljaxController;
+import com.crawljax.globals.LabeledFunctions;
 import com.crawljax.globals.StaticCallGraph;
 import com.crawljax.graph.Edge;
 import com.crawljax.graph.Vertex;
@@ -153,7 +154,15 @@ public class StaticFunctionTracer implements NodeVisitor {
 				if(!getFunctionName(callerFunc).equals("NoFunctionNode")){
 				
 					Vertex caller=new Vertex(getFunctionName(callerFunc));
-					Vertex callee=new Vertex(((FunctionCall)node).getTarget().toSource());
+					Vertex callee;
+					String calleeFuncName=((FunctionCall)node).getTarget().toSource();
+					if(LabeledFunctions.labeledFunctions.get(calleeFuncName)!=null){
+						callee=new Vertex(LabeledFunctions.labeledFunctions.get(calleeFuncName));
+						
+					}
+					else{
+						callee=new Vertex(((FunctionCall)node).getTarget().toSource());
+					}
 					Edge edge=new Edge(caller,callee);
 					StaticCallGraph.staticCallGraph.addEdge(edge, caller, callee);
 					/*	AstNode newNode=createFunctionTrackingNode(callerFunc, (FunctionCall) node);
@@ -173,7 +182,14 @@ public class StaticFunctionTracer implements NodeVisitor {
 							if(!getFunctionName(callerFunc).equals("NoFunctionNode")){
 								
 								Vertex caller=new Vertex(getFunctionName(callerFunc));
-								Vertex callee=new Vertex(node.toSource()+"_functionAttachedToEventable");
+								Vertex callee;
+								if(LabeledFunctions.labeledFunctions.get(node.toSource())!=null){
+									callee=new Vertex(LabeledFunctions.labeledFunctions.get(node.toSource()));
+									
+								}
+								else{
+									callee=new Vertex(node.toSource()+"_functionAttachedToEventable");
+								}
 								Edge edge=new Edge(caller,caller);
 								StaticCallGraph.staticCallGraph.addEdge(edge, caller, callee);
 								/*	AstNode newNode=createFunctionTypeNameTrackingNode(callerFunc, (Name) node);
@@ -196,6 +212,14 @@ public class StaticFunctionTracer implements NodeVisitor {
 									
 									Vertex caller=new Vertex(getFunctionName(callerFunc));
 									Vertex callee=new Vertex(getFunctionName((FunctionNode)node)+"_functionAttachedToEventable");
+									if(LabeledFunctions.labeledFunctions.get(getFunctionName((FunctionNode)node))!=null){
+										callee=new Vertex(
+												LabeledFunctions.labeledFunctions.get(getFunctionName((FunctionNode)node)));
+										
+									}
+									else{
+										callee=new Vertex(getFunctionName((FunctionNode)node)+"_functionAttachedToEventable");
+									}
 									Edge edge=new Edge(caller,caller);
 									StaticCallGraph.staticCallGraph.addEdge(edge, caller, callee);
 									/*	AstNode newNode=createFunctionTypeNameTrackingNode(callerFunc,node);

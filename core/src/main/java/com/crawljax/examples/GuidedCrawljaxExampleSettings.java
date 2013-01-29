@@ -12,6 +12,7 @@ import com.crawljax.core.configuration.ProxyConfiguration;
 import com.crawljax.core.configuration.ThreadConfiguration;
 import com.crawljax.plugins.webscarabwrapper.WebScarabWrapper;
 import com.crawljax.staticTracer.StaticFunctionTracer;
+import com.crawljax.staticTracer.StaticLabeledFunctionTracer;
 import com.crawljax.astmodifier.*;
 import com.crawljax.executionTracer.*;
 import com.crawljax.core.configuration.Form;
@@ -27,7 +28,7 @@ public final class GuidedCrawljaxExampleSettings {
 
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
 	
-	private static final String URL = "http://localhost:8080/same-game/same-game.html";
+	private static final String URL = "http://localhost:8080/same-game/same-game.htm";
 
 
 	
@@ -51,7 +52,8 @@ public final class GuidedCrawljaxExampleSettings {
 		WebScarabWrapper web = new WebScarabWrapper();
 		AstEventHandlerInstrumenter eventHandlerInstrumenter=new AstEventHandlerInstrumenter();
 		StaticFunctionTracer staticFunctionTracer=new StaticFunctionTracer();
-		JSModifyProxyPlugin proxyPlugin = new JSModifyProxyPlugin(eventHandlerInstrumenter,staticFunctionTracer);
+		StaticLabeledFunctionTracer staticLabeledFunctionTracer=new StaticLabeledFunctionTracer();
+		JSModifyProxyPlugin proxyPlugin = new JSModifyProxyPlugin(eventHandlerInstrumenter,staticFunctionTracer,staticLabeledFunctionTracer);
 		proxyPlugin.excludeDefaults();
 		
 		web.addPlugin(proxyPlugin);
@@ -158,7 +160,7 @@ public final class GuidedCrawljaxExampleSettings {
 	 */
 	public static void main(String[] args) {
 		try {
-			System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
+		//	System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
 			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 			crawljax.run();
 		} catch (CrawljaxException e) {

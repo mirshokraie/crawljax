@@ -19,6 +19,7 @@ import org.w3c.dom.NodeList;
 
 import com.crawljax.executionTracer.JSEventHandlerExecTracer;
 import com.crawljax.staticTracer.StaticFunctionTracer;
+import com.crawljax.staticTracer.StaticLabeledFunctionTracer;
 import com.crawljax.util.Helper;
 
 
@@ -30,6 +31,7 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 
 	private JSASTModifier modifier;
 	private StaticFunctionTracer staticFunctionTracer;
+	private StaticLabeledFunctionTracer staticLabeledFunctionTracer;
 	
 
 	/**
@@ -38,11 +40,12 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 	 * @param modify
 	 *            The JSASTModifier to run over all JavaScript.
 	 */
-	public JSModifyProxyPlugin(JSASTModifier modify, StaticFunctionTracer staticFunctionTracer) {
+	public JSModifyProxyPlugin(JSASTModifier modify, StaticFunctionTracer staticFunctionTracer, StaticLabeledFunctionTracer staticLabeledFunctionTracer) {
 		
 		excludeFilenamePatterns = new ArrayList<String>();
 		modifier = modify;
 		this.staticFunctionTracer=staticFunctionTracer;
+		this.staticLabeledFunctionTracer=staticLabeledFunctionTracer;
 	}
 
 	/**
@@ -53,9 +56,10 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 	 * @param excludes
 	 *            List with variable patterns to exclude.
 	 */
-	public JSModifyProxyPlugin(JSASTModifier modify, List<String> excludes,StaticFunctionTracer staticFunctionTracer) {
+	public JSModifyProxyPlugin(JSASTModifier modify, List<String> excludes,StaticFunctionTracer staticFunctionTracer, StaticLabeledFunctionTracer staticLabeledFunctionTracer) {
 		excludeFilenamePatterns = excludes;
 		this.staticFunctionTracer=staticFunctionTracer;
+		this.staticLabeledFunctionTracer=staticLabeledFunctionTracer;
 		modifier = modify;
 	}
 	
@@ -178,29 +182,33 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 			ast = rhinoParser.parse(new String(input), scopename, 0);
 
 				
+			staticLabeledFunctionTracer.setScopeName(scopename);
+			ast.visit(staticLabeledFunctionTracer);
+	
 				
-				staticFunctionTracer.setScopeName(scopename);
-				staticFunctionTracer.setShouldTrackFuncCalls_Nodes(false, true);
-				ast.visit(staticFunctionTracer);
-				staticFunctionTracer.setShouldTrackFuncCalls_Nodes(true, false);
-				ast.visit(staticFunctionTracer);
+			
+			staticFunctionTracer.setScopeName(scopename);
+			staticFunctionTracer.setShouldTrackFuncCalls_Nodes(false, true);
+			ast.visit(staticFunctionTracer);
+			staticFunctionTracer.setShouldTrackFuncCalls_Nodes(true, false);
+			ast.visit(staticFunctionTracer);
 				
-				modifier.setScopeName(scopename);
-				modifier.start();
+			modifier.setScopeName(scopename);
+			modifier.start();
 
 			/* recurse through AST */
 			/*	modifier.shouldTrackFunctionNodes=true;
 				ast.visit(modifier);
 			*/
-				if(modifier.shouldTrackClickables){
-					
-					ast.visit(modifier);
-				}
+			if(modifier.shouldTrackClickables){
+				
+				ast.visit(modifier);
+			}
 				
 				
 				
 
-				modifier.finish(ast);
+			modifier.finish(ast);
 			
 			
 			/* clean up */
