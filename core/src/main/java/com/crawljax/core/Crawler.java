@@ -558,8 +558,8 @@ public class Crawler implements Runnable {
 	
 	//Shabnam
 	private boolean guidedCrawl() throws CrawljaxException {
+		
 		StateVertex orrigionalState = this.getStateMachine().getCurrentState();
-
 		while (true) {
 			//TODO: should check depth...
 			if (depthLimitReached(depth)) {
@@ -613,8 +613,8 @@ public class Crawler implements Runnable {
 							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
 							configurationReader.getCrawlSpecificationReader().getClickOnce(),
 							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
-			*///		this.updateNotFullExpandedStates();
-					break;
+					this.updateNotFullExpandedStates();
+			*/		break;
 				case cloneDetected:
 					System.out.println("cloneDetected");
 		/*			this.getStateMachine().getCurrentState().searchForCandidateElements(candidateExtractor,
@@ -630,12 +630,6 @@ public class Crawler implements Runnable {
 			}
 
 			StateVertex currentState = this.getStateMachine().getCurrentState();
-			StateVertex previousState = this.getStateMachine().getPreviousState();
-			StateVertex previousPreviousState = this.getStateMachine().getPreviousPreviousState();
-
-			//LOGGER.info("currentState is " + currentState);
-			//LOGGER.info("previousState is " + previousState);
-			//LOGGER.info("previousPreviousState is " + previousPreviousState);
 
 			StateFlowGraph sfg = controller.getSession().getStateFlowGraph();
 			ArrayList<StateVertex> notFullExpandedStates = sfg.getNotFullExpandedStates();
