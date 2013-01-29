@@ -563,6 +563,8 @@ public class StateFlowGraph implements Serializable {
 		
 		String state=stateVertex.toString();
 		List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
+		if(candidateElems==null) return;
+		
 		List<Eventable> eventableList= stateVertex.getCrawlPathToState();
 		
 	//	Document document=stateVertex.getDocument();

@@ -336,6 +336,9 @@ public class Crawler implements Runnable {
 
 		LOGGER.info("Executing " + eventable.getEventType() + " on element: " + eventable
 		        + "; State: " + this.getStateMachine().getCurrentState().getName());
+
+		System.out.println("Executing " + eventable.getEventType() + " on element: " + eventable
+		        + "; State: " + this.getStateMachine().getCurrentState().getName());
 		
 		// Shabnam check if all candidateElements have been fired on the current state
 		if (this.getStateMachine().getCurrentState().isFullyExpanded())
@@ -587,7 +590,7 @@ public class Crawler implements Runnable {
 
 				// Shabnam: This is the count of candidates after filtering...
 				CrawljaxController.NumCandidateClickables += orrigionalState.getNumCandidateElements();
-				updateNotFullExpandedStates();
+		//		updateNotFullExpandedStates();
 			}else
 				//LOGGER.info("Outer # candidateElements for state " + orrigionalState.getName() + " is ZERO!");
 
@@ -605,22 +608,21 @@ public class Crawler implements Runnable {
 				switch (result) {
 				case newState:
 					System.out.println("backTrackPath for new state " +this.getStateMachine().getCurrentState().getName()+ " is " + backTrackPath);
-					this.getStateMachine().getCurrentState().setCrawlPathToState(controller.getSession().getCurrentCrawlPath());
+			/*		this.getStateMachine().getCurrentState().setCrawlPathToState(controller.getSession().getCurrentCrawlPath());
 					this.getStateMachine().getCurrentState().searchForCandidateElements(candidateExtractor,
 							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
 							configurationReader.getCrawlSpecificationReader().getClickOnce(),
 							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
-					System.out.println("newState with "+this.getStateMachine().getCurrentState().getCandidateElemList().size() + " candidate elements");
-					this.updateNotFullExpandedStates();
+			*///		this.updateNotFullExpandedStates();
 					break;
 				case cloneDetected:
 					System.out.println("cloneDetected");
-					this.getStateMachine().getCurrentState().searchForCandidateElements(candidateExtractor,
+		/*			this.getStateMachine().getCurrentState().searchForCandidateElements(candidateExtractor,
 							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
 							configurationReader.getCrawlSpecificationReader().getClickOnce(),
 							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
 					this.updateNotFullExpandedStates();
-					break;
+		*/			break;
 				default:
 					System.out.println("noChange");
 					break;
@@ -650,6 +652,7 @@ public class Crawler implements Runnable {
 			}
 
 			LOGGER.info("Next state to crawl is: " + nextToCrawl.getName());
+			System.out.println("Next state to crawl is: " + nextToCrawl.getName());
 
 			switch (strategy){
 			case DFS:
@@ -959,7 +962,7 @@ public class Crawler implements Runnable {
 
 	//Shabnam selecting next state for crawling
 	private int nextForFunctionCovCrawling() {
-
+ 
 		StateFlowGraph sfg = controller.getSession().getStateFlowGraph();
 		ArrayList<StateVertex> notFullExpandedStates = sfg.getNotFullExpandedStates();
 		int stateIndex = 0;

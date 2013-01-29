@@ -361,9 +361,11 @@ public class StateVertex implements Serializable {
 							//Shabnam: replacing candidate elements with the ones that we detected
 							candidateElemList=alternateCandidateElemList;
 							numCandidateElements=alternateNumCandidateElements;
+							
 						}
 					}
 				}
+				System.out.println(candidateElemList.size() +" new elements detected for state " + this.getName());
 				
 			}
 			else{
