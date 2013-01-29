@@ -39,7 +39,7 @@ public class Crawler implements Runnable {
 
 	//Shabnam
 	enum CrawlStrategy {
-		FuncCov, DFS
+		FuncCov, DFS, BFS
 	}
 	//Shabnam
 	private boolean strategicCrawl = true;
@@ -640,7 +640,7 @@ public class Crawler implements Runnable {
 
 			// setting the crawl strategy
 			CrawlStrategy strategy = CrawlStrategy.FuncCov;
-
+			updateNotFullExpandedStates();
 			// choose next state to crawl based on the strategy
 			StateVertex nextToCrawl = nextStateToCrawl(strategy);
 
@@ -665,7 +665,22 @@ public class Crawler implements Runnable {
 					reloadToSate(nextToCrawl); // backtrack
 				}
 				break;
-				
+			case BFS:
+				if (nextToCrawl.equals(currentState)){
+					// For BFS, this means event did not create new state, so continue with the same state.
+					LOGGER.info("same state will be crawled for the next clickable...");
+				}else{
+					LOGGER.info("changing original from " + currentState.getName());
+					this.getStateMachine().changeToNewState(nextToCrawl);
+					LOGGER.info(" to " + this.getStateMachine().getCurrentState().getName());
+
+					// Start a new CrawlPath for this Crawler
+					controller.getSession().startNewPath();
+					LOGGER.info("Reloading page for navigating back");
+					this.goToInitialURL();
+					reloadToSate(nextToCrawl); // backtrack
+				}
+				break;
 				case FuncCov:
 					if (nextToCrawl.equals(currentState)){
 						// do nothing
@@ -912,6 +927,10 @@ public class Crawler implements Runnable {
 		ArrayList<StateVertex> notFullExpandedStates = sfg.getNotFullExpandedStates();
 
 		switch (strategy){
+		case BFS:
+			// next state is the first-in state
+			index = 0;
+			break;
 		case DFS:
 			// continue with the last-in state
 			if (notFullExpandedStates.size()>0)
