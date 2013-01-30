@@ -60,8 +60,9 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 					if(lines[i].split("::")[0].equals("Eventable")){
 						String[] uniqueIds=lines[i].split("::");
 						handlerFunc=uniqueIds[uniqueIds.length-2];
+						handlerFunc=handlerFunc.replace("'", "");
 						eventType=uniqueIds[uniqueIds.length-1];
-						for(int j=1;j<uniqueIds.length-1;j++){
+						for(int j=1;j<uniqueIds.length-2;j++){
 							ArrayList<Object> elementInfo=new ArrayList<Object>();
 							elementInfo.add(uniqueIds[j]);
 							elementInfo.add(stateMachine.getCurrentState().toString());
