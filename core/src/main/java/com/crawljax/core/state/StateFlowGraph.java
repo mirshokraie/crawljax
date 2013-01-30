@@ -717,11 +717,13 @@ public class StateFlowGraph implements Serializable {
 		ArrayList<Vertex> vertices=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getVertices();
 		for(int i=0;i<vertices.size();i++){
 			if(vertices.get(i).name.equals(funcName)){
-				ArrayList<Vertex> vertexList=new ArrayList<Vertex>();
+				Set<Vertex> vertexList=new HashSet<Vertex>();
 				Vertex vertex=vertices.get(i);
 				if(StaticCallGraph.staticCallGraph.getOutEdges(vertex).size()!=0){
-					ArrayList<Vertex> successors=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
-					for(Vertex v:successors){
+					Set<Vertex> successors= StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
+					Iterator<Vertex> iter=successors.iterator();
+					while(iter.hasNext()){
+						Vertex v=iter.next();
 						if(!executedFunctions.contains(v.name))
 							statesNewPotentialFuncs.get(stateVertex).add(v.name);
 					}
@@ -739,11 +741,14 @@ public class StateFlowGraph implements Serializable {
 		ArrayList<Vertex> vertices=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getVertices();
 		for(int i=0;i<vertices.size();i++){
 			if(vertices.get(i).name.equals(funcName)){
-				ArrayList<Vertex> vertexList=new ArrayList<Vertex>();
+				Set<Vertex> vertexList=new HashSet<Vertex>();
 				Vertex vertex=vertices.get(i);
 				if(StaticCallGraph.staticCallGraph.getOutEdges(vertex).size()!=0){
-					ArrayList<Vertex> successors=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
-					for(Vertex v:successors){
+					Set<Vertex> successors= StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
+					Iterator<Vertex> iter=successors.iterator();
+					
+					while(iter.hasNext()){
+						Vertex v=iter.next();
 						if(!executedFunctions.contains(v.name))
 							newPotFuncs++;
 					}

@@ -80,6 +80,7 @@ public abstract class JSASTModifier implements NodeVisitor  {
 			events.add("onclick");
 			events.add("unbind-2-click");
 			events.add("unbind");
+			events.add("off-2-click");
 			
 			
 			

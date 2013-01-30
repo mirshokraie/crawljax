@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -403,7 +404,7 @@ public class WeightedGraph implements DirectedGraph<Vertex, Edge>  {
 		return false;
 	}
 	
-	public ArrayList<Vertex> getAllSuccessorVertices(Vertex v,ArrayList<Vertex> vertices){
+	public Set<Vertex> getAllSuccessorVertices(Vertex v,Set<Vertex> vertices){
 		
 		if(v.outEdges.size()!=0){
 			Iterator<Edge> it=v.outEdges.iterator();
