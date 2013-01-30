@@ -412,8 +412,8 @@ public class WeightedGraph implements DirectedGraph<Vertex, Edge>  {
 				getAllSuccessorVertices(it.next().getDest(),vertices);
 			}
 		}
-		else
-			vertices.add(v);
+		
+		vertices.add(v);
 		return vertices;
 			
 	}

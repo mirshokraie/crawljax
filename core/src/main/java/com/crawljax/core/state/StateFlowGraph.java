@@ -876,8 +876,8 @@ public class StateFlowGraph implements Serializable {
 				getAllPredecessorVertices(it.next().getSourceStateVertex(),stateVertices);
 			}
 		}
-		else
-			stateVertices.add(stateVertex);
+		
+		stateVertices.add(stateVertex);
 		return stateVertices;
 			
 	}
@@ -893,8 +893,8 @@ public class StateFlowGraph implements Serializable {
 				getAllPredecessorVertices(it.next().getTargetStateVertex(),stateVertices);
 			}
 		}
-		else
-			stateVertices.add(stateVertex);
+		
+		stateVertices.add(stateVertex);
 		return stateVertices;
 			
 	}
@@ -927,8 +927,7 @@ public class StateFlowGraph implements Serializable {
 		Set<StateVertex> preStateVertices=new HashSet<StateVertex>();
 		preStateVertices=getAllPredecessorVertices(curStateVertex, preStateVertices);
 		successorStateVertices=getAllSuccessorVertices(vertexInPath, successorStateVertices);
-	//	preStateVertices.add(curStateVertex);
-	//	successorStateVertices.add(vertexInPath);
+
 		
 		Set<String> successorStateNames=new HashSet<String>();
 		Iterator<StateVertex> verit=successorStateVertices.iterator();

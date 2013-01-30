@@ -976,6 +976,8 @@ public class Crawler implements Runnable {
 		}
 		LOGGER.info("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
 				+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
+		System.out.println("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
+				+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
 
 		if(!allEquals)
 			return stateIndex;
