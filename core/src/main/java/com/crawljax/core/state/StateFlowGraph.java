@@ -568,15 +568,13 @@ public class StateFlowGraph implements Serializable {
 		List<Eventable> eventableList= stateVertex.getCrawlPathToState();
 		
 	//	Document document=stateVertex.getDocument();
-		Set<StateVertex> stateVertices=new HashSet<StateVertex>();
-		stateVertices=getAllPredecessorVertices(stateVertex, stateVertices);
-		stateVertices.add(stateVertex);
 		Set<String> stateNames=new HashSet<String>();
-		Iterator<StateVertex> verit=stateVertices.iterator();
-		while(verit.hasNext()){
-			StateVertex vertex=verit.next();
-			stateNames.add(vertex.getName());
-		}
+		
+		stateNames=getAllPredecessorVertices(stateVertex, stateNames);
+	//	stateVertices.add(stateVertex);
+	
+	
+
 		Set<String> keySet=eventableElementsMap.keySet();
 		Iterator<String> it=keySet.iterator();
 		while(it.hasNext()){
@@ -717,15 +715,15 @@ public class StateFlowGraph implements Serializable {
 		ArrayList<Vertex> vertices=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getVertices();
 		for(int i=0;i<vertices.size();i++){
 			if(vertices.get(i).name.equals(funcName)){
-				Set<Vertex> vertexList=new HashSet<Vertex>();
+				Set<String> vertexList=new HashSet<String>();
 				Vertex vertex=vertices.get(i);
 				if(StaticCallGraph.staticCallGraph.getOutEdges(vertex).size()!=0){
-					Set<Vertex> successors= StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
-					Iterator<Vertex> iter=successors.iterator();
+					Set<String> successors= StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
+					Iterator<String> iter=successors.iterator();
 					while(iter.hasNext()){
-						Vertex v=iter.next();
-						if(!executedFunctions.contains(v.name))
-							statesNewPotentialFuncs.get(stateVertex).add(v.name);
+						String v=iter.next();
+						if(!executedFunctions.contains(v))
+							statesNewPotentialFuncs.get(stateVertex).add(v);
 					}
 				}
 					
@@ -741,15 +739,15 @@ public class StateFlowGraph implements Serializable {
 		ArrayList<Vertex> vertices=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getVertices();
 		for(int i=0;i<vertices.size();i++){
 			if(vertices.get(i).name.equals(funcName)){
-				Set<Vertex> vertexList=new HashSet<Vertex>();
+				Set<String> vertexList=new HashSet<String>();
 				Vertex vertex=vertices.get(i);
 				if(StaticCallGraph.staticCallGraph.getOutEdges(vertex).size()!=0){
-					Set<Vertex> successors= StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
-					Iterator<Vertex> iter=successors.iterator();
+					Set<String> successors= StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
+					Iterator<String> iter=successors.iterator();
 					
 					while(iter.hasNext()){
-						Vertex v=iter.next();
-						if(!executedFunctions.contains(v.name))
+						String v=iter.next();
+						if(!executedFunctions.contains(v))
 							newPotFuncs++;
 					}
 				}
@@ -866,7 +864,7 @@ public class StateFlowGraph implements Serializable {
 	}
 */	
 	//Shabnam
-	private Set<StateVertex> getAllPredecessorVertices(StateVertex stateVertex,Set<StateVertex> stateVertices){
+	private Set<String> getAllPredecessorVertices(StateVertex stateVertex,Set<String> stateVertices){
 		
 		Set<Eventable> eventable=sfg.incomingEdgesOf(stateVertex);
 		if(eventable.size()!=0){
@@ -877,24 +875,24 @@ public class StateFlowGraph implements Serializable {
 			}
 		}
 		
-		stateVertices.add(stateVertex);
+		stateVertices.add(stateVertex.getName());
 		return stateVertices;
 			
 	}
 	
 	//Shabnam
-	private Set<StateVertex> getAllSuccessorVertices(StateVertex stateVertex,Set<StateVertex> stateVertices){
+	private Set<String> getAllSuccessorVertices(StateVertex stateVertex,Set<String> stateVertices){
 		
 		Set<Eventable> eventable=sfg.outgoingEdgesOf(stateVertex);
 		if(eventable.size()!=0){
 			
 			Iterator<Eventable> it=eventable.iterator();
 			while(it.hasNext()){
-				getAllPredecessorVertices(it.next().getTargetStateVertex(),stateVertices);
+				getAllSuccessorVertices(it.next().getTargetStateVertex(),stateVertices);
 			}
 		}
 		
-		stateVertices.add(stateVertex);
+		stateVertices.add(stateVertex.getName());
 		return stateVertices;
 			
 	}
@@ -923,24 +921,15 @@ public class StateFlowGraph implements Serializable {
 		ArrayList<ArrayList<Object>> clickUnbindList=eventableElementsMap.get("click");
 		if(clickUnbindList!=null)
 			list.addAll(clickUnbindList);
-		Set<StateVertex> successorStateVertices=new HashSet<StateVertex>();
-		Set<StateVertex> preStateVertices=new HashSet<StateVertex>();
-		preStateVertices=getAllPredecessorVertices(curStateVertex, preStateVertices);
-		successorStateVertices=getAllSuccessorVertices(vertexInPath, successorStateVertices);
-
-		
 		Set<String> successorStateNames=new HashSet<String>();
-		Iterator<StateVertex> verit=successorStateVertices.iterator();
-		while(verit.hasNext()){
-			StateVertex vertex=verit.next();
-			successorStateNames.add(vertex.getName());
-		}
 		Set<String> preStateNames=new HashSet<String>();
-		Iterator<StateVertex> preVerIt=preStateVertices.iterator();
-		while(preVerIt.hasNext()){
-			StateVertex vertex=preVerIt.next();
-			preStateNames.add(vertex.getName());
-		}
+		preStateNames=getAllPredecessorVertices(curStateVertex, preStateNames);
+		successorStateNames=getAllSuccessorVertices(vertexInPath, successorStateNames);
+		successorStateNames.remove(vertexInPath.getName());
+		preStateNames.remove(curStateVertex.getName());
+		
+	
+
 	
 				for(int j=0;j<list.size();j++){
 					ArrayList<Object> innerList=list.get(j);

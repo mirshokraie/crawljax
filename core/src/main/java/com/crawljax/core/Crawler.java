@@ -608,21 +608,21 @@ public class Crawler implements Runnable {
 				switch (result) {
 				case newState:
 					System.out.println("backTrackPath for new state " +this.getStateMachine().getCurrentState().getName()+ " is " + backTrackPath);
-			/*		this.getStateMachine().getCurrentState().setCrawlPathToState(controller.getSession().getCurrentCrawlPath());
+					this.getStateMachine().getCurrentState().setCrawlPathToState(controller.getSession().getCurrentCrawlPath());
 					this.getStateMachine().getCurrentState().searchForCandidateElements(candidateExtractor,
 							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
 							configurationReader.getCrawlSpecificationReader().getClickOnce(),
 							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
-					this.updateNotFullExpandedStates();
-			*/		break;
+			//		this.updateNotFullExpandedStates();
+					break;
 				case cloneDetected:
 					System.out.println("cloneDetected");
-		/*			this.getStateMachine().getCurrentState().searchForCandidateElements(candidateExtractor,
+					this.getStateMachine().getCurrentState().searchForCandidateElements(candidateExtractor,
 							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
 							configurationReader.getCrawlSpecificationReader().getClickOnce(),
 							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
-					this.updateNotFullExpandedStates();
-		*/			break;
+		//			this.updateNotFullExpandedStates();
+					break;
 				default:
 					System.out.println("noChange");
 					break;
@@ -972,6 +972,7 @@ public class Crawler implements Runnable {
 				stateIndex=i;
 				allEquals=false;
 			}
+			System.out.println("score for state" + i + " is " + stateNewPotentialFuncs);
 			
 		}
 		LOGGER.info("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
