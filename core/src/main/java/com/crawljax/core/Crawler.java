@@ -980,7 +980,7 @@ public class Crawler implements Runnable {
 		if(!allEquals)
 			return stateIndex;
 		else{
-			Random rand=new Random();
+			Random rand=new Random(10);
 			return rand.nextInt(notFullExpandedStates.size());
 			
 		}
