@@ -637,8 +637,12 @@ public class Crawler implements Runnable {
 			// setting the crawl strategy
 			CrawlStrategy strategy = CrawlStrategy.FuncCov;
 			updateNotFullExpandedStates();
-			// choose next state to crawl based on the strategy
-			StateVertex nextToCrawl = nextStateToCrawl(strategy);
+			StateVertex nextToCrawl; 
+			if(orrigionalState.isFullyExpanded())
+				// choose next state to crawl based on the strategy
+				nextToCrawl = nextStateToCrawl(strategy);
+			else
+				nextToCrawl=orrigionalState;
 
 			if (nextToCrawl==null){
 				LOGGER.info("Something is wrong! nextToCrawl is null...");

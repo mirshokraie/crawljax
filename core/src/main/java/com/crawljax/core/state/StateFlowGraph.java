@@ -925,7 +925,7 @@ public class StateFlowGraph implements Serializable {
 		Set<String> preStateNames=new HashSet<String>();
 		preStateNames=getAllPredecessorVertices(curStateVertex, preStateNames);
 		successorStateNames=getAllSuccessorVertices(vertexInPath, successorStateNames);
-		successorStateNames.remove(vertexInPath.getName());
+	//	successorStateNames.remove(vertexInPath.getName());
 		preStateNames.remove(curStateVertex.getName());
 		
 	

@@ -77,15 +77,15 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 		eventHandler = eventHandler.replaceAll("\\\"", "\\\\\"");
 		eventHandler = eventHandler.replaceAll("\\\'", "\\\\\'");
 		targetElement = targetElement.replaceAll("\\\"", "\\\\\"");
-		targetElement = targetElement.replaceAll("\\\'", "\\\\\'");
+	//	targetElement = targetElement.replaceAll("\\\'", "\\\\\'");
 		int lineNo=element.getLineno();
 		String code=
 			"send(new Array('" + getScopeName() + "::" + enclosingFunc + "', '" + lineNo +  
             "', new Array(";
 		
-		code += "giveUniqueId(" + targetElement + ", " + "'" + 
+		code += "giveUniqueId(" +  targetElement + ", " + "'" + 
 		eventHandler + "'"+ ", " + "'" + eventType + "'" + "))));";
-	//	System.out.println(code);
+		System.out.println(code);
 		return parse(code);
 	}
 
@@ -106,7 +106,7 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 		
 		code += "addFunctionNodeTrack('" + functionName + "'" + ", " + "'" + 
 		"NoMoreInfoYet" + "'"+"))));";
-	//	System.out.println(code);
+		System.out.println(code);
 		return parse(code);
 	
 	}
