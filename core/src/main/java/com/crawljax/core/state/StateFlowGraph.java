@@ -33,7 +33,6 @@ import org.xml.sax.SAXException;
 
 import com.crawljax.core.CandidateElement;
 import com.crawljax.globals.GlobalVars;
-import com.crawljax.globals.StaticCallGraph;
 import com.crawljax.graph.Edge;
 import com.crawljax.graph.Vertex;
 
@@ -732,13 +731,13 @@ public class StateFlowGraph implements Serializable {
 	
 	//Shabnam
 	private void updateNewPotentialFuncCall(String stateVertex,String funcName){
-		ArrayList<Vertex> vertices=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getVertices();
+		ArrayList<Vertex> vertices=(ArrayList<Vertex>) GlobalVars.staticCallGraph.getVertices();
 		for(int i=0;i<vertices.size();i++){
 			if(vertices.get(i).name.equals(funcName)){
 				Set<String> vertexList=new HashSet<String>();
 				Vertex vertex=vertices.get(i);
-				if(StaticCallGraph.staticCallGraph.getOutEdges(vertex).size()!=0){
-					Set<String> successors= StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
+				if(GlobalVars.staticCallGraph.getOutEdges(vertex).size()!=0){
+					Set<String> successors= GlobalVars.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
 					Iterator<String> iter=successors.iterator();
 					while(iter.hasNext()){
 						String v=iter.next();
@@ -756,13 +755,13 @@ public class StateFlowGraph implements Serializable {
 	//Shabnam
 	private int getNewPotentialFuncCall(String funcName){
 		int newPotFuncs=0;
-		ArrayList<Vertex> vertices=(ArrayList<Vertex>) StaticCallGraph.staticCallGraph.getVertices();
+		ArrayList<Vertex> vertices=(ArrayList<Vertex>) GlobalVars.staticCallGraph.getVertices();
 		for(int i=0;i<vertices.size();i++){
 			if(vertices.get(i).name.equals(funcName)){
 				Set<String> vertexList=new HashSet<String>();
 				Vertex vertex=vertices.get(i);
-				if(StaticCallGraph.staticCallGraph.getOutEdges(vertex).size()!=0){
-					Set<String> successors= StaticCallGraph.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
+				if(GlobalVars.staticCallGraph.getOutEdges(vertex).size()!=0){
+					Set<String> successors= GlobalVars.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
 					Iterator<String> iter=successors.iterator();
 					
 					while(iter.hasNext()){

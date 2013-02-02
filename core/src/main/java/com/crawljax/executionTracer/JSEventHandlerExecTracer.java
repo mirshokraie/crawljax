@@ -11,7 +11,6 @@ import com.crawljax.core.CrawlSession;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateMachine;
-import com.crawljax.globals.ExecutedFunctions;
 import com.crawljax.globals.GlobalVars;
 
 public class JSEventHandlerExecTracer extends ExecutionTracer {
@@ -83,7 +82,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 					else 
 						if(lines[i].split("::")[0].equals("FunctionExecuted")){
 							functionName=lines[i].split("::")[1];
-							ExecutedFunctions.executedFuncList.add(functionName);
+							GlobalVars.executedFuncList.add(functionName);
 						}
 					
 					i++;

@@ -11,7 +11,7 @@ import com.crawljax.core.CrawlSession;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateMachine;
-import com.crawljax.globals.ExecutedFunctions;
+import com.crawljax.globals.GlobalVars;
 
 @Deprecated
 public class JSExecutedFuncsExecTracer extends ExecutionTracer 
@@ -55,7 +55,7 @@ public class JSExecutedFuncsExecTracer extends ExecutionTracer
 					while (!lines[i].equals("================================================")){
 														
 						functionName=lines[i].split("::")[0];
-						ExecutedFunctions.executedFuncList.add(functionName);
+						GlobalVars.executedFuncList.add(functionName);
 						i++;
 							
 					}

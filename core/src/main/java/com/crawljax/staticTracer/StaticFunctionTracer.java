@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.crawljax.core.CrawljaxController;
 import com.crawljax.globals.GlobalVars;
-import com.crawljax.globals.LabeledFunctions;
-import com.crawljax.globals.StaticCallGraph;
 import com.crawljax.graph.Edge;
 import com.crawljax.graph.Vertex;
 
@@ -163,15 +161,15 @@ public class StaticFunctionTracer implements NodeVisitor {
 					Vertex caller=new Vertex(getFunctionName(callerFunc));
 					Vertex callee;
 					String calleeFuncName=((FunctionCall)node).getTarget().toSource();
-					if(LabeledFunctions.labeledFunctions.get(calleeFuncName)!=null){
-						callee=new Vertex(LabeledFunctions.labeledFunctions.get(calleeFuncName));
+					if(GlobalVars.labeledFunctions.get(calleeFuncName)!=null){
+						callee=new Vertex(GlobalVars.labeledFunctions.get(calleeFuncName));
 						
 					}
 					else{
 						callee=new Vertex(((FunctionCall)node).getTarget().toSource());
 					}
 					Edge edge=new Edge(caller,callee);
-					StaticCallGraph.staticCallGraph.addEdge(edge, caller, callee);
+					GlobalVars.staticCallGraph.addEdge(edge, caller, callee);
 					/*	AstNode newNode=createFunctionTrackingNode(callerFunc, (FunctionCall) node);
 						appendNodeAfterFunctionCall(node, newNode);
 					*/
@@ -198,8 +196,8 @@ public class StaticFunctionTracer implements NodeVisitor {
 									FunctionNode caller=node.getEnclosingFunction();
 									String name=getFunctionName(caller);
 									String callerName;
-									if(LabeledFunctions.labeledFunctions.get(name)!=null){
-										callerName=LabeledFunctions.labeledFunctions.get(name);
+									if(GlobalVars.labeledFunctions.get(name)!=null){
+										callerName=GlobalVars.labeledFunctions.get(name);
 										
 									}
 									else{
@@ -237,8 +235,8 @@ public class StaticFunctionTracer implements NodeVisitor {
 								String name=getFunctionName(caller);
 								String handlerName="";
 								String callerName;
-								if(LabeledFunctions.labeledFunctions.get(name)!=null){
-									callerName=LabeledFunctions.labeledFunctions.get(name);
+								if(GlobalVars.labeledFunctions.get(name)!=null){
+									callerName=GlobalVars.labeledFunctions.get(name);
 									
 								}
 								else{

@@ -11,7 +11,7 @@ import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateFlowGraph;
 import com.crawljax.core.state.StateMachine;
 import com.crawljax.core.state.StateVertex;
-import com.crawljax.globals.ExecutedFunctions;
+import com.crawljax.globals.GlobalVars;
 
 /**
  * This is the initial Crawler. An initial crawler crawls only the index page, creates the index
@@ -95,7 +95,7 @@ public class InitialCrawler extends Crawler {
 		CrawljaxPluginsUtil.runOnFireEventSuccessPlugins(null, controller.getSession()
 		        .getCurrentCrawlPath(),controller.getSession(),this
 		        .getStateMachine());
-		controller.getSession().getStateFlowGraph().updateExecutedFunctions(ExecutedFunctions.executedFuncList);
+		controller.getSession().getStateFlowGraph().updateExecutedFunctions(GlobalVars.executedFuncList);
 		/**
 		 * Run OnNewState Plugins for the index state.
 		 */

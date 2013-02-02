@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.crawljax.core.CrawljaxController;
-import com.crawljax.globals.LabeledFunctions;
+import com.crawljax.globals.GlobalVars;
 
 			
 public class StaticLabeledFunctionTracer implements NodeVisitor {
@@ -102,7 +102,7 @@ public class StaticLabeledFunctionTracer implements NodeVisitor {
 				FunctionNode funcNode=(FunctionNode) ((LabeledStatement)node).getStatement();
 				String funcName=getFunctionName(funcNode);
 				String labelName=((LabeledStatement)node).getLabels().get(0).getName();
-				LabeledFunctions.labeledFunctions.put(labelName, funcName);
+				GlobalVars.labeledFunctions.put(labelName, funcName);
 			
 				
 			}
