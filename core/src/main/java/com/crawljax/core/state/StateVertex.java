@@ -25,8 +25,8 @@ import com.crawljax.core.Crawler;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.TagElement;
 import com.crawljax.core.state.Eventable.EventType;
-import com.crawljax.globals.Eventables;
 import com.crawljax.globals.ExecutedFunctions;
+import com.crawljax.globals.GlobalVars;
 import com.crawljax.util.Helper;
 
 /**
@@ -292,7 +292,7 @@ public class StateVertex implements Serializable {
 			//Shabnam
 			sfg.updateExecutedFunctions(ExecutedFunctions.executedFuncList);
 			try {
-				sfg.updateStatesPotentialFuncs(this, Eventables.eventableElementsMap);
+				sfg.updateStatesPotentialFuncs(this, GlobalVars.eventableElementsMap);
 			} catch (SAXException e1) {
 			
 				e1.printStackTrace();

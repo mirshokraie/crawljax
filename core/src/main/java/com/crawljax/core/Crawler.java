@@ -26,8 +26,8 @@ import com.crawljax.core.state.StateMachine;
 import com.crawljax.core.state.StateVertex;
 import com.crawljax.forms.FormHandler;
 import com.crawljax.forms.FormInput;
-import com.crawljax.globals.Eventables;
 import com.crawljax.globals.ExecutedFunctions;
+import com.crawljax.globals.GlobalVars;
 import com.crawljax.util.ElementResolver;
 
 /**
@@ -1062,7 +1062,7 @@ public class Crawler implements Runnable {
 			for(int i=0;i<notFullExpandedStates.size();i++){
 				StateVertex state=notFullExpandedStates.get(i);
 			//	System.out.println("updateStatesPotentialFuncs for " + state.getName());
-				controller.getSession().getStateFlowGraph().updateStatesPotentialFuncs(state, Eventables.eventableElementsMap);
+				controller.getSession().getStateFlowGraph().updateStatesPotentialFuncs(state, GlobalVars.eventableElementsMap);
 			}
 		}
 		catch (SAXException e) {

@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.crawljax.core.CandidateElement;
+import com.crawljax.globals.GlobalVars;
 import com.crawljax.globals.StaticCallGraph;
 import com.crawljax.graph.Edge;
 import com.crawljax.graph.Vertex;
@@ -641,10 +642,29 @@ public class StateFlowGraph implements Serializable {
 	
 	//Shabnam
 	public int getStatesNewPotentialFuncs(StateVertex stateVertex){
-		if(statesNewPotentialFuncs.get(stateVertex.toString())!=null){
-			return statesNewPotentialFuncs.get(stateVertex.toString()).size();
+		
+		if(statesNewPotentialFuncs.get(stateVertex.toString())==null) return 0;
+			
+		return(statesNewPotentialFuncs.get(stateVertex.toString()).size()
+				+ getStatesNewPotentialFutureClickables(stateVertex));
+		
+		
+	}
+	
+	//Shabnam
+	public int getStatesNewPotentialFutureClickables(StateVertex stateVertex){
+		HashSet<String> funcNames=statesNewPotentialFuncs.get(stateVertex.toString());
+		int count=0;
+		if(funcNames==null) return 0;
+		Iterator<String> iter=funcNames.iterator();
+		while(iter.hasNext()){
+			String funcName=iter.next();
+			count+=getPotentialFutureClickables(funcName);
 		}
-		return 0;
+			
+		return count;
+		
+		
 	}
 	
 	//Shabnam
@@ -951,6 +971,20 @@ public class StateFlowGraph implements Serializable {
 					
 		
 	}
+	
+	private int getPotentialFutureClickables(String funcName){
+		int count=0;
+		HashSet<String> handlerSet=GlobalVars.potentialFutrueClickables.get(funcName);
+		if(handlerSet==null) return 0;
+		Iterator<String> iter=handlerSet.iterator();
+		while(iter.hasNext()){
+			String handler=iter.next();
+			if(!executedFunctions.contains(handler))
+				count++;
+		}
+		return count;
+	}
+	
 	
 		
 	

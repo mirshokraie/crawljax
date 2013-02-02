@@ -28,8 +28,8 @@ public final class GuidedCrawljaxExampleSettings {
 
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
 	
-	private static final String URL = "http://localhost:8080//Ghostbusters1/Ghostbusters.htm";
-
+	//private static final String URL = "http://localhost:8080//Ghostbusters1/Ghostbusters.htm";
+	private static final String URL = "http://localhost:8080//same-game/same-game.htm";
 
 	
 
@@ -101,7 +101,8 @@ public final class GuidedCrawljaxExampleSettings {
 			crawler.click("span");
 			crawler.click("img");
 			crawler.click("input").withAttribute("type", "submit");
-	*/		crawler.click("div");
+			crawler.click("div");
+	*/		crawler.click("td");
 		}else{
 			// this is just for the TuduList application
 			Form form=new Form();

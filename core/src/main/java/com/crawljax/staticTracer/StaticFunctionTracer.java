@@ -1,11 +1,13 @@
 package com.crawljax.staticTracer;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.Parser;
+import org.mozilla.javascript.ast.Assignment;
 import org.mozilla.javascript.ast.AstNode;
 import org.mozilla.javascript.ast.FunctionCall;
 import org.mozilla.javascript.ast.FunctionNode;
@@ -18,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.crawljax.core.CrawljaxController;
+import com.crawljax.globals.GlobalVars;
 import com.crawljax.globals.LabeledFunctions;
 import com.crawljax.globals.StaticCallGraph;
 import com.crawljax.graph.Edge;
@@ -41,7 +44,8 @@ public class StaticFunctionTracer implements NodeVisitor {
 	 * Contains the scopename of the AST we are visiting. Generally this will be the filename
 	 */
 	private String scopeName = null;
-	
+	private final ArrayList<String> events = new ArrayList<String>() ;
+
 	/**
 	 * @param scopeName
 	 *            the scopeName to set
@@ -78,7 +82,10 @@ public class StaticFunctionTracer implements NodeVisitor {
 	
 	public StaticFunctionTracer(){
 		
-
+		events.add("click");
+		events.add("bind-2-click");
+		events.add("on-2-click");
+		events.add("onclick");
 		
 		functionCallsNotToLog.add("parseInt");
 		functionCallsNotToLog.add("jQuery");
@@ -172,70 +179,104 @@ public class StaticFunctionTracer implements NodeVisitor {
 
 			}
     
-			else
-				if(node instanceof Name){
-					if(node.getParent() instanceof PropertyGet 
-							|| (node.getParent() instanceof FunctionCall 
-							&& !((FunctionCall)node.getParent()).getTarget().toSource().equals(node.toSource()))){
-						if(functionNodes.contains(node.toSource())){
-							FunctionNode callerFunc=node.getEnclosingFunction();
-							if(!getFunctionName(callerFunc).equals("NoFunctionNode")){
-								
-								Vertex caller=new Vertex(getFunctionName(callerFunc));
-								Vertex callee;
-								if(LabeledFunctions.labeledFunctions.get(node.toSource())!=null){
-									callee=new Vertex(LabeledFunctions.labeledFunctions.get(node.toSource()));
-									
-								}
-								else{
-									callee=new Vertex(node.toSource()+"_functionAttachedToEventable");
-								}
-								Edge edge=new Edge(caller,caller);
-								StaticCallGraph.staticCallGraph.addEdge(edge, caller, callee);
-								/*	AstNode newNode=createFunctionTypeNameTrackingNode(callerFunc, (Name) node);
-    								appendNodeAfterFunctionCall(node, newNode);
-								*/
-							}
-						}
-					}
-				}
-    	
-				else{
-					if(node instanceof FunctionNode){
-						if(node.getParent() instanceof FunctionCall
-							&& !((FunctionCall)node.getParent()).getTarget().toSource().equals(node.toSource())
-							|| !(node.getParent() instanceof FunctionCall)){
-	    		
-							if(functionNodes.contains(getFunctionName((FunctionNode) node))){
-								FunctionNode callerFunc=node.getEnclosingFunction();
-								if(!getFunctionName(callerFunc).equals("NoFunctionNode")){
-									
-									Vertex caller=new Vertex(getFunctionName(callerFunc));
-									Vertex callee=new Vertex(getFunctionName((FunctionNode)node)+"_functionAttachedToEventable");
-									if(LabeledFunctions.labeledFunctions.get(getFunctionName((FunctionNode)node))!=null){
-										callee=new Vertex(
-												LabeledFunctions.labeledFunctions.get(getFunctionName((FunctionNode)node)));
+			
+			
+					// should track clickables such as .click, ... 
+					if (node instanceof Name) {
+
+					
+						if(node.getParent() instanceof PropertyGet &&
+								node.getParent().getParent() instanceof Assignment){
+							Assignment assignment=(Assignment)node.getParent().getParent();
+			
+							AstNode rightSide=assignment.getRight();
+							if(rightSide instanceof FunctionNode){
+								if (events.indexOf(node.toSource())!=-1){
+							
+									FunctionNode handler=(FunctionNode)rightSide;
+									String handlerName=getFunctionName(handler);
+									FunctionNode caller=node.getEnclosingFunction();
+									String name=getFunctionName(caller);
+									String callerName;
+									if(LabeledFunctions.labeledFunctions.get(name)!=null){
+										callerName=LabeledFunctions.labeledFunctions.get(name);
 										
 									}
 									else{
-										callee=new Vertex(getFunctionName((FunctionNode)node)+"_functionAttachedToEventable");
+										callerName=name;
 									}
-									Edge edge=new Edge(caller,caller);
-									StaticCallGraph.staticCallGraph.addEdge(edge, caller, callee);
-									/*	AstNode newNode=createFunctionTypeNameTrackingNode(callerFunc,node);
-	    								appendNodeAfterFunctionCall(node, newNode);
-									*/
+									if(GlobalVars.potentialFutrueClickables.get(callerName)!=null){
+										HashSet<String> handlerSet=GlobalVars.potentialFutrueClickables.get(callerName);
+										handlerSet.add(handlerName);
+										
+									}
+									else{
+										HashSet<String> handlerSet=new HashSet<String>();
+										handlerSet.add(handlerName);
+										GlobalVars.potentialFutrueClickables.put(callerName, handlerSet);
+									}
 								}
 							}
-						}
-					}
-    	
-				}
-		}
+							
 	
+						}
+						
+						
+						
+						if (node.getParent() instanceof PropertyGet
+						        && node.getParent().getParent() instanceof FunctionCall && !node.getParent().toSource().contains("function")) {
+
+							List<AstNode> arguments = new ArrayList<AstNode>();
+							arguments=((FunctionCall) node.getParent().getParent()).getArguments();
+
+							
+							if (events.indexOf(node.toSource()) != -1 || (arguments.size()>0 &&
+							        events.indexOf(node.toSource() + "-" + arguments.size() + "-" + arguments.get(0).toSource()) != -1)) {
+					
+								FunctionNode caller=node.getEnclosingFunction();
+								String name=getFunctionName(caller);
+								String handlerName="";
+								String callerName;
+								if(LabeledFunctions.labeledFunctions.get(name)!=null){
+									callerName=LabeledFunctions.labeledFunctions.get(name);
+									
+								}
+								else{
+									callerName=name;
+								}
+								if(arguments.size()==1){
+									handlerName=arguments.get(0).toSource();		
+									
+								}
+								else if(arguments.size()==2){
+									handlerName=arguments.get(1).toSource();
+									
+								}
+								
+								if(GlobalVars.potentialFutrueClickables.get(callerName)!=null){
+									HashSet<String> handlerSet=GlobalVars.potentialFutrueClickables.get(callerName);
+									handlerSet.add(handlerName);
+									
+								}
+								else{
+									HashSet<String> handlerSet=new HashSet<String>();
+									handlerSet.add(handlerName);
+									GlobalVars.potentialFutrueClickables.put(callerName, handlerSet);
+								}
+
+							
+
+							}
+						}
+					
+			
+					}
+		
+		}
+		
 		return true;
 		
+
 	}
-
-
 }
+

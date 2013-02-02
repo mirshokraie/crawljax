@@ -11,8 +11,8 @@ import com.crawljax.core.CrawlSession;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateMachine;
-import com.crawljax.globals.Eventables;
 import com.crawljax.globals.ExecutedFunctions;
+import com.crawljax.globals.GlobalVars;
 
 public class JSEventHandlerExecTracer extends ExecutionTracer {
 
@@ -68,15 +68,15 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 							elementInfo.add(stateMachine.getCurrentState().toString());
 							elementInfo.add(eventable);
 							elementInfo.add(eventType);
-							if(Eventables.eventableElementsMap.get(handlerFunc)!=null){
+							if(GlobalVars.eventableElementsMap.get(handlerFunc)!=null){
 							
-								Eventables.eventableElementsMap.get(handlerFunc).add(elementInfo);
+								GlobalVars.eventableElementsMap.get(handlerFunc).add(elementInfo);
 				
 							}
 							else{
 								ArrayList<ArrayList<Object>> newList=new ArrayList<ArrayList<Object>>();
 								newList.add(elementInfo);
-								Eventables.eventableElementsMap.put(handlerFunc,newList);
+								GlobalVars.eventableElementsMap.put(handlerFunc,newList);
 							}
 						}
 					}
