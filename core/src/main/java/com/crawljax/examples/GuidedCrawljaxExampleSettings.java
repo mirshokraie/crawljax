@@ -11,7 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.jgrapht.GraphPath;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
 import com.crawljax.core.CandidateElement;
@@ -26,9 +28,12 @@ import com.crawljax.plugins.webscarabwrapper.WebScarabWrapper;
 import com.crawljax.staticTracer.StaticFunctionTracer;
 import com.crawljax.staticTracer.StaticLabeledFunctionTracer;
 import com.crawljax.util.Helper;
+import com.crawljax.util.XPathHelper;
 import com.crawljax.astmodifier.*;
 import com.crawljax.executionTracer.*;
 import com.crawljax.core.configuration.Form;
+import com.crawljax.core.state.Attribute;
+import com.crawljax.core.state.Eventable;
 import com.crawljax.core.state.StateFlowGraph;
 import com.crawljax.core.state.StateVertex;
 
@@ -181,7 +186,7 @@ public final class GuidedCrawljaxExampleSettings {
 			crawljax.run();
 			String outputdir = "same-output";
 			writeStateFlowGraphToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
-		
+			writeAllPossiblePathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 		} catch (CrawljaxException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -191,6 +196,8 @@ public final class GuidedCrawljaxExampleSettings {
 	
 	private static void writeStateFlowGraphToFile(StateFlowGraph stateFlowGraph, String outputDir){
 		try{
+			
+			
 			StringBuffer result=new StringBuffer();
 			Helper.directoryCheck(Helper.addFolderSlashIfNeeded(outputDir));
 			String filename =  Helper.addFolderSlashIfNeeded(outputDir) + "stateFlowGraph" + ".txt";	
@@ -207,9 +214,11 @@ public final class GuidedCrawljaxExampleSettings {
 					for(int i=0;i<element.getAttributes().getLength();i++){
 						String attrName=element.getAttributes().item(i).getNodeName();
 						String attrValue=element.getAttributes().item(i).getNodeValue();
-						result.append(attrName + "::" + attrValue +"\n");
+						result.append(attrName + "::" + attrValue + "\n");
 					}
-				result.append("---------------------------------------------------------------------------\n");
+					String xpath=XPathHelper.getXPathExpression(element);
+					result.append("xpath::" + xpath + "\n");
+					result.append("---------------------------------------------------------------------------\n");
 				
 				}
 				result.append("===========================================================================\n");
@@ -223,4 +232,54 @@ public final class GuidedCrawljaxExampleSettings {
 		}
 	}
 
+	private static void writeAllPossiblePathToFile(StateFlowGraph stateFlowGraph, String outputDir){
+		try{
+			StringBuffer result=new StringBuffer();
+			Helper.directoryCheck(Helper.addFolderSlashIfNeeded(outputDir));
+			String filename =  Helper.addFolderSlashIfNeeded(outputDir) + "allPossiblePath" + ".txt";	
+			PrintWriter file = new PrintWriter(filename);
+			Iterator<StateVertex> it=stateFlowGraph.getAllStates().iterator();
+			StateVertex index = null;
+			while(it.hasNext()){
+				StateVertex state=it.next();
+				if(state.getName().equals("index")){
+					index=state;
+					break;
+				}
+			}
+			List<List<GraphPath<StateVertex, Eventable>>> allPath=stateFlowGraph.getAllPossiblePaths(index);
+			for(int i=0;i<allPath.size();i++){
+				List<GraphPath<StateVertex, Eventable>> path=allPath.get(i);
+				for(int j=0;j<path.size();j++){
+					StateVertex start=path.get(j).getStartVertex();
+					String startVertexName=start.getName();
+					StateVertex end=path.get(j).getEndVertex();
+					String endVertexName=end.getName();
+					result.append(startVertexName + "::" + endVertexName + "\n");
+					List<Eventable> events=path.get(j).getEdgeList();
+					for(Eventable event:events){
+						NamedNodeMap attrs=event.getElement().getNode().getAttributes();
+						for(int k=0;k<attrs.getLength();k++){
+							String attrName=attrs.item(k).getNodeName();
+							String attrValue=attrs.item(k).getNodeValue();
+							result.append(attrName + "::" + attrValue + "\n");
+						}
+						String xpath=XPathHelper.getXPathExpression(event.getElement().getNode());
+						result.append("xpath::" + xpath + "\n");
+						result.append("---------------------------------------------------------------------------\n");
+					}
+					result.append("===========================================================================\n");
+					
+				}
+			}
+			file.write(result.toString());
+			file.close();
+			
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		
+	}
 }
