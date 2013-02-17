@@ -2,7 +2,19 @@ package com.crawljax.examples;
 
 
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.w3c.dom.Element;
+
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
+import com.crawljax.core.CandidateElement;
 import com.crawljax.core.CrawljaxController;
 import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.configuration.CrawlSpecification;
@@ -13,9 +25,12 @@ import com.crawljax.core.configuration.ThreadConfiguration;
 import com.crawljax.plugins.webscarabwrapper.WebScarabWrapper;
 import com.crawljax.staticTracer.StaticFunctionTracer;
 import com.crawljax.staticTracer.StaticLabeledFunctionTracer;
+import com.crawljax.util.Helper;
 import com.crawljax.astmodifier.*;
 import com.crawljax.executionTracer.*;
 import com.crawljax.core.configuration.Form;
+import com.crawljax.core.state.StateFlowGraph;
+import com.crawljax.core.state.StateVertex;
 
 
 
@@ -36,7 +51,7 @@ public final class GuidedCrawljaxExampleSettings {
 	private static final int MAX_DEPTH = 0; // this indicates no depth-limit
 	
 
-	private static final int MAX_NUMBER_STATES = 100;
+	private static final int MAX_NUMBER_STATES = 10;
 
 	private GuidedCrawljaxExampleSettings() {
 
@@ -164,11 +179,48 @@ public final class GuidedCrawljaxExampleSettings {
 	//		System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
 			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 			crawljax.run();
+			String outputdir = "same-output";
+			writeStateFlowGraphToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
+		
 		} catch (CrawljaxException e) {
 			e.printStackTrace();
 			System.exit(1);
 		} 
 
+	}
+	
+	private static void writeStateFlowGraphToFile(StateFlowGraph stateFlowGraph, String outputDir){
+		try{
+			StringBuffer result=new StringBuffer();
+			Helper.directoryCheck(Helper.addFolderSlashIfNeeded(outputDir));
+			String filename =  Helper.addFolderSlashIfNeeded(outputDir) + "stateFlowGraph" + ".txt";	
+			PrintWriter file = new PrintWriter(filename);
+			
+			Set<StateVertex> stateVertexList=stateFlowGraph.getAllStates();
+			Iterator<StateVertex> it=stateVertexList.iterator();
+			while(it.hasNext()){
+				StateVertex stateVertex=it.next();
+				result.append(stateVertex.getName() + "\n");
+				List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
+				for(CandidateElement elem:candidateElems){
+					Element element=elem.getElement();
+					for(int i=0;i<element.getAttributes().getLength();i++){
+						String attrName=element.getAttributes().item(i).getNodeName();
+						String attrValue=element.getAttributes().item(i).getNodeValue();
+						result.append(attrName + "::" + attrValue +"\n");
+					}
+				result.append("---------------------------------------------------------------------------\n");
+				
+				}
+				result.append("===========================================================================\n");
+			}
+			
+			file.write(result.toString());
+			file.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 
 }
