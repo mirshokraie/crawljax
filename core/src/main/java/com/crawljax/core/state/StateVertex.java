@@ -314,20 +314,30 @@ public class StateVertex implements Serializable {
 					newPotentialfuncs[i]= sfg.getNoElementNewPotentialFuncs(this, candidateList.get(i));
 				}
 				
+				removeElemsWithRepeatedPotentialfuncs(candidateList,newPotentialfuncs,sfg);
+	/*			ArrayList<Integer> elemsWithRepeatedPotentialFuncs=new ArrayList<Integer>();
 				for(int i=0;i<candidateList.size();i++){
 					for(int j=i+1;j<candidateList.size();j++){
 						if(newPotentialfuncs[i]==newPotentialfuncs[j]){
 							Set<String> seti=sfg.getElementNewPotentialFuncs(this, candidateList.get(i));
 							Set<String> setj=sfg.getElementNewPotentialFuncs(this, candidateList.get(j));
 							if(seti.equals(setj)){
-								newPotentialfuncs[j]=0;
+								elemsWithRepeatedPotentialFuncs.add(j);
+//								newPotentialfuncs[j]=0;
 								
 							}
 						}
 					}
 				}
-			
+				RandomGen random=new RandomGen();
 				
+				int thershold=(int) Math.round(elemsWithRepeatedPotentialFuncs.size()*0.5);
+				for(int count=0;count<thershold;count++){
+					int index=elemsWithRepeatedPotentialFuncs.get(random.getNextRandomInt(elemsWithRepeatedPotentialFuncs.size()));
+					newPotentialfuncs[index]=0;
+				}
+			
+	*/			
 				int temp_idx; int temp_newPotentialfuncs;
 				for (int i=0; i<candidateList.size(); i++)
 					for (int j=i; j<candidateList.size(); j++)
@@ -619,5 +629,36 @@ public class StateVertex implements Serializable {
 	//Shabnam
 	public List<CandidateElement> getCandidateElemList(){
 		return candidateElemList;
+	}
+	
+	//Shabnam
+	private void removeElemsWithRepeatedPotentialfuncs(List<CandidateElement> candidateList, int[] newPotentialfuncs, StateFlowGraph sfg){
+		ArrayList<Integer> elemsWithRepeatedPotentialFuncs=new ArrayList<Integer>();
+		for(int i=0;i<candidateList.size();i++){
+			for(int j=i+1;j<candidateList.size();j++){
+				if(newPotentialfuncs[i]==newPotentialfuncs[j] && newPotentialfuncs[i]!=0){
+					Set<String> seti=sfg.getElementNewPotentialFuncs(this, candidateList.get(i));
+					Set<String> setj=sfg.getElementNewPotentialFuncs(this, candidateList.get(j));
+					if(seti.equals(setj)){
+						if(!elemsWithRepeatedPotentialFuncs.contains(j))
+							elemsWithRepeatedPotentialFuncs.add(j);
+//						newPotentialfuncs[j]=0;
+						
+					}
+				}
+			}
+		}
+		RandomGen random=new RandomGen();
+		
+		int thershold=(int) Math.round(elemsWithRepeatedPotentialFuncs.size()*0.8);
+		for(int count=0;count<thershold;count++){
+			
+			int index=elemsWithRepeatedPotentialFuncs.get(random.getNextRandomInt(elemsWithRepeatedPotentialFuncs.size()));
+			while(newPotentialfuncs[index]==0){
+				index=elemsWithRepeatedPotentialFuncs.get(random.getNextRandomInt(elemsWithRepeatedPotentialFuncs.size()));
+			}
+				
+			newPotentialfuncs[index]=0;
+		}
 	}
 }
