@@ -27,6 +27,7 @@ import com.crawljax.core.state.StateVertex;
 import com.crawljax.forms.FormHandler;
 import com.crawljax.forms.FormInput;
 import com.crawljax.globals.GlobalVars;
+import com.crawljax.randomGenerator.RandomGen;
 import com.crawljax.util.ElementResolver;
 
 /**
@@ -986,8 +987,8 @@ public class Crawler implements Runnable {
 		if(!allEquals)
 			return stateIndex;
 		else{
-			Random rand=new Random(10);
-			return rand.nextInt(notFullExpandedStates.size());
+			RandomGen rand=new RandomGen();
+			return rand.getNextRandomInt(notFullExpandedStates.size());
 			
 		}
 			

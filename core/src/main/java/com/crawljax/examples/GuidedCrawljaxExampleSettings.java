@@ -258,6 +258,8 @@ public final class GuidedCrawljaxExampleSettings {
 					result.append(startVertexName + "::" + endVertexName + "\n");
 					List<Eventable> events=path.get(j).getEdgeList();
 					for(Eventable event:events){
+						String tagName=event.getElement().getNode().getNodeName();
+						result.append("tagName::" + tagName + "\n");
 						NamedNodeMap attrs=event.getElement().getNode().getAttributes();
 						for(int k=0;k<attrs.getLength();k++){
 							String attrName=attrs.item(k).getNodeName();

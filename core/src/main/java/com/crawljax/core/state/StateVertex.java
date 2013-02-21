@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -26,6 +27,7 @@ import com.crawljax.core.CrawljaxException;
 import com.crawljax.core.TagElement;
 import com.crawljax.core.state.Eventable.EventType;
 import com.crawljax.globals.GlobalVars;
+import com.crawljax.randomGenerator.RandomGen;
 import com.crawljax.util.Helper;
 
 /**
@@ -309,8 +311,22 @@ public class StateVertex implements Serializable {
 				
 				for (int i=0; i<candidateList.size(); i++){
 					indices[i]=i;
-					newPotentialfuncs[i]= sfg.getElementNewPotentialFuncs(this, candidateList.get(i));
+					newPotentialfuncs[i]= sfg.getNoElementNewPotentialFuncs(this, candidateList.get(i));
 				}
+				
+				for(int i=0;i<candidateList.size();i++){
+					for(int j=i+1;j<candidateList.size();j++){
+						if(newPotentialfuncs[i]==newPotentialfuncs[j]){
+							Set<String> seti=sfg.getElementNewPotentialFuncs(this, candidateList.get(i));
+							Set<String> setj=sfg.getElementNewPotentialFuncs(this, candidateList.get(j));
+							if(seti.equals(setj)){
+								newPotentialfuncs[j]=0;
+								
+							}
+						}
+					}
+				}
+			
 				
 				int temp_idx; int temp_newPotentialfuncs;
 				for (int i=0; i<candidateList.size(); i++)
@@ -325,6 +341,7 @@ public class StateVertex implements Serializable {
 						}
 				
 				ArrayList<CandidateElement> elemList=sfg.getClickableElements(this);
+				ArrayList<CandidateElement> elemListPresentInCurrDom=new ArrayList<CandidateElement>();
 				for (int i=0; i<candidateList.size(); i++)
 				{
 					for (String eventType : eventTypes) { 
@@ -334,11 +351,12 @@ public class StateVertex implements Serializable {
 							if(elemList.get(j).getElement().hasAttribute("id"))
 								if(elemList.get(j).getElement().getAttribute("id").equals(
 										candidateList.get(indices[i]).getElement().getAttribute("id"))){
+									elemListPresentInCurrDom.add(candidateList.get(indices[i]));
 									select=true;
 									break;
 								}
 						}
-						if(select){
+						if(select && newPotentialfuncs[i]!=0){
 							if (eventType.equals(EventType.click.toString())) {
 								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
 										EventType.click));
@@ -357,13 +375,26 @@ public class StateVertex implements Serializable {
 									LOGGER.warn("The Event Type: " + eventType + " is not supported.");
 								}
 							}
-							//Shabnam: replacing candidate elements with the ones that we detected
-							candidateElemList=alternateCandidateElemList;
-							numCandidateElements=alternateNumCandidateElements;
+							
+
 							
 						}
 					}
 				}
+				if(candidateActions.size()==0){
+					if(elemListPresentInCurrDom.size()!=0){
+						RandomGen rand=new RandomGen();
+						int index=rand.getNextRandomInt(elemListPresentInCurrDom.size());
+						candidateActions.add(new CandidateCrawlAction(elemListPresentInCurrDom.get(index),
+								EventType.click));
+						alternateCandidateElemList.add(elemListPresentInCurrDom.get(index));
+						alternateNumCandidateElements++;
+					}
+				}
+			
+				//Shabnam: replacing candidate elements with the ones that we detected
+				candidateElemList=alternateCandidateElemList;
+				numCandidateElements=alternateNumCandidateElements;
 				System.out.println(candidateElemList.size() +" new elements detected for state " + this.getName());
 				
 			}

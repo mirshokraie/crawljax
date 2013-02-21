@@ -706,7 +706,7 @@ public class StateFlowGraph implements Serializable {
 		return false;
 	}
 	// Shabnam get the number of all new potential functions for the given element
-	public int getElementNewPotentialFuncs(StateVertex stateVertex, CandidateElement element){
+	public int getNoElementNewPotentialFuncs(StateVertex stateVertex, CandidateElement element){
 		int newPotFuncs=0;
 		String state=stateVertex.toString();
 		if(statesPotentialFuncs.get(state)!=null){
@@ -718,7 +718,7 @@ public class StateFlowGraph implements Serializable {
 					String funcName=(String) elemInfo.get(1);
 					if(!executedFunctions.contains(funcName))
 						newPotFuncs++;
-					newPotFuncs+=getNewPotentialFuncCall(funcName);
+					newPotFuncs+=getNoNewPotentialFuncCall(funcName);
 					
 					break;
 				}
@@ -728,6 +728,33 @@ public class StateFlowGraph implements Serializable {
 		}
 		return newPotFuncs;
 	}
+	
+	public Set<String> getElementNewPotentialFuncs(StateVertex stateVertex, CandidateElement element){
+		Set<String> newPotFuncs=new HashSet<String>();
+		
+		String state=stateVertex.toString();
+		if(statesPotentialFuncs.get(state)!=null){
+			ArrayList<ArrayList<Object>> list=statesPotentialFuncs.get(state);
+			for(int i=0;i<list.size();i++){
+				ArrayList<Object> elemInfo=list.get(i);
+				if((((CandidateElement)elemInfo.get(0)).getElement().getAttribute("id"))
+						.equals(element.getElement().getAttribute("id"))){
+					String funcName=(String) elemInfo.get(1);
+					if(!executedFunctions.contains(funcName)){
+						newPotFuncs.add(funcName);
+					}
+					newPotFuncs.addAll(getNewPotentialFuncCall(funcName));
+					
+					break;
+				}
+				
+			}
+			
+		}
+		return newPotFuncs;
+	}
+	
+	
 	
 	//Shabnam
 	private void updateNewPotentialFuncCall(String stateVertex,String funcName){
@@ -753,7 +780,7 @@ public class StateFlowGraph implements Serializable {
 	}
 	
 	//Shabnam
-	private int getNewPotentialFuncCall(String funcName){
+	private int getNoNewPotentialFuncCall(String funcName){
 		int newPotFuncs=0;
 		ArrayList<Vertex> vertices=(ArrayList<Vertex>) GlobalVars.staticCallGraph.getVertices();
 		for(int i=0;i<vertices.size();i++){
@@ -768,6 +795,31 @@ public class StateFlowGraph implements Serializable {
 						String v=iter.next();
 						if(!executedFunctions.contains(v))
 							newPotFuncs++;
+					}
+				}
+					
+				break;
+			}
+		}
+		return newPotFuncs;
+		
+	}
+	
+	private Set<String> getNewPotentialFuncCall(String funcName){
+		Set<String> newPotFuncs=new HashSet<String>();
+		ArrayList<Vertex> vertices=(ArrayList<Vertex>) GlobalVars.staticCallGraph.getVertices();
+		for(int i=0;i<vertices.size();i++){
+			if(vertices.get(i).name.equals(funcName)){
+				Set<String> vertexList=new HashSet<String>();
+				Vertex vertex=vertices.get(i);
+				if(GlobalVars.staticCallGraph.getOutEdges(vertex).size()!=0){
+					Set<String> successors= GlobalVars.staticCallGraph.getAllSuccessorVertices(vertex, vertexList);
+					Iterator<String> iter=successors.iterator();
+					
+					while(iter.hasNext()){
+						String v=iter.next();
+						if(!executedFunctions.contains(v))
+							newPotFuncs.add(v);
 					}
 				}
 					
