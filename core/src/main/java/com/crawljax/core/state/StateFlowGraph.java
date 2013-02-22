@@ -439,9 +439,6 @@ public class StateFlowGraph implements Serializable {
 	 */
 	private String makeStateName(int id, boolean guided) {
 
-		if (guided) {
-			return "guided" + id;
-		}
 
 		return "state" + id;
 	}
