@@ -560,6 +560,7 @@ public class Crawler implements Runnable {
 	private boolean guidedCrawl() throws CrawljaxException {
 		
 		StateVertex orrigionalState = this.getStateMachine().getCurrentState();
+		
 		while (true) {
 			//TODO: should check depth...
 			if (depthLimitReached(depth)) {
@@ -600,7 +601,7 @@ public class Crawler implements Runnable {
 			else{
 				CandidateCrawlAction action =
 					orrigionalState.pollCandidateCrawlAction(this, crawlQueueManager);
-
+				
 				ClickResult result = this.crawlAction(action);
 
 				orrigionalState.finishedWorking(this, action);
@@ -613,7 +614,8 @@ public class Crawler implements Runnable {
 							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
 							configurationReader.getCrawlSpecificationReader().getClickOnce(),
 							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
-			//		this.updateNotFullExpandedStates();
+					GlobalVars.stateCrawlPathMap.put(this.getStateMachine().getCurrentState(),this.getStateMachine().getCurrentState().getCrawlPathToState());
+					//		this.updateNotFullExpandedStates();
 					break;
 				case cloneDetected:
 					System.out.println("cloneDetected");
@@ -621,7 +623,8 @@ public class Crawler implements Runnable {
 							configurationReader.getTagElements(), configurationReader.getExcludeTagElements(),
 							configurationReader.getCrawlSpecificationReader().getClickOnce(),
 							controller.getSession().getStateFlowGraph(),controller.isEfficientCrawling());
-		//			this.updateNotFullExpandedStates();
+					GlobalVars.stateCrawlPathMap.put(this.getStateMachine().getCurrentState(),this.getStateMachine().getCurrentState().getCrawlPathToState());
+					//			this.updateNotFullExpandedStates();
 					break;
 				default:
 					System.out.println("noChange");
@@ -979,16 +982,24 @@ public class Crawler implements Runnable {
 			System.out.println("score for state" + i + " is " + stateNewPotentialFuncs);
 			
 		}
-		LOGGER.info("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
-				+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
-		System.out.println("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
-				+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
 
-		if(!allEquals)
+
+		if(!allEquals){
+			LOGGER.info("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
+					+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
+			System.out.println("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
+					+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
 			return stateIndex;
+		}
 		else{
+			
 			RandomGen rand=new RandomGen();
-			return rand.getNextRandomInt(notFullExpandedStates.size());
+			int randomlySelectedIndex=rand.getNextRandomInt(notFullExpandedStates.size());
+			LOGGER.info("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(randomlySelectedIndex).getName()
+					+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
+			System.out.println("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(randomlySelectedIndex).getName()
+					+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
+			return randomlySelectedIndex;
 			
 		}
 			

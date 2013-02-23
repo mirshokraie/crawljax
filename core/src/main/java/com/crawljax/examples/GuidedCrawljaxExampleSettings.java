@@ -31,6 +31,7 @@ import com.crawljax.util.Helper;
 import com.crawljax.util.XPathHelper;
 import com.crawljax.astmodifier.*;
 import com.crawljax.executionTracer.*;
+import com.crawljax.globals.GlobalVars;
 import com.crawljax.core.configuration.Form;
 import com.crawljax.core.state.Attribute;
 import com.crawljax.core.state.Eventable;
@@ -56,7 +57,7 @@ public final class GuidedCrawljaxExampleSettings {
 	private static final int MAX_DEPTH = 0; // this indicates no depth-limit
 	
 
-	private static final int MAX_NUMBER_STATES = 10;
+	private static final int MAX_NUMBER_STATES = 0;
 
 	private GuidedCrawljaxExampleSettings() {
 
@@ -100,14 +101,11 @@ public final class GuidedCrawljaxExampleSettings {
 
 		crawler.setEfficientCrawling(true);  // this is the default setting
 
-		// crawler.setDiverseCrawling(true);   // do guided crawling
-		// crawler.setClickOnce(false);       // false: multiple click, true: click only once on each clickable
-
 		boolean doEfficientCrawling = true;
 
 		if (doEfficientCrawling){
 			crawler.setEfficientCrawling(true);
-			crawler.setClickOnce(false);
+			crawler.setClickOnce(true);
 		}
 
 		// click these elements
@@ -161,7 +159,7 @@ public final class GuidedCrawljaxExampleSettings {
 			crawler.setInputSpecification(getInputSpecification());
 
 	//	crawler.setClickOnce(true);
-		crawler.setDepth(2);
+	//	crawler.setDepth(2);
 		// limit the crawling scope
 		crawler.setMaximumStates(MAX_NUMBER_STATES);
 		crawler.setDepth(MAX_DEPTH);
@@ -187,6 +185,7 @@ public final class GuidedCrawljaxExampleSettings {
 			String outputdir = "same-output";
 			writeStateFlowGraphToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 			writeAllPossiblePathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
+			writeAllPathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 		} catch (CrawljaxException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -194,6 +193,7 @@ public final class GuidedCrawljaxExampleSettings {
 
 	}
 	
+	@Deprecated
 	private static void writeStateFlowGraphToFile(StateFlowGraph stateFlowGraph, String outputDir){
 		try{
 			
@@ -232,6 +232,79 @@ public final class GuidedCrawljaxExampleSettings {
 		}
 	}
 
+	
+	
+	private static void writeAllPathToFile(StateFlowGraph stateFlowGraph, String outputDir){
+		try{
+			StringBuffer result=new StringBuffer();
+			Helper.directoryCheck(Helper.addFolderSlashIfNeeded(outputDir));
+			String filename =  Helper.addFolderSlashIfNeeded(outputDir) + "allPossiblePath" + ".txt";	
+			PrintWriter file = new PrintWriter(filename);
+			
+			Iterator<StateVertex> it=stateFlowGraph.getAllStates().iterator();
+			StateVertex index = null;
+			while(it.hasNext()){
+				StateVertex state=it.next();
+				if(state.getName().equals("index")){
+					index=state;
+					break;
+				}
+			}
+			
+			List<StateVertex> leafNodeList=stateFlowGraph.getDeepStates(index);
+			Set<StateVertex> keys=GlobalVars.stateCrawlPathMap.keySet();
+			Iterator<StateVertex> iter=keys.iterator();
+			while(iter.hasNext()){
+				StateVertex state=iter.next();
+				if(!leafNodeList.contains(state)){
+					GlobalVars.stateCrawlPathMap.removeAll(state);
+					iter=keys.iterator();
+				}
+			}
+			
+			keys=GlobalVars.stateCrawlPathMap.keySet();
+			iter=keys.iterator();
+			while(iter.hasNext()){
+				StateVertex end=iter.next();
+				String startVertexName=index.getName();
+				String endVertexName=end.getName();
+				
+				List<List<Eventable>> events=GlobalVars.stateCrawlPathMap.get(end);
+				for(List<Eventable> eventableList:events){
+					result.append(startVertexName + "::" + endVertexName + "\n");
+					for(Eventable event:eventableList){
+						String tagName=event.getElement().getNode().getNodeName();
+						result.append("tagName::" + tagName + "\n");
+						NamedNodeMap attrs=event.getElement().getNode().getAttributes();
+						for(int k=0;k<attrs.getLength();k++){
+							String attrName=attrs.item(k).getNodeName();
+							String attrValue=attrs.item(k).getNodeValue();
+							result.append(attrName + "::" + attrValue + "\n");
+						}
+						String xpath=XPathHelper.getXPathExpression(event.getElement().getNode());
+						result.append("xpath::" + xpath + "\n");
+						result.append("---------------------------------------------------------------------------\n");
+					}
+					
+					result.append("===========================================================================\n");
+					
+				
+						
+				}
+			}
+			file.write(result.toString());
+			file.close();
+			
+			
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	@Deprecated
 	private static void writeAllPossiblePathToFile(StateFlowGraph stateFlowGraph, String outputDir){
 		try{
 			StringBuffer result=new StringBuffer();
@@ -284,4 +357,6 @@ public final class GuidedCrawljaxExampleSettings {
 		
 		
 	}
+	
+	
 }

@@ -351,6 +351,7 @@ public class StateVertex implements Serializable {
 						}
 				
 				ArrayList<CandidateElement> elemList=sfg.getClickableElements(this);
+
 				ArrayList<CandidateElement> elemListPresentInCurrDom=new ArrayList<CandidateElement>();
 				for (int i=0; i<candidateList.size(); i++)
 				{
@@ -403,8 +404,12 @@ public class StateVertex implements Serializable {
 				}
 			
 				//Shabnam: replacing candidate elements with the ones that we detected
+				
 				candidateElemList=alternateCandidateElemList;
 				numCandidateElements=alternateNumCandidateElements;
+				if(numCandidateElements==0){
+					sfg.removeFromNotFullExpandedStates(this);
+				}
 				System.out.println(candidateElemList.size() +" new elements detected for state " + this.getName());
 				
 			}
@@ -624,6 +629,7 @@ public class StateVertex implements Serializable {
 	public void setCrawlPathToState(CrawlPath cp) {
 		for (Eventable e: cp)
 			this.crawlPathToState.add(e);
+		
 		System.out.println("+++++ crawlpath to state " + this.getName() + " is set to " + this.crawlPathToState);
 	}
 	//Shabnam

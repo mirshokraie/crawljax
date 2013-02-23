@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.TreeMap;
 import  com.crawljax.core.state.*;
 import com.crawljax.graph.WeightedGraph;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 
 public class GlobalVars {
 	
@@ -21,6 +23,6 @@ public class GlobalVars {
 	public static  HashMap<String,String> labeledFunctions=new HashMap<String,String>();
 	public static WeightedGraph staticCallGraph=new WeightedGraph();
 	public static  HashMap<String,HashSet<String>> potentialFutrueClickables=new HashMap<String,HashSet<String>>();
-	
+	public static ListMultimap<StateVertex,List<Eventable>> stateCrawlPathMap=ArrayListMultimap.create();
 
 }
