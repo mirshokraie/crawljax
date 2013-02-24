@@ -27,10 +27,10 @@ public class EventHandlerTrace extends Trace {
 
 	
 	@Override
-	public String parse(JSONArray jsonObject) throws JSONException, CrawljaxException {
+	public String parse(JSONArray jsonObject, int bufferActualLength) throws JSONException, CrawljaxException {
 	
 		StringBuffer result = new StringBuffer();
-		for (int j = 0; j < jsonObject.length(); j++) {
+		for (int j = 0; j < bufferActualLength; j++) {
 			
 			JSONArray value = jsonObject.getJSONArray(j);
 			String programPointName = value.getString(0);

@@ -32,7 +32,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 			CrawlSession session, StateMachine stateMachine) {
 		try {
 			
-
+			
 			LOGGER.info("Reading execution trace");
 
 			LOGGER.info("Parsing JavaScript execution trace");
@@ -43,7 +43,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 
 			
 			EventHandlerTrace trace = new EventHandlerTrace();
-			String input=trace.parse(points);
+			String input=trace.parse(points,bufferActualLength);
 			String[] lines=input.split("\n");
 			String functionName="";
 			String scopeName="";
@@ -64,12 +64,29 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 						for(int j=1;j<uniqueIds.length-2;j++){
 							ArrayList<Object> elementInfo=new ArrayList<Object>();
 							elementInfo.add(uniqueIds[j]);
-							elementInfo.add(stateMachine.getCurrentState().toString());
+							if(eventable==null)
+								elementInfo.add(stateMachine.getCurrentState().toString());
+							else
+								elementInfo.add(eventable.getTargetStateVertex().toString());
 							elementInfo.add(eventable);
 							elementInfo.add(eventType);
 							if(GlobalVars.eventableElementsMap.get(handlerFunc)!=null){
-							
-								GlobalVars.eventableElementsMap.get(handlerFunc).add(elementInfo);
+								
+								boolean found=false;
+								ArrayList<ArrayList<Object>> lists=GlobalVars.eventableElementsMap.get(handlerFunc);
+								for(ArrayList<Object> list:lists){
+									String id=(String) list.get(0);
+									String stateName=(String) list.get(1);
+									Eventable event=(Eventable) list.get(2);
+									String typeofevent=(String) list.get(3);
+									if(id.equals(uniqueIds[j]) && stateMachine.getCurrentState().toString().equals(stateName)
+											 && typeofevent.equals(eventType)){
+										found=true;
+										break;
+									}
+								}
+								if(!found)
+									GlobalVars.eventableElementsMap.get(handlerFunc).add(elementInfo);
 				
 							}
 							else{

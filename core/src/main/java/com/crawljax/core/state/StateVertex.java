@@ -350,7 +350,7 @@ public class StateVertex implements Serializable {
 							newPotentialfuncs[j] = temp_newPotentialfuncs;
 						}
 				
-				ArrayList<CandidateElement> elemList=sfg.getClickableElements(this);
+				ArrayList<org.w3c.dom.Element> elemList=sfg.getClickableElements(this);
 
 				ArrayList<CandidateElement> elemListPresentInCurrDom=new ArrayList<CandidateElement>();
 				for (int i=0; i<candidateList.size(); i++)
@@ -359,8 +359,8 @@ public class StateVertex implements Serializable {
 						//Shabnam select only clickable ones that we detect before and ignore the others
 						boolean select=false;
 						for(int j=0;j<elemList.size();j++){
-							if(elemList.get(j).getElement().hasAttribute("id"))
-								if(elemList.get(j).getElement().getAttribute("id").equals(
+							if(elemList.get(j).hasAttribute("id"))
+								if(elemList.get(j).getAttribute("id").equals(
 										candidateList.get(indices[i]).getElement().getAttribute("id"))){
 									elemListPresentInCurrDom.add(candidateList.get(indices[i]));
 									select=true;
