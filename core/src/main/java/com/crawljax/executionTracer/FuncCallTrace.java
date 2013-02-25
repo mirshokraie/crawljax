@@ -32,10 +32,10 @@ public class FuncCallTrace extends Trace {
 		return null;
 	}
 	@Override
-	public String parse(JSONArray jsonObject, int actualBufferLength) throws JSONException, CrawljaxException {
+	public String parse(JSONArray jsonObject) throws JSONException, CrawljaxException {
 	
 		StringBuffer result = new StringBuffer();
-		for (int j = 0; j < actualBufferLength; j++) {
+		for (int j = 0; j < jsonObject.length(); j++) {
 			
 			JSONArray value = jsonObject.getJSONArray(j);
 			String programPointName = value.getString(0);

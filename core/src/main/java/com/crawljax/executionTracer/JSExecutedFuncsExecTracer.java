@@ -44,7 +44,7 @@ public class JSExecutedFuncsExecTracer extends ExecutionTracer
 				Thread.sleep(ONE_SEC);
 
 				ExecutedFunctionsTrace trace = new ExecutedFunctionsTrace();
-				String input=trace.parse(points, bufferActualLength);
+				String input=trace.parse(points);
 				String[] lines=input.split("\n");
 				String functionName="";
 				String scopeName="";

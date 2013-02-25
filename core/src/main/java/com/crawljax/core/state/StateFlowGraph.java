@@ -527,15 +527,15 @@ public class StateFlowGraph implements Serializable {
 	}
 	//Shabnam knownelems are the elements with onclick="function.." set in the html code
 	//should be called in addstate (one time when a new state added)
-	private void updateStatesPotentialFuncsWithKnownElems(StateVertex stateVertex){
+	private void updateStatesPotentialFuncsWithKnownElems(StateVertex stateVertex) throws SAXException, IOException{
 		
 		String state=stateVertex.toString();
-		List<CandidateElement> candidateElems=stateVertex.getCandidateElemList();
+		List<Element> candidateElems=getDOMElements(stateVertex);
 		
 		for(int i=0;i<candidateElems.size();i++){
-			if(candidateElems.get(i).getElement().hasAttribute("onclick")){
-				CandidateElement elem=candidateElems.get(i);
-				String function=elem.getElement().getAttribute("onclick");
+			if(candidateElems.get(i).hasAttribute("onclick")){
+				Element elem=candidateElems.get(i);
+				String function=elem.getAttribute("onclick");
 				AstNode funcNode=(AstNode) parse(function).getFirstChild();
 				String funcName="";
 				if(funcNode instanceof FunctionNode){
@@ -565,6 +565,7 @@ public class StateFlowGraph implements Serializable {
 		}
 	}
 	
+	//Shabnam
 	private ArrayList<Element> getDOMElements(StateVertex state) throws SAXException, IOException{
 		Document doc = Helper.getDocument(state.getDom());
 		DocumentTraversal traversal = (DocumentTraversal) doc;
@@ -575,6 +576,7 @@ public class StateFlowGraph implements Serializable {
 		return elemList;
 	}
 
+	//shabnam
 	private static final void traverseLevel(TreeWalker walker, String indent, ArrayList<Element> elemList) {
 		Node parent = walker.getCurrentNode();
 		elemList.add(((Element) parent));

@@ -25,7 +25,6 @@ public abstract class ExecutionTracer
 	protected static final int ONE_SEC = 1000;
 
 	protected static JSONArray points = new JSONArray();
-	protected static int bufferActualLength;
 
 
 
@@ -53,15 +52,14 @@ public abstract class ExecutionTracer
 		JSONArray buffer = null;
 	
 		try {
-		
-			int index=0;
+				
+			points=new JSONArray();
 			buffer = new JSONArray(string);
 			for (int i = 0; i < buffer.length(); i++) {
-				points.put(index,buffer.get(i));
-				index++;
+				points.put(buffer.get(i));	
 			
 			}
-			bufferActualLength=buffer.length();
+
 
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -43,7 +43,7 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 
 			
 			EventHandlerTrace trace = new EventHandlerTrace();
-			String input=trace.parse(points,bufferActualLength);
+			String input=trace.parse(points);
 			String[] lines=input.split("\n");
 			String functionName="";
 			String scopeName="";
