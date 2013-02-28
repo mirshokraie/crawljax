@@ -2,6 +2,7 @@
 package com.crawljax.executionTracer;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.mozilla.javascript.ast.AstNode;
 import org.mozilla.javascript.ast.AstRoot;
@@ -11,6 +12,8 @@ import org.mozilla.javascript.ast.Name;
 
 import com.crawljax.astmodifier.JSASTModifier;
 import com.crawljax.util.Helper;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 @Deprecated
 public class AstExecutedFunctionsInstrumenter extends JSASTModifier{
 
@@ -56,11 +59,16 @@ public class AstExecutedFunctionsInstrumenter extends JSASTModifier{
 	
 	
 	private AstNode jsLoggingFunctions() {
-		String code;
-
-		File js = new File(this.getClass().getResource("/addFunctionNodeTrack.js").getFile());
+		String code=null;
+		try {
+			code=Resources.toString(AstExecutedFunctionsInstrumenter.class.getResource("/addFunctionNodeTrack.js"), Charsets.UTF_8);
+		} catch (IOException e) {
+		
+			e.printStackTrace();
+		}
+/*		File js = new File(this.getClass().getResource("/addFunctionNodeTrack.js").getFile());
 		code = Helper.getContent(js);
-		return parse(code);
+*/		return parse(code);
 	}
 
 

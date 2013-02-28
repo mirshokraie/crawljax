@@ -1,6 +1,8 @@
 package com.crawljax.executionTracer;
 
 import java.io.File;
+import java.io.IOException;
+
 import org.mozilla.javascript.ast.AstNode;
 import org.mozilla.javascript.ast.AstRoot;
 import org.mozilla.javascript.ast.FunctionCall;
@@ -10,6 +12,8 @@ import org.mozilla.javascript.ast.Name;
 import com.crawljax.astmodifier.JSASTModifier;
 
 import com.crawljax.util.Helper;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 
 public class AstFunctionCallInstrumenter extends JSASTModifier {
 
@@ -97,11 +101,16 @@ public class AstFunctionCallInstrumenter extends JSASTModifier {
 	
 	
 	private AstNode jsLoggingFunctions() {
-		String code;
+		String code=null;
+		try {
+			code=Resources.toString(AstFunctionCallInstrumenter.class.getResource("/addFunctionCallTrack.js"), Charsets.UTF_8);
+		} catch (IOException e) {
 
-		File js = new File(this.getClass().getResource("/addFunctionCallTrack.js").getFile());
+			e.printStackTrace();
+		}
+/*		File js = new File(this.getClass().getResource("/addFunctionCallTrack.js").getFile());
 		code = Helper.getContent(js);
-		return parse(code);
+*/		return parse(code);
 	}
 
 
