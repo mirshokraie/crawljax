@@ -48,9 +48,10 @@ public final class GuidedCrawljaxExampleSettings {
 
 
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
-	
-	//private static final String URL = "http://localhost:8080//Ghostbusters1/Ghostbusters.htm";
-	private static final String URL = "http://localhost:8080//same-game/same-game.htm";
+
+//	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.html";
+	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
+//	private static final String URL = "http://localhost:8080//same-game/same-game.html";
 
 	
 
@@ -120,7 +121,10 @@ public final class GuidedCrawljaxExampleSettings {
 			crawler.click("img");
 			crawler.click("input").withAttribute("type", "submit");
 			crawler.click("div");
-	*/		crawler.click("td");
+			crawler.click("td");
+			crawler.click("p").withAttribute("id", "welcome");
+	*/		crawler.click("button");
+	crawler.click("button");
 		}else{
 			// this is just for the TuduList application
 			Form form=new Form();
@@ -164,6 +168,7 @@ public final class GuidedCrawljaxExampleSettings {
 		crawler.setMaximumStates(MAX_NUMBER_STATES);
 		crawler.setDepth(MAX_DEPTH);
 
+
 		return crawler;
 	}
 
@@ -179,7 +184,7 @@ public final class GuidedCrawljaxExampleSettings {
 	 */
 	public static void main(String[] args) {
 		try {
-	//		System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
+			System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
 			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 			crawljax.run();
 			String outputdir = "same-output";

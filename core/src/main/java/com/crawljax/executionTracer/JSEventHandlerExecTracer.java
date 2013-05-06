@@ -43,7 +43,11 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 
 			
 			EventHandlerTrace trace = new EventHandlerTrace();
-			String input=trace.parse(points);
+/*			JSONArray pointsCopied=new JSONArray();
+			for(int i=indexofPoints;i<points.length();i++){
+				pointsCopied.put(points.get(i));
+			}
+*/			String input=trace.parse(points);
 			String[] lines=input.split("\n");
 			String functionName="";
 			String scopeName="";

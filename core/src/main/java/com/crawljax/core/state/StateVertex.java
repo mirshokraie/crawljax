@@ -286,7 +286,7 @@ public class StateVertex implements Serializable {
 			                clickOnce, this);
 			//Shabnam 
 			numCandidateElements = candidateList.size();
-			candidateElemList=candidateList;
+			candidateElemList=new ArrayList<CandidateElement>(candidateList);
 			//Shabnam
 			int alternateNumCandidateElements=0;
 			List<CandidateElement> alternateCandidateElemList=new ArrayList<CandidateElement>();
@@ -402,11 +402,12 @@ public class StateVertex implements Serializable {
 						alternateNumCandidateElements++;
 					}
 				}
-			
+				
+
 				//Shabnam: replacing candidate elements with the ones that we detected
 				
-				candidateElemList=alternateCandidateElemList;
-				numCandidateElements=alternateNumCandidateElements;
+				candidateElemList.addAll(alternateCandidateElemList);
+				numCandidateElements=candidateElemList.size();
 				if(numCandidateElements==0){
 					sfg.removeFromNotFullExpandedStates(this);
 				}
@@ -434,6 +435,28 @@ public class StateVertex implements Serializable {
 		catch (CrawljaxException e) {
 			LOGGER.error(
 			        "Catched exception while searching for candidates in state " + getName(), e);
+		}
+		if(candidateActions.size()==0){
+			if(candidateElemList.size()!=0){
+				for(int i=0;i<candidateElemList.size();i++){
+					for (String eventType : eventTypes) {
+				
+						if (eventType.equals(EventType.click.toString())) {
+							candidateActions.add(new CandidateCrawlAction(candidateElemList.get(i),
+									EventType.click));
+						} 
+						else {
+							if (eventType.equals(EventType.hover.toString())) {
+								candidateActions.add(new CandidateCrawlAction(candidateElemList.get(i),
+										EventType.hover));
+							} 
+							else {
+								LOGGER.warn("The Event Type: " + eventType + " is not supported.");
+							}
+						}
+					}
+				}
+			}
 		}
 		return candidateActions.size() > 0; // Only notify of found candidates when there are...
 

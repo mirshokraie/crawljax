@@ -604,7 +604,7 @@ public class StateFlowGraph implements Serializable {
 	
 	
 
-		Set<String> keySet=eventableElementsMap.keySet();
+		Set<String> keySet=((TreeMap<String, ArrayList<ArrayList<Object>>>) eventableElementsMap.clone()).keySet();
 		Iterator<String> it=keySet.iterator();
 		while(it.hasNext()){
 			String funcName= it.next();

@@ -25,7 +25,7 @@ public abstract class ExecutionTracer
 	protected static final int ONE_SEC = 1000;
 
 	protected static JSONArray points = new JSONArray();
-
+//	protected static int indexofPoints=0;
 
 
 	public ExecutionTracer() {
@@ -53,8 +53,13 @@ public abstract class ExecutionTracer
 	
 		try {
 				
-			points=new JSONArray();
-			buffer = new JSONArray(string);
+	/*		if(points.length()!=0){
+				indexofPoints=points.length();
+			}
+			else
+				indexofPoints=0;
+	//		points=new JSONArray();
+	*/		buffer = new JSONArray(string);
 			for (int i = 0; i < buffer.length(); i++) {
 				points.put(buffer.get(i));	
 			
