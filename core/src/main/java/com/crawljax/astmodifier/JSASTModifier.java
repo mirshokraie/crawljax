@@ -358,11 +358,21 @@ public abstract class JSASTModifier implements NodeVisitor  {
 									PropertyGet propGet=(PropertyGet) node.getParent();
 									arguments = new ArrayList<AstNode>();
 									arguments=((FunctionCall) node.getParent().getParent()).getArguments();
-									String eventType="mousedown";
+									String eventType="click";
 									AstNode newNode=createFunctionAttachToEventNode(arguments.get(1), propGet.getLeft(),eventType);
 									appendNodeAfterClickEvent(node, newNode);
 									
 								}
+								else
+									if(node.toSource().equals("attachEvent")){
+										PropertyGet propGet=(PropertyGet) node.getParent();
+										arguments = new ArrayList<AstNode>();
+										arguments=((FunctionCall) node.getParent().getParent()).getArguments();
+										String eventType="click";
+										AstNode newNode=createFunctionAttachToEventNode(arguments.get(1), propGet.getLeft(),eventType);
+										appendNodeAfterClickEvent(node, newNode);
+										
+									}
 						}
 					}
 				}

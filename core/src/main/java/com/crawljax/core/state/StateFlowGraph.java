@@ -1014,11 +1014,13 @@ public class StateFlowGraph implements Serializable {
 			}
 		}
 		
-		ArrayList<ArrayList<Object>> list= (ArrayList<ArrayList<Object>>) eventableElementsMap.get(funcName).clone();
+		ArrayList<ArrayList<Object>> list= eventableElementsMap.get(funcName);
 		if(eventableElementsMap.get(eventType)!=null)
 			list.addAll(eventableElementsMap.get(eventType));
 		//adding unbinds such as unbind("click") which unbinds all click events regardless of the function name/event handler
-		ArrayList<ArrayList<Object>> clickUnbindList=(ArrayList<ArrayList<Object>>) eventableElementsMap.get("click").clone();
+		ArrayList<ArrayList<Object>> clickUnbindList=null;
+		if(eventableElementsMap.get("click")!=null)
+			clickUnbindList=(ArrayList<ArrayList<Object>>) eventableElementsMap.get("click").clone();
 		if(clickUnbindList!=null)
 			list.addAll(clickUnbindList);
 		Set<String> successorStateNames=new HashSet<String>();

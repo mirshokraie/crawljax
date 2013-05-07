@@ -16,6 +16,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
 import com.crawljax.browser.EmbeddedBrowser.BrowserType;
+import com.crawljax.condition.UrlCondition;
 import com.crawljax.core.CandidateElement;
 import com.crawljax.core.CrawljaxController;
 import com.crawljax.core.CrawljaxException;
@@ -49,9 +50,10 @@ public final class GuidedCrawljaxExampleSettings {
 
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
 
-//	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.html";
-	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
-//	private static final String URL = "http://localhost:8080//same-game/same-game.html";
+	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.htm";
+//	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
+//	private static final String URL = "http://localhost:8080//same-game/same-game.htm";
+//	private static final String URL="http://localhost:8080/tunnel/tunnel.htm";
 
 	
 
@@ -120,12 +122,14 @@ public final class GuidedCrawljaxExampleSettings {
 			crawler.click("span");
 			crawler.click("img");
 			crawler.click("input").withAttribute("type", "submit");
-			crawler.click("div");
-			crawler.click("td");
+*/			crawler.click("div");
+/*			crawler.click("td");
 			crawler.click("p").withAttribute("id", "welcome");
-	*/		crawler.click("button");
-	crawler.click("button");
-		}else{
+			crawler.click("button");
+			crawler.click("div");
+			crawler.addCrawlCondition("Only crawl symbol game", new UrlCondition("symbol"));
+			crawler.setWaitTimeAfterEvent(100);
+*/		}else{
 			// this is just for the TuduList application
 			Form form=new Form();
 			Form addList=new Form();
@@ -184,7 +188,7 @@ public final class GuidedCrawljaxExampleSettings {
 	 */
 	public static void main(String[] args) {
 		try {
-			System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
+	//		System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
 			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 			crawljax.run();
 			String outputdir = "same-output";

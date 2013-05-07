@@ -24,8 +24,9 @@ function addFunctionNodeTrack(functionName, functionInfo) {
 				
 }
 
-function giveUniqueId(element, eventHandler, eventType ) {
+function giveUniqueId(elem, eventHandler, eventType ) {
 	
+	var element=$(elem).clone();
 	var idCounterList=new Array();
 	for(var i=0;i<$(element).get().length;i++){
 		 if($($(element).get(i)).prop("id")==""){
@@ -38,6 +39,17 @@ function giveUniqueId(element, eventHandler, eventType ) {
 		 }
 	}
 
-	//	document.write(idCounterList[1]);
-	 return  new Array("giveUniqueId",idCounterList, eventHandler, eventType);
+	
+	var eventHandlerToBeSent=functionName(eventHandler);
+	if(eventHandlerToBeSent=="")
+		eventHandlerToBeSent="someFunction";
+
+	 return  new Array("giveUniqueId",idCounterList,  eventHandlerToBeSent, eventType);
+}
+
+function functionName(fun) {
+	  var ret = fun.toString();
+	  ret = ret.substr('function '.length);
+	  ret = ret.substr(0, ret.indexOf('('));
+	  return ret;
 };

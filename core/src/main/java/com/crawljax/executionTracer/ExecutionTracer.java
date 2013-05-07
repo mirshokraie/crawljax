@@ -58,8 +58,8 @@ public abstract class ExecutionTracer
 			}
 			else
 				indexofPoints=0;
-	//		points=new JSONArray();
-	*/		buffer = new JSONArray(string);
+	*/	//	points=new JSONArray();
+			buffer = new JSONArray(string);
 			for (int i = 0; i < buffer.length(); i++) {
 				points.put(buffer.get(i));	
 			

@@ -29,6 +29,7 @@ import com.crawljax.core.state.Eventable.EventType;
 import com.crawljax.globals.GlobalVars;
 import com.crawljax.randomGenerator.RandomGen;
 import com.crawljax.util.Helper;
+import com.google.common.collect.ImmutableList;
 
 /**
  * The state vertex class which represents a state in the browser. This class implements the
@@ -406,8 +407,12 @@ public class StateVertex implements Serializable {
 
 				//Shabnam: replacing candidate elements with the ones that we detected
 				
-				candidateElemList.addAll(alternateCandidateElemList);
-				numCandidateElements=candidateElemList.size();
+				if(alternateCandidateElemList.size()!=0){
+						candidateElemList=alternateCandidateElemList;
+						numCandidateElements=alternateCandidateElemList.size();
+				}
+				else
+					numCandidateElements=candidateElemList.size();
 				if(numCandidateElements==0){
 					sfg.removeFromNotFullExpandedStates(this);
 				}
@@ -437,7 +442,8 @@ public class StateVertex implements Serializable {
 			        "Catched exception while searching for candidates in state " + getName(), e);
 		}
 		if(candidateActions.size()==0){
-			if(candidateElemList.size()!=0){
+			
+			
 				for(int i=0;i<candidateElemList.size();i++){
 					for (String eventType : eventTypes) {
 				
@@ -456,7 +462,7 @@ public class StateVertex implements Serializable {
 						}
 					}
 				}
-			}
+			
 		}
 		return candidateActions.size() > 0; // Only notify of found candidates when there are...
 
@@ -669,9 +675,10 @@ public class StateVertex implements Serializable {
 					Set<String> seti=sfg.getElementNewPotentialFuncs(this, candidateList.get(i));
 					Set<String> setj=sfg.getElementNewPotentialFuncs(this, candidateList.get(j));
 					if(seti.equals(setj)){
-						if(!elemsWithRepeatedPotentialFuncs.contains(j))
-							elemsWithRepeatedPotentialFuncs.add(j);
-//						newPotentialfuncs[j]=0;
+						if(!seti.contains("someFunction"))
+							if(!elemsWithRepeatedPotentialFuncs.contains(j))
+								elemsWithRepeatedPotentialFuncs.add(j);
+//							newPotentialfuncs[j]=0;
 						
 					}
 				}
