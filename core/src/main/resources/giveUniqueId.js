@@ -1,6 +1,7 @@
 window.xhr = new XMLHttpRequest();
 window.buffer = new Array();
 var idCounter = new Date().getTime();
+var globalCounter=0;
 
 function send(value) {
 	window.buffer.push(value);
@@ -41,8 +42,10 @@ function giveUniqueId(elem, eventHandler, eventType ) {
 
 	
 	var eventHandlerToBeSent=functionName(eventHandler);
-	if(eventHandlerToBeSent=="")
-		eventHandlerToBeSent="someFunction";
+	if(eventHandlerToBeSent==""){
+		eventHandlerToBeSent="someFunction"+globalCounter;
+		globalCounter++;
+	}
 
 	 return  new Array("giveUniqueId",idCounterList,  eventHandlerToBeSent, eventType);
 }

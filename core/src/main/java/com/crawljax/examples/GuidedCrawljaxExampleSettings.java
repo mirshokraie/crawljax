@@ -50,8 +50,8 @@ public final class GuidedCrawljaxExampleSettings {
 
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
 
-	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.htm";
-//	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
+//	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.htm";
+	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
 //	private static final String URL = "http://localhost:8080//same-game/same-game.htm";
 //	private static final String URL="http://localhost:8080/tunnel/tunnel.htm";
 
@@ -108,7 +108,7 @@ public final class GuidedCrawljaxExampleSettings {
 
 		if (doEfficientCrawling){
 			crawler.setEfficientCrawling(true);
-			crawler.setClickOnce(true);
+			crawler.setClickOnce(false);
 		}
 
 		// click these elements
@@ -122,14 +122,14 @@ public final class GuidedCrawljaxExampleSettings {
 			crawler.click("span");
 			crawler.click("img");
 			crawler.click("input").withAttribute("type", "submit");
-*/			crawler.click("div");
-/*			crawler.click("td");
+			crawler.click("div");
+			crawler.click("td");
 			crawler.click("p").withAttribute("id", "welcome");
-			crawler.click("button");
+*/			crawler.click("button");
 			crawler.click("div");
 			crawler.addCrawlCondition("Only crawl symbol game", new UrlCondition("symbol"));
 			crawler.setWaitTimeAfterEvent(100);
-*/		}else{
+		}else{
 			// this is just for the TuduList application
 			Form form=new Form();
 			Form addList=new Form();

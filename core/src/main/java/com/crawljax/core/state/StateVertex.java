@@ -354,6 +354,7 @@ public class StateVertex implements Serializable {
 				ArrayList<org.w3c.dom.Element> elemList=sfg.getClickableElements(this);
 
 				ArrayList<CandidateElement> elemListPresentInCurrDom=new ArrayList<CandidateElement>();
+				ArrayList<CandidateElement> unfoundedElems=new ArrayList<CandidateElement>();
 				for (int i=0; i<candidateList.size(); i++)
 				{
 					for (String eventType : eventTypes) { 
@@ -374,6 +375,7 @@ public class StateVertex implements Serializable {
 										EventType.click));
 								alternateCandidateElemList.add(candidateList.get(indices[i]));
 								alternateNumCandidateElements++;
+								System.out.println(candidateList.get(indices[i]).getGeneralString().toString()+"*****"+"\n");
 						
 							
 							} else {
@@ -391,7 +393,34 @@ public class StateVertex implements Serializable {
 
 							
 						}
+						
+						else if(!select){
+							
+							if (eventType.equals(EventType.click.toString())) {
+								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
+										EventType.click));
+								unfoundedElems.add(candidateList.get(indices[i]));
+								alternateNumCandidateElements++;
+						
+							
+							} else {
+								if (eventType.equals(EventType.hover.toString())) {
+									candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
+											EventType.hover));
+									unfoundedElems.add(candidateList.get(indices[i]));
+									alternateNumCandidateElements++;
+								
+								} else {
+									LOGGER.warn("The Event Type: " + eventType + " is not supported.");
+								}
+							}
+							
+						}
 					}
+				}
+				
+				for(CandidateElement unfounded:unfoundedElems){
+					alternateCandidateElemList.add(unfounded);
 				}
 				if(candidateActions.size()==0){
 					if(elemListPresentInCurrDom.size()!=0){
@@ -441,7 +470,7 @@ public class StateVertex implements Serializable {
 			LOGGER.error(
 			        "Catched exception while searching for candidates in state " + getName(), e);
 		}
-		if(candidateActions.size()==0){
+/*		if(candidateActions.size()==0){
 			
 			
 				for(int i=0;i<candidateElemList.size();i++){
@@ -464,7 +493,7 @@ public class StateVertex implements Serializable {
 				}
 			
 		}
-		return candidateActions.size() > 0; // Only notify of found candidates when there are...
+	*/	return candidateActions.size() > 0; // Only notify of found candidates when there are...
 
 	}
 
