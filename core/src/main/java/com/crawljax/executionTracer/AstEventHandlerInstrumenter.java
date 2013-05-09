@@ -78,23 +78,32 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 
 	@Override
 	protected AstNode createFunctionAttachToEventNode(AstNode handler, AstNode element,String eventType) {
-		String eventHandler=handler.toSource();
+		String eventHandler;
+		if(handler instanceof FunctionNode){
+			eventHandler=getFunctionName((FunctionNode)handler);
+			
+		}
+		else{
+			eventHandler=handler.toSource();
+		}
 		String targetElement=element.toSource();
 		String enclosingFunc=getFunctionName(element.getEnclosingFunction());
 		eventHandler = Helper.removeNewLines(eventHandler);
 		targetElement = Helper.removeNewLines(targetElement);
 		/* escape quotes */
-//		eventHandler = eventHandler.replaceAll("\\\"", "\\\\\"");
-//		eventHandler = eventHandler.replaceAll("\\\'", "\\\\\'");
+		eventHandler = eventHandler.replaceAll("\\\"", "\\\\\"");
+		eventHandler = eventHandler.replaceAll("\\\'", "\\\\\'");
 		targetElement = targetElement.replaceAll("\\\"", "\\\\\"");
 	//	targetElement = targetElement.replaceAll("\\\'", "\\\\\'");
 		int lineNo=element.getLineno();
-		String code=
+		String code;
+		/* eventHandler can be a passed argument, we need to make this statement if/else to support sending either eventHandler or 'eventHandler' */
+		code=
 			"send(new Array('" + getScopeName() + "::" + enclosingFunc + "', '" + lineNo +  
             "', new Array(";
 		
-		code += "giveUniqueId(" +  targetElement + ", "  + 
-		eventHandler + ", " + "'" + eventType + "'" + "))));";
+		code += "giveUniqueId(" +  targetElement + ", "  + "'" 
+		+ eventHandler + "'" + ", " + "'" + eventType + "'" + "))));";
 		System.out.println(code);
 		return parse(code);
 	}

@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -50,8 +53,8 @@ public final class GuidedCrawljaxExampleSettings {
 
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
 
-//	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.htm";
-	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
+	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.html";
+//	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
 //	private static final String URL = "http://localhost:8080//same-game/same-game.htm";
 //	private static final String URL="http://localhost:8080/tunnel/tunnel.htm";
 
@@ -108,7 +111,7 @@ public final class GuidedCrawljaxExampleSettings {
 
 		if (doEfficientCrawling){
 			crawler.setEfficientCrawling(true);
-			crawler.setClickOnce(false);
+			crawler.setClickOnce(true);
 		}
 
 		// click these elements
@@ -125,10 +128,12 @@ public final class GuidedCrawljaxExampleSettings {
 			crawler.click("div");
 			crawler.click("td");
 			crawler.click("p").withAttribute("id", "welcome");
-*/			crawler.click("button");
-			crawler.click("div");
-			crawler.addCrawlCondition("Only crawl symbol game", new UrlCondition("symbol"));
+			crawler.click("button");
+*/			crawler.click("div");
+//			crawler.addCrawlCondition("Only crawl symbol game", new UrlCondition("symbol"));
 			crawler.setWaitTimeAfterEvent(100);
+			crawler.setWaitTimeAfterReloadUrl(500);
+			crawler.setMaximumRuntime(20);
 		}else{
 			// this is just for the TuduList application
 			Form form=new Form();
@@ -188,10 +193,10 @@ public final class GuidedCrawljaxExampleSettings {
 	 */
 	public static void main(String[] args) {
 		try {
-	//		System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
+			System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
 			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 			crawljax.run();
-			String outputdir = "same-output";
+			String outputdir = "ghost-output";
 			writeStateFlowGraphToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 			writeAllPossiblePathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 			writeAllPathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
@@ -272,9 +277,29 @@ public final class GuidedCrawljaxExampleSettings {
 			}
 			
 			keys=GlobalVars.stateCrawlPathMap.keySet();
+			
+		
+			Comparator<StateVertex> cp=new Comparator<StateVertex>() {
+
+				@Override
+				public int compare(StateVertex s1, StateVertex s2) {
+			        if(s1.getName().compareTo(s2.getName())>0)
+			        	return 1;
+			        else if(s1.getName().compareTo(s2.getName())<0){
+			        	return -1;
+			        }
+			        return 0;
+					
+				}
+				
+				
+			};
+			ArrayList<StateVertex> stateVertexList=new ArrayList<StateVertex>(keys);
+			Collections.sort(stateVertexList, cp);
 			iter=keys.iterator();
-			while(iter.hasNext()){
-				StateVertex end=iter.next();
+			
+			for(int i=0;i<stateVertexList.size();i++){
+				StateVertex end=stateVertexList.get(i);
 				String startVertexName=index.getName();
 				String endVertexName=end.getName();
 				
