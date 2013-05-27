@@ -53,10 +53,10 @@ public final class GuidedCrawljaxExampleSettings {
 
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
 
-	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.html";
+//	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.html";
 //	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
-//	private static final String URL = "http://localhost:8080//same-game/same-game.htm";
-//	private static final String URL="http://localhost:8080/tunnel/tunnel.htm";
+	private static final String URL = "http://localhost:8080//same-game/same-game.html";
+//	private static final String URL="http://localhost:8080/tunnel/tunnel.html";
 
 	
 
@@ -126,14 +126,14 @@ public final class GuidedCrawljaxExampleSettings {
 			crawler.click("img");
 			crawler.click("input").withAttribute("type", "submit");
 			crawler.click("div");
-			crawler.click("td");
-			crawler.click("p").withAttribute("id", "welcome");
-			crawler.click("button");
-*/			crawler.click("div");
+*/			crawler.click("td");
+//			crawler.click("p").withAttribute("id", "welcome");
+//			crawler.click("button");
+//			crawler.click("div");
 //			crawler.addCrawlCondition("Only crawl symbol game", new UrlCondition("symbol"));
-			crawler.setWaitTimeAfterEvent(100);
-			crawler.setWaitTimeAfterReloadUrl(500);
-			crawler.setMaximumRuntime(20);
+//			crawler.setWaitTimeAfterEvent(3000);
+//			crawler.setWaitTimeAfterReloadUrl(500);
+//			crawler.setMaximumRuntime(20);
 		}else{
 			// this is just for the TuduList application
 			Form form=new Form();
@@ -196,7 +196,7 @@ public final class GuidedCrawljaxExampleSettings {
 			System.setProperty("webdriver.firefox.bin" ,"/ubc/ece/home/am/grads/shabnamm/program-files/firefox18/firefox/firefox");
 			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 			crawljax.run();
-			String outputdir = "ghost-output";
+			String outputdir = "same-output";
 			writeStateFlowGraphToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 			writeAllPossiblePathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 			writeAllPathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);

@@ -394,7 +394,7 @@ public class StateVertex implements Serializable {
 							
 						}
 						
-						else if(!select){
+		/*				else if(!select){
 							
 							if (eventType.equals(EventType.click.toString())) {
 								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
@@ -416,13 +416,13 @@ public class StateVertex implements Serializable {
 							}
 							
 						}
-					}
+			*/		}
 				}
 				
-				for(CandidateElement unfounded:unfoundedElems){
+		/*		for(CandidateElement unfounded:unfoundedElems){
 					alternateCandidateElemList.add(unfounded);
 				}
-				if(candidateActions.size()==0){
+		*/		if(candidateActions.size()==0){
 					if(elemListPresentInCurrDom.size()!=0){
 						RandomGen rand=new RandomGen();
 						int index=rand.getNextRandomInt(elemListPresentInCurrDom.size());
@@ -470,7 +470,7 @@ public class StateVertex implements Serializable {
 			LOGGER.error(
 			        "Catched exception while searching for candidates in state " + getName(), e);
 		}
-/*		if(candidateActions.size()==0){
+		if(candidateActions.size()==0){
 			
 			
 				for(int i=0;i<candidateElemList.size();i++){
@@ -493,7 +493,7 @@ public class StateVertex implements Serializable {
 				}
 			
 		}
-	*/	return candidateActions.size() > 0; // Only notify of found candidates when there are...
+		return candidateActions.size() > 0; // Only notify of found candidates when there are...
 
 	}
 
@@ -707,7 +707,7 @@ public class StateVertex implements Serializable {
 						if(!seti.contains("someFunction"))
 							if(!elemsWithRepeatedPotentialFuncs.contains(j))
 								elemsWithRepeatedPotentialFuncs.add(j);
-//							newPotentialfuncs[j]=0;
+							newPotentialfuncs[j]=0;
 						
 					}
 				}
