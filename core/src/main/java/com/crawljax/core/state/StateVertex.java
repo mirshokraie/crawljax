@@ -369,7 +369,7 @@ public class StateVertex implements Serializable {
 									break;
 								}
 						}
-						if(select && newPotentialfuncs[i]!=0){
+						if(select){ //&& newPotentialfuncs[i]!=0){
 							if (eventType.equals(EventType.click.toString())) {
 								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
 										EventType.click));
