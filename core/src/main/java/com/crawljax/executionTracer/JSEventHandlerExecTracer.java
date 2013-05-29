@@ -68,10 +68,12 @@ public class JSEventHandlerExecTracer extends ExecutionTracer {
 						for(int j=1;j<uniqueIds.length-2;j++){
 							ArrayList<Object> elementInfo=new ArrayList<Object>();
 							elementInfo.add(uniqueIds[j]);
-							if(eventable==null)
+							if(eventable==null || eventable.getTargetStateVertex()==null)
 								elementInfo.add(stateMachine.getCurrentState().toString());
-							else
+							else{
+									
 								elementInfo.add(eventable.getTargetStateVertex().toString());
+							}
 							elementInfo.add(eventable);
 							elementInfo.add(eventType);
 							if(GlobalVars.eventableElementsMap.get(handlerFunc)!=null){

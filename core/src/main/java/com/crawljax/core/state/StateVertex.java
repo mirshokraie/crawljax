@@ -369,7 +369,7 @@ public class StateVertex implements Serializable {
 									break;
 								}
 						}
-						if(select){ //&& newPotentialfuncs[i]!=0){
+						if(select && newPotentialfuncs[i]!=0){
 							if (eventType.equals(EventType.click.toString())) {
 								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
 										EventType.click));
@@ -394,7 +394,7 @@ public class StateVertex implements Serializable {
 							
 						}
 						
-						else if(!select){
+		/*				else if(!select){
 							
 							if (eventType.equals(EventType.click.toString())) {
 								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
@@ -416,13 +416,13 @@ public class StateVertex implements Serializable {
 							}
 							
 						}
-					}
+			*/		}
 				}
 				
-				for(CandidateElement unfounded:unfoundedElems){
+		/*		for(CandidateElement unfounded:unfoundedElems){
 					alternateCandidateElemList.add(unfounded);
 				}
-				if(candidateActions.size()==0){
+		*/		if(candidateActions.size()==0){
 					if(elemListPresentInCurrDom.size()!=0){
 						RandomGen rand=new RandomGen();
 						int index=rand.getNextRandomInt(elemListPresentInCurrDom.size());
@@ -470,7 +470,7 @@ public class StateVertex implements Serializable {
 			LOGGER.error(
 			        "Catched exception while searching for candidates in state " + getName(), e);
 		}
-/*		if(candidateActions.size()==0){
+		if(candidateActions.size()==0){
 			
 			
 				for(int i=0;i<candidateElemList.size();i++){
@@ -493,7 +493,7 @@ public class StateVertex implements Serializable {
 				}
 			
 		}
-	*/	return candidateActions.size() > 0; // Only notify of found candidates when there are...
+		return candidateActions.size() > 0; // Only notify of found candidates when there are...
 
 	}
 
@@ -707,7 +707,7 @@ public class StateVertex implements Serializable {
 						if(!seti.contains("someFunction"))
 							if(!elemsWithRepeatedPotentialFuncs.contains(j))
 								elemsWithRepeatedPotentialFuncs.add(j);
-//							newPotentialfuncs[j]=0;
+	//						newPotentialfuncs[j]=0;
 						
 					}
 				}
@@ -715,8 +715,11 @@ public class StateVertex implements Serializable {
 		}
 		RandomGen random=new RandomGen();
 		
-		int thershold=(int) Math.round(elemsWithRepeatedPotentialFuncs.size()*0.8);
-		for(int count=0;count<thershold;count++){
+		int threshold=(int) Math.round(elemsWithRepeatedPotentialFuncs.size()*0.5);
+		if (threshold==0){
+			
+		}
+		for(int count=0;count<threshold;count++){
 			
 			int index=elemsWithRepeatedPotentialFuncs.get(random.getNextRandomInt(elemsWithRepeatedPotentialFuncs.size()));
 			while(newPotentialfuncs[index]==0){

@@ -81,6 +81,7 @@ public class StateFlowGraph implements Serializable {
 	 */
 	public StateFlowGraph() {
 		sfg = new DirectedMultigraph<StateVertex, Eventable>(Eventable.class);
+		
 	}
 
 	/**
@@ -536,7 +537,7 @@ public class StateFlowGraph implements Serializable {
 			if(candidateElems.get(i).hasAttribute("onclick")){
 				Element elem=candidateElems.get(i);
 				String function=elem.getAttribute("onclick");
-				AstNode funcNode=(AstNode) parse(function).getFirstChild();
+				AstNode funcNode=(AstNode) parse(function+";").getFirstChild();
 				String funcName="";
 				if(funcNode instanceof FunctionNode){
 					funcName=getFunctionName((FunctionNode) funcNode);

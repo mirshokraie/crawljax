@@ -649,6 +649,7 @@ public class Crawler implements Runnable {
 
 			if (nextToCrawl==null){
 				LOGGER.info("Something is wrong! nextToCrawl is null...");
+				System.out.println("nextToCrawl is null");
 				return false;
 			}
 
