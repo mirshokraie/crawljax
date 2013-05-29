@@ -80,7 +80,8 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 	protected AstNode createFunctionAttachToEventNode(AstNode handler, AstNode element,String eventType) {
 		String eventHandler;
 		if(handler instanceof FunctionNode){
-			eventHandler=getFunctionName((FunctionNode)handler);
+			eventHandler= "'" + getFunctionName((FunctionNode)handler) + "'";
+			
 			
 		}
 		else{
