@@ -16,6 +16,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.crawljax.core.CandidateCrawlAction;
@@ -371,6 +373,24 @@ public class StateVertex implements Serializable {
 						}
 						if(select && newPotentialfuncs[i]!=0){
 							if (eventType.equals(EventType.click.toString())) {
+								if(candidateList.get(indices[i]).getElement().getNodeName().toLowerCase().equals("div")){
+									if(candidateList.get(indices[i]).getElement().hasChildNodes()){
+										NodeList nodes=candidateList.get(indices[i]).getElement().getChildNodes();
+										for(int nodeCounter=0;nodeCounter<nodes.getLength();nodeCounter++){
+											Node node=nodes.item(nodeCounter);
+											for(CandidateElement candidElem:candidateList){
+												if(candidElem.getElement().isEqualNode(node)){
+													candidateActions.add(new CandidateCrawlAction(candidElem,
+															EventType.click));
+													alternateCandidateElemList.add(candidElem);
+													alternateNumCandidateElements++;
+													System.out.println(candidElem.getGeneralString().toString()+"*****"+"\n");
+												}
+											}
+											
+										}
+									}
+								}
 								candidateActions.add(new CandidateCrawlAction(candidateList.get(indices[i]),
 										EventType.click));
 								alternateCandidateElemList.add(candidateList.get(indices[i]));

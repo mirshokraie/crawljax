@@ -54,8 +54,8 @@ public final class GuidedCrawljaxExampleSettings {
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
 
 //	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.htm";
-//	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
-	private static final String URL = "http://localhost:8080//same-game/same-game.htm";
+	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
+//	private static final String URL = "http://localhost:8080//same-game/same-game.htm";
 //	private static final String URL="http://localhost:8080/tunnel/tunnel.htm";
 //	private static final String URL="http://localhost:8080/fractal_viewer/index.php";
 //	private static final String URL="http://localhost:8080/pacman/index.html";
@@ -117,7 +117,7 @@ public final class GuidedCrawljaxExampleSettings {
 
 		if (doEfficientCrawling){
 			crawler.setEfficientCrawling(true);
-			crawler.setClickOnce(true);
+			crawler.setClickOnce(false);
 		}
 		// click these elements
 		boolean tudu = false; 
@@ -156,14 +156,16 @@ public final class GuidedCrawljaxExampleSettings {
 			crawler.setMaximumRuntime(120);
 	*/	
 
-			crawler.click("td");
+//			crawler.click("td");
 //			crawler.click("p").withAttribute("id", "welcome");
 //			crawler.click("button");
 //			crawler.click("div");
 //			crawler.addCrawlCondition("Only crawl symbol game", new UrlCondition("symbol"));
-			crawler.setWaitTimeAfterEvent(100);
+			crawler.setWaitTimeAfterEvent(1000);
 //			crawler.setWaitTimeAfterReloadUrl(500);
 //			crawler.setMaximumRuntime(20);
+			crawler.click("button");
+			crawler.click("div");
 		}else{
 
 			// this is just for the TuduList application
