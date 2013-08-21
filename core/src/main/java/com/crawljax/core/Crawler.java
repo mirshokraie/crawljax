@@ -641,7 +641,7 @@ public class Crawler implements Runnable {
 			CrawlStrategy strategy = CrawlStrategy.FuncCov;
 			updateNotFullExpandedStates();
 			StateVertex nextToCrawl; 
-			if(orrigionalState.isFullyExpanded())
+			if(orrigionalState.isFullyExpanded() || sfg.getStatesNewPotentialFuncs(orrigionalState)==0)
 				// choose next state to crawl based on the strategy
 				nextToCrawl = nextStateToCrawl(strategy);
 			else
@@ -980,7 +980,7 @@ public class Crawler implements Runnable {
 				stateIndex=i;
 				allEquals=false;
 			}
-			System.out.println("score for state" + i + " is " + stateNewPotentialFuncs);
+			System.out.println("score for " + notFullExpandedStates.get(i).getName() + " is " + stateNewPotentialFuncs);
 			
 		}
 
@@ -990,11 +990,10 @@ public class Crawler implements Runnable {
 					+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
 			System.out.println("The selected state with maximum number of potential functions is " +  notFullExpandedStates.get(stateIndex).getName()
 					+ " with maxPotentialFunctions "  +  maxPotentialFuncs);
-			if(!notFullExpandedStates.get(stateIndex).getName().equals("index"))
-				return Integer.parseInt(notFullExpandedStates.get(stateIndex).getName().replace("state", ""));
+	//		if(!notFullExpandedStates.get(stateIndex).getName().equals("index"))
+	//			return Integer.parseInt(notFullExpandedStates.get(stateIndex).getName().replace("state", ""));
 		
-			else
-				return 0;
+			return stateIndex;
 		}
 		else{
 			
