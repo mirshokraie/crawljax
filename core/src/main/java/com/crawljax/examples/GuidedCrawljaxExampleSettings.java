@@ -54,14 +54,16 @@ public final class GuidedCrawljaxExampleSettings {
 	//private static final String URL = "http://localhost:8080/tudu-dwr/";
 
 //	private static final String URL = "http://localhost:8080//Ghostbusters/Ghostbusters.htm";
-	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
+//	private static final String URL = "	http://localhost:8080/symbol/Symbol.html";
+//	private static final String URL="http://localhost:8080/BunnyHunt/index.html";
+//	private static final String URL= "http://localhost:8080/cartDemo/cartDemo.html";
 //	private static final String URL = "http://localhost:8080//same-game/same-game.htm";
 //	private static final String URL="http://localhost:8080/tunnel/tunnel.htm";
 //	private static final String URL="http://localhost:8080/fractal_viewer/index.php";
 //	private static final String URL="http://localhost:8080/pacman/index.html";
 //	private static final String URL="http://localhost:8080/homeostasis/index.html";
 //	private static final String URL="http://localhost:8080/galleria/themes/classic/classic-demo.html";
-//	private static final String URL="http://127.0.0.1/phormer331";
+	private static final String URL="http://127.0.0.1/phormer331";
 //	private static final String URL="http://localhost:8080/peg/peg.html";
 
 	private static final int MAX_DEPTH = 0; // this indicates no depth-limit
@@ -117,7 +119,7 @@ public final class GuidedCrawljaxExampleSettings {
 
 		if (doEfficientCrawling){
 			crawler.setEfficientCrawling(true);
-			crawler.setClickOnce(false);
+			crawler.setClickOnce(true);
 		}
 		// click these elements
 		boolean tudu = false; 
@@ -125,11 +127,15 @@ public final class GuidedCrawljaxExampleSettings {
 		if (!tudu){
 			//defining clickables
 	
-	/*		crawler.click("a");
-			crawler.click("div");
-			crawler.click("span");
+			crawler.click("a");
+			crawler.click("input");
+	//		crawler.dontClick("a").withAttribute("class", "simpleCart_checkout");
 			crawler.click("img");
-			crawler.click("input").withAttribute("type", "submit");
+			crawler.click("button");
+			crawler.dontClick("a").withAttribute("href", "admin.php");
+			crawler.dontClick("a").withAttribute("title", "RSS Feed");
+			crawler.dontClick("a").withAttribute("href", "mailto%");
+	/*		crawler.click("input").withAttribute("type", "submit");
 			crawler.click("div");
 
 			crawler.click("td");
@@ -140,17 +146,14 @@ public final class GuidedCrawljaxExampleSettings {
 			crawler.click("a");
 			
 			
-	/*		crawler.clickDefaultElements();
+			crawler.clickDefaultElements();
 			crawler.click("a");
-			crawler.click("div");
+	/*		crawler.click("div");
 			crawler.click("span");
 			crawler.click("img");
 			crawler.click("button");
 			crawler.click("input").withAttribute("type", "submit");
 			crawler.click("td");
-			crawler.dontClick("a").withAttribute("href", "admin.php");
-			crawler.dontClick("a").withAttribute("title", "RSS Feed");
-			crawler.dontClick("a").withAttribute("href", "mailto%");
 			crawler.setWaitTimeAfterEvent(2000);
 			crawler.setWaitTimeAfterReloadUrl(100);
 			crawler.setMaximumRuntime(120);
@@ -161,11 +164,11 @@ public final class GuidedCrawljaxExampleSettings {
 //			crawler.click("button");
 //			crawler.click("div");
 //			crawler.addCrawlCondition("Only crawl symbol game", new UrlCondition("symbol"));
-			crawler.setWaitTimeAfterEvent(1000);
+			crawler.setWaitTimeAfterEvent(100);
 //			crawler.setWaitTimeAfterReloadUrl(500);
 //			crawler.setMaximumRuntime(20);
-			crawler.click("button");
-			crawler.click("div");
+//			crawler.click("input");
+//			crawler.click("div").withAttribute("id", "bunny%");
 		}else{
 
 			// this is just for the TuduList application
@@ -204,7 +207,7 @@ public final class GuidedCrawljaxExampleSettings {
 		if (!tudu)
 			crawler.setInputSpecification(getInputSpecification());
 
-	//	crawler.setClickOnce(true);
+		crawler.setClickOnce(false);
 	//	crawler.setDepth(2);
 		// limit the crawling scope
 		crawler.setMaximumStates(MAX_NUMBER_STATES);
@@ -230,7 +233,7 @@ public final class GuidedCrawljaxExampleSettings {
 			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 			crawljax.run();
 
-			String outputdir = "same-output";
+			String outputdir = "phormer-output";
 
 			writeStateFlowGraphToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 			writeAllPossiblePathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);

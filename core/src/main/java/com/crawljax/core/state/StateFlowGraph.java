@@ -24,9 +24,11 @@ import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.ast.AstNode;
 import org.mozilla.javascript.ast.FunctionCall;
 import org.mozilla.javascript.ast.FunctionNode;
+import org.mozilla.javascript.ast.LabeledStatement;
 import org.mozilla.javascript.ast.Name;
 import org.mozilla.javascript.ast.ObjectProperty;
 import org.mozilla.javascript.ast.PropertyGet;
+import org.mozilla.javascript.ast.ReturnStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -539,6 +541,9 @@ public class StateFlowGraph implements Serializable {
 				String function=elem.getAttribute("onclick");
 				AstNode funcNode=(AstNode) parse(function+";").getFirstChild();
 				String funcName="";
+				if(funcNode instanceof LabeledStatement){
+					funcName=((LabeledStatement)funcNode).getStatement().toSource();
+				}
 				if(funcNode instanceof FunctionNode){
 					funcName=getFunctionName((FunctionNode) funcNode);
 				}
@@ -547,6 +552,9 @@ public class StateFlowGraph implements Serializable {
 				}
 				else if(funcNode instanceof PropertyGet){
 					funcName=((PropertyGet)funcNode).getProperty().toSource();
+				}
+				else if(funcNode instanceof ReturnStatement){
+					funcName=getFunctionName(((FunctionNode)(((ReturnStatement) funcNode).getReturnValue())));
 				}
 				
 				ArrayList<Object> elemInfo=new ArrayList<Object>();
@@ -892,7 +900,8 @@ public class StateFlowGraph implements Serializable {
 		Iterator<StateVertex> it=prevStates.iterator();
 		while(it.hasNext()){
 			StateVertex vertex=it.next();
-			prevStateFuncNames.addAll(statesNewPotentialFuncs.get(vertex.toString()));
+			if(statesNewPotentialFuncs.get(vertex.toString())!=null)
+				prevStateFuncNames.addAll(statesNewPotentialFuncs.get(vertex.toString()));
 			
 		}
 		if(currStateFuncNames.equals(prevStateFuncNames))
@@ -968,11 +977,13 @@ public class StateFlowGraph implements Serializable {
 	private Set<String> getAllPredecessorVertices(StateVertex stateVertex,Set<String> stateVertices){
 		
 		Set<Eventable> eventable=sfg.incomingEdgesOf(stateVertex);
-		if(eventable.size()!=0){
+		if(eventable.size()!=0 && !stateVertex.getName().equals("index")){
 			
 			Iterator<Eventable> it=eventable.iterator();
 			while(it.hasNext()){
-				getAllPredecessorVertices(it.next().getSourceStateVertex(),stateVertices);
+				StateVertex nextSt=it.next().getSourceStateVertex();
+				if(!nextSt.equals(stateVertex))
+					getAllPredecessorVertices(nextSt,stateVertices);
 			}
 		}
 		

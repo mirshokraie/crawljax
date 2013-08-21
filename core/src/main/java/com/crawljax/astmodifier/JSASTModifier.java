@@ -312,7 +312,8 @@ public abstract class JSASTModifier implements NodeVisitor  {
 										eventType="unbind";
 									FunctionNode handler=(FunctionNode)rightSide;
 									AstNode newNode=createFunctionAttachToEventNode(handler, propGet.getLeft(),eventType);
-									appendNodeAfterClickEvent(node, newNode);
+							//		appendNodeAfterClickEvent(node, newNode);
+									handler.getBody().addChildrenToFront(newNode);
 								}
 							}
 							
