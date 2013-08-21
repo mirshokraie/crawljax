@@ -63,8 +63,9 @@ public final class GuidedCrawljaxExampleSettings {
 //	private static final String URL="http://localhost:8080/pacman/index.html";
 //	private static final String URL="http://localhost:8080/homeostasis/index.html";
 //	private static final String URL="http://localhost:8080/galleria/themes/classic/classic-demo.html";
-	private static final String URL="http://127.0.0.1/phormer331";
+//	private static final String URL="http://127.0.0.1/phormer331";
 //	private static final String URL="http://localhost:8080/peg/peg.html";
+	private static final String URL="http://localhost:8080/Aviary/Aviary.html";
 
 	private static final int MAX_DEPTH = 0; // this indicates no depth-limit
 
@@ -132,10 +133,10 @@ public final class GuidedCrawljaxExampleSettings {
 	//		crawler.dontClick("a").withAttribute("class", "simpleCart_checkout");
 			crawler.click("img");
 			crawler.click("button");
-			crawler.dontClick("a").withAttribute("href", "admin.php");
+	/*		crawler.dontClick("a").withAttribute("href", "admin.php");
 			crawler.dontClick("a").withAttribute("title", "RSS Feed");
 			crawler.dontClick("a").withAttribute("href", "mailto%");
-	/*		crawler.click("input").withAttribute("type", "submit");
+			crawler.click("input").withAttribute("type", "submit");
 			crawler.click("div");
 
 			crawler.click("td");
@@ -233,7 +234,7 @@ public final class GuidedCrawljaxExampleSettings {
 			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 			crawljax.run();
 
-			String outputdir = "phormer-output";
+			String outputdir = "aviary-output";
 
 			writeStateFlowGraphToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 			writeAllPossiblePathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);

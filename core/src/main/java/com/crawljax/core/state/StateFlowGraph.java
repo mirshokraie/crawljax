@@ -607,8 +607,8 @@ public class StateFlowGraph implements Serializable {
 		
 	//	Document document=stateVertex.getDocument();
 		Set<String> stateNames=new HashSet<String>();
-		
-		stateNames=getAllPredecessorVertices(stateVertex, stateNames);
+		Set<String> observedStates=new HashSet<String>();
+		stateNames=getAllPredecessorVertices(stateVertex, stateNames, observedStates);
 	//	stateVertices.add(stateVertex);
 	
 	
@@ -974,7 +974,7 @@ public class StateFlowGraph implements Serializable {
 	}
 */	
 	//Shabnam
-	private Set<String> getAllPredecessorVertices(StateVertex stateVertex,Set<String> stateVertices){
+	private Set<String> getAllPredecessorVertices(StateVertex stateVertex,Set<String> stateVertices, Set<String> visitedStates){
 		
 		Set<Eventable> eventable=sfg.incomingEdgesOf(stateVertex);
 		if(eventable.size()!=0 && !stateVertex.getName().equals("index")){
@@ -982,8 +982,11 @@ public class StateFlowGraph implements Serializable {
 			Iterator<Eventable> it=eventable.iterator();
 			while(it.hasNext()){
 				StateVertex nextSt=it.next().getSourceStateVertex();
-				if(!nextSt.equals(stateVertex))
-					getAllPredecessorVertices(nextSt,stateVertices);
+				if(!visitedStates.contains(nextSt.getName())){
+					System.out.println(nextSt.getName());
+					visitedStates.add(nextSt.getName());
+					getAllPredecessorVertices(nextSt,stateVertices,visitedStates);
+				}
 			}
 		}
 		
@@ -1037,7 +1040,8 @@ public class StateFlowGraph implements Serializable {
 			list.addAll(clickUnbindList);
 		Set<String> successorStateNames=new HashSet<String>();
 		Set<String> preStateNames=new HashSet<String>();
-		preStateNames=getAllPredecessorVertices(curStateVertex, preStateNames);
+		Set<String> observedStates=new HashSet<String>();
+		preStateNames=getAllPredecessorVertices(curStateVertex, preStateNames, observedStates);
 		successorStateNames=getAllSuccessorVertices(vertexInPath, successorStateNames);
 	//	successorStateNames.remove(vertexInPath.getName());
 		preStateNames.remove(curStateVertex.getName());

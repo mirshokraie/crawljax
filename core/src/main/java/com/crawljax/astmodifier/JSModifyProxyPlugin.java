@@ -119,6 +119,9 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 		excludeFilenamePatterns.add(".*functional.js");
 		excludeFilenamePatterns.add(".*test.core.js");
 		excludeFilenamePatterns.add(".*inject.js");
+		excludeFilenamePatterns.add(".*152505823.js");
+		excludeFilenamePatterns.add(".*chartbeat.js");
+		excludeFilenamePatterns.add(".*inpage_linkid.js");
 		 
 	}
 	
@@ -168,7 +171,9 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 			return input;
 		}
 		
-		
+		if(!scopename.contains("aviary") && !scopename.contains("sliding")){
+			return input;
+		}
 		
 		try {
 		
