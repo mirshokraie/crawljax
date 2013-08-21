@@ -983,7 +983,7 @@ public class StateFlowGraph implements Serializable {
 			while(it.hasNext()){
 				StateVertex nextSt=it.next().getSourceStateVertex();
 				if(!visitedStates.contains(nextSt.getName())){
-					System.out.println(nextSt.getName());
+		
 					visitedStates.add(nextSt.getName());
 					getAllPredecessorVertices(nextSt,stateVertices,visitedStates);
 				}

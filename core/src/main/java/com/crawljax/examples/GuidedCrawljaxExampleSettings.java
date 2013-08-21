@@ -130,6 +130,7 @@ public final class GuidedCrawljaxExampleSettings {
 	
 			crawler.click("a");
 			crawler.click("input");
+			crawler.click("span");
 	//		crawler.dontClick("a").withAttribute("class", "simpleCart_checkout");
 			crawler.click("img");
 			crawler.click("button");

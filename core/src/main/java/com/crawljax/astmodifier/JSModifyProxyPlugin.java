@@ -171,7 +171,7 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 			return input;
 		}
 		
-		if(!scopename.contains("aviary") && !scopename.contains("sliding")){
+		if(!scopename.contains("aviary.js") && !scopename.contains("sliding.js")){
 			return input;
 		}
 		
