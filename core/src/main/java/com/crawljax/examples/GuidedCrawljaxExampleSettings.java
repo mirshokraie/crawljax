@@ -65,14 +65,17 @@ public final class GuidedCrawljaxExampleSettings {
 //	private static final String URL="http://localhost:8080/galleria/themes/classic/classic-demo.html";
 //	private static final String URL="http://127.0.0.1/phormer331";
 //	private static final String URL="http://localhost:8080/peg/peg.html";
-	private static final String URL="http://localhost:8080/Aviary/Aviary.html";
-
+//	private static final String URL="http://localhost:8080/aviary.com/index.html";
+//	private static final String URL="http://localhost:8080/narrowdesign/www.narrowdesign.com/index.html";
+	private static final String URL="http://localhost:8080/jointLondon/www.jointlondon.com/index.html";
+//	private static final String URL="http://127.0.0.1/elFinder-2.x/elfinder.src.html";
+//	private static final String URL="http://127.0.0.1/elfinder-2.0-rc1/elfinder.html";
 	private static final int MAX_DEPTH = 0; // this indicates no depth-limit
 
 
 
 
-	private static final int MAX_NUMBER_STATES = 100;
+	private static final int MAX_NUMBER_STATES = 30;
 
 	private GuidedCrawljaxExampleSettings() {
 
@@ -110,7 +113,7 @@ public final class GuidedCrawljaxExampleSettings {
 
 	private static CrawlSpecification getCrawlSpecification() {
 		CrawlSpecification crawler = new CrawlSpecification(URL);
-
+	//	crawler.addCrawlCondition("only crawl this site", new UrlCondition("cartDemo".toLowerCase()));
 				
 		
 
@@ -127,13 +130,20 @@ public final class GuidedCrawljaxExampleSettings {
 
 		if (!tudu){
 			//defining clickables
-	
-			crawler.click("a");
+	//		crawler.click("span");
+			crawler.click("div");
 			crawler.click("input");
-			crawler.click("span");
-	//		crawler.dontClick("a").withAttribute("class", "simpleCart_checkout");
+			crawler.click("a");
 			crawler.click("img");
+	//		crawler.click("svg");
 			crawler.click("button");
+	//		crawler.click("span");
+	//		crawler.dontClick("a").withAttribute("href", "account/login.html");
+	//		crawler.dontClick("a").withAttribute("href", "account/signup.html");
+	//		crawler.dontClick("a").withAttribute("class", "simpleCart_checkout");
+	//		crawler.click("img");
+	//		crawler.click("button");
+			
 	/*		crawler.dontClick("a").withAttribute("href", "admin.php");
 			crawler.dontClick("a").withAttribute("title", "RSS Feed");
 			crawler.dontClick("a").withAttribute("href", "mailto%");
@@ -167,7 +177,7 @@ public final class GuidedCrawljaxExampleSettings {
 //			crawler.click("div");
 //			crawler.addCrawlCondition("Only crawl symbol game", new UrlCondition("symbol"));
 			crawler.setWaitTimeAfterEvent(100);
-//			crawler.setWaitTimeAfterReloadUrl(500);
+//			crawler.setWaitTimeAfterReloadUrl(6000);
 //			crawler.setMaximumRuntime(20);
 //			crawler.click("input");
 //			crawler.click("div").withAttribute("id", "bunny%");
@@ -235,7 +245,7 @@ public final class GuidedCrawljaxExampleSettings {
 			CrawljaxController crawljax = new CrawljaxController(getCrawljaxConfiguration());
 			crawljax.run();
 
-			String outputdir = "aviary-output";
+			String outputdir = "jointLondon-output";
 
 			writeStateFlowGraphToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
 			writeAllPossiblePathToFile(crawljax.getSession().getStateFlowGraph(), outputdir);
@@ -323,9 +333,9 @@ public final class GuidedCrawljaxExampleSettings {
 
 				@Override
 				public int compare(StateVertex s1, StateVertex s2) {
-			        if(s1.getName().compareTo(s2.getName())>0)
+			        if(Integer.parseInt(s1.getName().replace("state", "").trim())>Integer.parseInt(s2.getName().replace("state", "").trim()))
 			        	return 1;
-			        else if(s1.getName().compareTo(s2.getName())<0){
+			        else if(Integer.parseInt(s1.getName().replace("state", "").trim())<Integer.parseInt(s2.getName().replace("state", "").trim())){
 			        	return -1;
 			        }
 			        return 0;

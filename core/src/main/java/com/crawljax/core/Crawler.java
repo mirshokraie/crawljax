@@ -641,7 +641,7 @@ public class Crawler implements Runnable {
 			CrawlStrategy strategy = CrawlStrategy.FuncCov;
 			updateNotFullExpandedStates();
 			StateVertex nextToCrawl; 
-			if(orrigionalState.isFullyExpanded() || sfg.getStatesNewPotentialFuncs(orrigionalState)==0)
+			if(orrigionalState.isFullyExpanded())// || sfg.getStatesNewPotentialFuncs(orrigionalState)==0)
 				// choose next state to crawl based on the strategy
 				nextToCrawl = nextStateToCrawl(strategy);
 			else

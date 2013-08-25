@@ -94,7 +94,7 @@ public class AstEventHandlerInstrumenter extends JSASTModifier {
 		/* escape quotes */
 	//	eventHandler = eventHandler.replaceAll("\\\"", "\\\\\"");
 	//	eventHandler = eventHandler.replaceAll("\\\'", "\\\\\'");
-		targetElement = targetElement.replaceAll("\\\"", "\\\\\"");
+	/*	targetElement = targetElement.replaceAll("\\\"", "\\\\\"");*/
 	//	targetElement = targetElement.replaceAll("\\\'", "\\\\\'");
 		int lineNo=element.getLineno();
 		String code;

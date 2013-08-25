@@ -1,5 +1,6 @@
 package com.crawljax.astmodifier;
 import java.io.IOException;
+import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +20,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import sun.misc.CharacterDecoder;
+
 import com.crawljax.executionTracer.JSEventHandlerExecTracer;
 import com.crawljax.staticTracer.StaticFunctionTracer;
 import com.crawljax.staticTracer.StaticLabeledFunctionTracer;
 import com.crawljax.util.Helper;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 
 
 public class JSModifyProxyPlugin extends ProxyPlugin{
@@ -122,7 +127,7 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 		excludeFilenamePatterns.add(".*152505823.js");
 		excludeFilenamePatterns.add(".*chartbeat.js");
 		excludeFilenamePatterns.add(".*inpage_linkid.js");
-		 
+		excludeFilenamePatterns.add(".*elfinder.ru.js");
 	}
 	
 
@@ -166,14 +171,16 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 		
 		/*this line should be removed when it is used for collecting exec
 		 * traces, mutating, and testing jquery library*/
-		input = input.replaceAll("[\r\n]","\n\n");
-		if (!shouldModify(scopename)) {
+	//	input = input.replaceAll("[\r\n]","\n\n");
+		if ((!shouldModify(scopename) || scopename.contains("i18n") ||  scopename.contains("proxy")
+				|| scopename.contains("/ui/") || scopename.contains("/commands/")) && !scopename.contains("elfinder.min.js")) {
+			
 			return input;
 		}
 		
-		if(!scopename.contains("aviary.js") && !scopename.contains("sliding.js")){
+	
+		if(!scopename.contains("ScrollBar.js") && !scopename.contains("joint.js"))
 			return input;
-		}
 		
 		try {
 		
@@ -186,6 +193,7 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 			Parser rhinoParser = new Parser(new CompilerEnvirons(), cx.getErrorReporter());
 			
 			/* parse some script and save it in AST */
+			
 			ast = rhinoParser.parse(new String(input), scopename, 0);
 
 				
@@ -262,7 +270,11 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 
 		if (type != null && type.contains("javascript")) {
 
+			
+			
+			
 			/* instrument the code if possible */
+			
 			response.setContent(modifyJS(new String(response.getContent()),
 			        request.getURL().toString()).getBytes());
 		} else if (type != null && type.contains("html")) {

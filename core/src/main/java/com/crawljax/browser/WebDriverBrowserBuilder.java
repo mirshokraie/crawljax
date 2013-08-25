@@ -2,14 +2,14 @@ package com.crawljax.browser;
 
 import java.util.List;
 
-import org.openqa.selenium.android.AndroidDriver;
+
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.iphone.IPhoneDriver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,21 +104,9 @@ public class WebDriverBrowserBuilder implements EmbeddedBrowserBuilder {
 				        .getWaitAfterEvent(), configuration.getCrawlSpecificationReader()
 				        .getWaitAfterReloadUrl());
 
-			case iphone:
-				try {
-					return WebDriverBackedEmbeddedBrowser.withDriver(new IPhoneDriver(),
-					        configuration.getFilterAttributeNames(), configuration
-					                .getCrawlSpecificationReader().getWaitAfterEvent(),
-					        configuration.getCrawlSpecificationReader().getWaitAfterReloadUrl());
-				} catch (Exception e) {
-					LOGGER.error(e.getMessage(), e);
-				}
 
-			case android:
-				return WebDriverBackedEmbeddedBrowser.withDriver(new AndroidDriver(),
-				        configuration.getFilterAttributeNames(), configuration
-				                .getCrawlSpecificationReader().getWaitAfterEvent(), configuration
-				                .getCrawlSpecificationReader().getWaitAfterReloadUrl());
+
+
 
 			default:
 				return WebDriverBackedEmbeddedBrowser.withDriver(new FirefoxDriver(),
