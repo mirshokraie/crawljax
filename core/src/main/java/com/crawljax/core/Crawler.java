@@ -42,7 +42,7 @@ public class Crawler implements Runnable {
 		FuncCov, DFS, BFS
 	}
 	//Shabnam
-	private boolean strategicCrawl = true;
+	private boolean strategicCrawl = false;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Crawler.class.getName());
 
 	private static final int ONE_SECOND = 1000;
@@ -545,8 +545,11 @@ public class Crawler implements Runnable {
 			orrigionalState.finishedWorking(this, action);
 			switch (result) {
 				case newState:
+					this.getStateMachine().getCurrentState().setCrawlPathToState(controller.getSession().getCurrentCrawlPath());
+					GlobalVars.stateCrawlPathMap.put(this.getStateMachine().getCurrentState(),this.getStateMachine().getCurrentState().getCrawlPathToState());
 					return newStateDetected(orrigionalState);
 				case cloneDetected:
+					GlobalVars.stateCrawlPathMap.put(this.getStateMachine().getCurrentState(),this.getStateMachine().getCurrentState().getCrawlPathToState());
 					return true;
 				default:
 					break;
@@ -641,7 +644,7 @@ public class Crawler implements Runnable {
 			CrawlStrategy strategy = CrawlStrategy.FuncCov;
 			updateNotFullExpandedStates();
 			StateVertex nextToCrawl; 
-			if(orrigionalState.isFullyExpanded())// || sfg.getStatesNewPotentialFuncs(orrigionalState)==0)
+			if(orrigionalState.isFullyExpanded() || sfg.getStatesNewPotentialFuncs(orrigionalState)==0)
 				// choose next state to crawl based on the strategy
 				nextToCrawl = nextStateToCrawl(strategy);
 			else

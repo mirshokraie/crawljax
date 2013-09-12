@@ -128,6 +128,7 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 		excludeFilenamePatterns.add(".*chartbeat.js");
 		excludeFilenamePatterns.add(".*inpage_linkid.js");
 		excludeFilenamePatterns.add(".*elfinder.ru.js");
+		excludeFilenamePatterns.add(".*help.js");
 	}
 	
 
@@ -179,9 +180,12 @@ public class JSModifyProxyPlugin extends ProxyPlugin{
 		}
 		
 	
-		if(!scopename.contains("ScrollBar.js") && !scopename.contains("joint.js"))
+		if(!scopename.contains("script.js"))
 			return input;
-		
+
+/*		if(!scopename.contains("ScrollBar.js") && !scopename.contains("joint.js"))
+			return input;
+*/		
 		try {
 		
 			AstRoot ast = null;	

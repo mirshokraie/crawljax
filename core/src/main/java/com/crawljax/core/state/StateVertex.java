@@ -294,9 +294,11 @@ public class StateVertex implements Serializable {
 			int alternateNumCandidateElements=0;
 			List<CandidateElement> alternateCandidateElemList=new ArrayList<CandidateElement>();
 			//Shabnam
-			sfg.updateExecutedFunctions(GlobalVars.executedFuncList);
+			if(isEfficientCrawling)
+				sfg.updateExecutedFunctions(GlobalVars.executedFuncList);
 			try {
-				sfg.updateStatesPotentialFuncs(this, GlobalVars.eventableElementsMap);
+				if(isEfficientCrawling)
+					sfg.updateStatesPotentialFuncs(this, GlobalVars.eventableElementsMap);
 			} catch (SAXException e1) {
 			
 				e1.printStackTrace();
